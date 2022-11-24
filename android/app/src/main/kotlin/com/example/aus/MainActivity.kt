@@ -1,4 +1,4 @@
-package com.example.placeholder
+package com.example.aus
 
 import io.flutter.embedding.android.FlutterActivity
 

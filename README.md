@@ -1,4 +1,4 @@
-# placeholder
+# aus
 
 A new Flutter project. Developed by APDI, students of HKUST.
 
@@ -18,7 +18,7 @@ A new Flutter project. Developed by APDI, students of HKUST.
 │   ├── controllers/       # how we manipulate the data
 │   ├── utils/             # some utility functions
 │   └── main.dart          # the app's entry point.
-├── placeholder.iml        # ignore; admin stuff
+├── aus.iml        # ignore; admin stuff
 ├── pubspec.lock           # ignore; automatically generated log of current version of dependencies
 ├── pubspec.yaml           # if we have any third-party dependency package, we write here
 └── test                   # test the functionalities
