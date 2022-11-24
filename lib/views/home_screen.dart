@@ -31,7 +31,10 @@ class _PostListPageState extends State<PostListPage> {
   Widget postUI(PostController controller) {
     return Container(
         decoration: BoxDecoration(color: Colors.blue[50]),
-        margin: EdgeInsets.fromLTRB(100, 20, 100, 20),
+        margin: EdgeInsets.symmetric(
+          vertical: 20,
+          horizontal: MediaQuery.of(context).size.width * 0.05,
+        ),
         child: Column(
           children: [
             Align(
