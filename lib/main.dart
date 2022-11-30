@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import views (screens)
 import 'views/home_screen.dart';
+import 'views/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const PostListPage(title: 'Posts'),
+      routes: {'login': (context) => const LoginPageWidget()},
     );
   }
 }

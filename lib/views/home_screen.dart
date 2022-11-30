@@ -41,23 +41,23 @@ class _PostListPageState extends State<PostListPage> {
               alignment: Alignment.topRight,
               child: Text(
                 controller.post.timestamp.toString(),
-                style: TextStyle(fontSize: 12),
+                style: const TextStyle(fontSize: 12),
               ),
             ),
             //title
             Text(
               controller.post.title,
-              style: TextStyle(fontSize: 24),
+              style: const TextStyle(fontSize: 24),
             ),
             Text(
                 '${controller.post.writer.name}, ${controller.getPostWriterSchool()}'),
-            Divider(),
+            const Divider(),
             //main content
             Text(
               controller.post.text,
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
-            Divider(),
+            const Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -67,9 +67,10 @@ class _PostListPageState extends State<PostListPage> {
                       controller.incrementLike();
                     });
                   },
+                  heroTag: null,
                   child: const Icon(Icons.favorite),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text('${controller.post.likes}'),
               ],
             ),
@@ -90,6 +91,13 @@ class _PostListPageState extends State<PostListPage> {
         // Here we take the value from the PostListPage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'login');
+              },
+              icon: const Icon(Icons.person))
+        ],
       ),
       body: SingleChildScrollView(
         child: Center(
