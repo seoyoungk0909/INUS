@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../controllers/post_controller.dart';
+import '../models/post_model.dart';
 
 class PostDetailPage extends StatefulWidget {
   const PostDetailPage({Key? key, required this.title}) : super(key: key);
@@ -17,15 +19,20 @@ class PostDetailPage extends StatefulWidget {
 class PostDetailPageState extends State<PostDetailPage> {
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    PostController controller = PostController(arguments['post'] ?? Post());
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        centerTitle: false,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Hello World"),
+            Text(controller.post.text),
+            Text(controller.post.likes.toString()),
           ],
         ),
       ),

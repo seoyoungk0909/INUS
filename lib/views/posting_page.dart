@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
 import '../models/user_model.dart';
+import 'post_ui.dart';
 
 class PostListPage extends StatefulWidget {
   const PostListPage({Key? key, required this.title}) : super(key: key);
@@ -32,84 +32,6 @@ class _PostListPageState extends State<PostListPage> {
   PostController controller3 = PostController(
       Post(postWriter: User(userName: "Claire Eve", userSchool: School.HKU)));
 
-  Widget postUI(PostController controller) {
-    return Container(
-        decoration: BoxDecoration(color: Colors.blue[50]),
-        margin: EdgeInsets.symmetric(
-          vertical: 20,
-          horizontal: MediaQuery.of(context).size.width * 0.05,
-        ),
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: Text(
-                timeago.format(DateTime.now().subtract(
-                    DateTime.now().difference(controller.post.timestamp))),
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-            //title
-            Text(
-              controller.post.title,
-              style: const TextStyle(fontSize: 24),
-            ),
-            Text(
-                '${controller.post.writer.name}, ${controller.getPostWriterSchool()}'),
-            const Divider(),
-            //main content
-            Text(
-              controller.post.text,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FloatingActionButton(
-                  onPressed: () {
-                    setState(() {
-                      controller.incrementLike();
-                    });
-                  },
-                  heroTag: null,
-                  child: const Icon(Icons.favorite),
-                ),
-                const SizedBox(width: 10),
-                Text('${controller.post.likes}'),
-              ],
-            ),
-          ],
-        ));
-  }
-
-  Widget postListView(List<Widget> children) {
-    return SingleChildScrollView(
-      child: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: children,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -136,8 +58,12 @@ class _PostListPageState extends State<PostListPage> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    postListView([postUI(controller1), postUI(controller2)]),
-                    postListView([postUI(controller3)]),
+                    postListView([
+                      postUI(context, controller1, setState: setState),
+                      postUI(context, controller2, setState: setState)
+                    ]),
+                    postListView(
+                        [postUI(context, controller3, setState: setState)]),
                   ],
                 ),
               ),
