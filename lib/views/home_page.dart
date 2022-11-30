@@ -5,9 +5,9 @@ import 'event_page.dart';
 import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, this.title});
+  const HomePage({super.key, required this.title});
 
-  final title;
+  final String title;
 
   @override
   State<HomePage> createState() => HomePageState();
