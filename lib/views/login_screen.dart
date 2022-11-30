@@ -12,6 +12,7 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
   TextEditingController? passwordTextController;
 
   late bool passwordVisibility;
+  late bool isSignup;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -20,6 +21,7 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
     emailTextController = TextEditingController();
     passwordTextController = TextEditingController();
     passwordVisibility = false;
+    isSignup = false;
   }
 
   @override
@@ -51,23 +53,35 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                        ),
-                        alignment: const AlignmentDirectional(-1, 0),
-                        child: Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
-                          child: Text(
-                            'Sign In',
-                            style: Theme.of(context).textTheme.titleLarge,
+                      InkWell(
+                        onTap: () => setState(() {
+                          isSignup = false;
+                        }),
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                          ),
+                          alignment: const AlignmentDirectional(-1, 0),
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 0, 16, 0),
+                            child: Text(
+                              'Sign In',
+                              style: isSignup
+                                  ? Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(color: Colors.grey)
+                                  : Theme.of(context).textTheme.titleLarge,
+                            ),
                           ),
                         ),
                       ),
                       InkWell(
-                        onTap: () {},
+                        onTap: () => setState(() {
+                          isSignup = true;
+                        }),
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
@@ -79,10 +93,12 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
                                 16, 0, 16, 0),
                             child: Text(
                               'Sign Up',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge
-                                  ?.copyWith(color: Colors.grey),
+                              style: isSignup
+                                  ? Theme.of(context).textTheme.titleLarge
+                                  : Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(color: Colors.grey),
                             ),
                           ),
                         ),
@@ -160,7 +176,7 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
                               20, 24, 20, 24),
                         ),
                         style: Theme.of(context).textTheme.bodyText1,
-                        maxLines: null,
+                        maxLines: 1,
                       ),
                     ),
                   ),
@@ -171,8 +187,8 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
-                      boxShadow: [
-                        const BoxShadow(
+                      boxShadow: const [
+                        BoxShadow(
                           blurRadius: 6,
                           color: Color(0x3416202A),
                           offset: Offset(0, 2),
@@ -294,13 +310,13 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
                             width: 1,
                           ),
                         ),
-                        child: const SizedBox(
+                        child: SizedBox(
                           width: 150,
                           height: 50,
                           child: Center(
                             child: Text(
-                              'Login',
-                              style: TextStyle(
+                              isSignup ? 'Sign Up' : 'Login',
+                              style: const TextStyle(
                                 fontFamily: 'Poppins',
                                 color: Colors.white,
                               ),
