@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
 import '../models/user_model.dart';
@@ -40,7 +41,8 @@ class _PostListPageState extends State<PostListPage> {
             Align(
               alignment: Alignment.topRight,
               child: Text(
-                controller.post.timestamp.toString(),
+                timeago.format(DateTime.now().subtract(
+                    DateTime.now().difference(controller.post.timestamp))),
                 style: const TextStyle(fontSize: 12),
               ),
             ),
