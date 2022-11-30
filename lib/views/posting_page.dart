@@ -29,6 +29,9 @@ class _PostListPageState extends State<PostListPage> {
   PostController controller2 = PostController(
       Post(postWriter: User(userName: "Apple Seed", userSchool: School.CUHK)));
 
+  PostController controller3 = PostController(
+      Post(postWriter: User(userName: "Claire Eve", userSchool: School.HKU)));
+
   Widget postUI(PostController controller) {
     return Container(
         decoration: BoxDecoration(color: Colors.blue[50]),
@@ -80,6 +83,33 @@ class _PostListPageState extends State<PostListPage> {
         ));
   }
 
+  Widget postListView(List<Widget> children) {
+    return SingleChildScrollView(
+      child: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        child: Column(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Invoke "debug painting" (press "p" in the console, choose the
+          // "Toggle Debug Paint" action from the Flutter Inspector in Android
+          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+          // to see the wireframe for each widget.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: children,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -89,41 +119,28 @@ class _PostListPageState extends State<PostListPage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the PostListPage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, 'login');
-              },
-              icon: const Icon(Icons.person))
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          // Center is a layout widget. It takes a single child and positions it
-          // in the middle of the parent.
-          child: Column(
-            // Column is also a layout widget. It takes a list of children and
-            // arranges them vertically. By default, it sizes itself to fit its
-            // children horizontally, and tries to be as tall as its parent.
-            //
-            // Invoke "debug painting" (press "p" in the console, choose the
-            // "Toggle Debug Paint" action from the Flutter Inspector in Android
-            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-            // to see the wireframe for each widget.
-            //
-            // Column has various properties to control how it sizes itself and
-            // how it positions its children. Here we use mainAxisAlignment to
-            // center the children vertically; the main axis here is the vertical
-            // axis because Columns are vertical (the cross axis would be
-            // horizontal).
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              postUI(controller1),
-              postUI(controller2),
+      body: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          body: Column(
+            children: [
+              Container(
+                color: Theme.of(context).primaryColor,
+                child: const TabBar(
+                  tabs: [
+                    Tab(text: "Recent"),
+                    Tab(text: "Popular"),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    postListView([postUI(controller1), postUI(controller2)]),
+                    postListView([postUI(controller3)]),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

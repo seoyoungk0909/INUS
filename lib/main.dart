@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 // import views (screens)
-import 'views/posting_page.dart';
+import 'views/post_detail_page.dart';
+import 'views/post_write_page.dart';
 import 'views/login_page.dart';
+import 'views/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,8 +29,12 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const PostListPage(title: 'Posts'),
-      routes: {'login': (context) => const LoginPageWidget()},
+      home: const HomePage(title: 'APDI'),
+      routes: {
+        'login': (context) => const LoginPageWidget(),
+        'post_write': (context) => const PostWritePage(title: 'New Post'),
+        'post_detail': (context) => const PostDetailPage(title: 'Community'),
+      },
     );
   }
 }

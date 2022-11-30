@@ -20,6 +20,7 @@ class PostWritePageState extends State<PostWritePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        centerTitle: false,
       ),
       body: Center(
         child: Column(
