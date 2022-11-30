@@ -138,6 +138,8 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
                       child: TextFormField(
                         controller: emailTextController,
                         obscureText: false,
+                        autocorrect: false,
+                        enableSuggestions: false,
                         decoration: InputDecoration(
                           labelText: 'Your email address',
                           labelStyle: Theme.of(context).textTheme.bodyText2,
@@ -201,6 +203,8 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
                       child: TextFormField(
                         controller: passwordTextController,
                         obscureText: !passwordVisibility,
+                        autocorrect: false,
+                        enableSuggestions: false,
                         decoration: InputDecoration(
                           labelText: 'Password',
                           labelStyle: Theme.of(context).textTheme.bodyText2,
