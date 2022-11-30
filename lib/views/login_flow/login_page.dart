@@ -269,7 +269,7 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          print('Button pressed ...');
+                          Navigator.pushNamed(context, 'password_reset');
                         },
                         style: TextButton.styleFrom(
                           primary: Theme.of(context).primaryColor,
@@ -296,6 +296,12 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
                       ),
                       TextButton(
                         onPressed: () async {
+                          // send sign up firebase auth
+                          if (isSignup) {
+                            Navigator.pushNamed(context, 'verify');
+                          } else {
+                            Navigator.pushNamed(context, 'welcome');
+                          }
                           // final user = await signInWithEmail(
                           //   context,
                           //   emailTextController!.text,

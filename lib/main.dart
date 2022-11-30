@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 // import views (screens)
 import 'views/post_detail_page.dart';
 import 'views/post_write_page.dart';
-import 'views/login_page.dart';
+import 'views/login_flow/login_page.dart';
+import 'views/login_flow/password_reset_page.dart';
+import 'views/login_flow/verify_page.dart';
+import 'views/login_flow/welcome_page.dart';
 import 'views/home_page.dart';
 
 void main() {
@@ -32,6 +35,9 @@ class MyApp extends StatelessWidget {
       home: const HomePage(title: 'APDI'),
       routes: {
         'login': (context) => const LoginPageWidget(),
+        'password_reset': (context) => const PasswordResetPage(),
+        'verify': (context) => const VerifyPage(),
+        'welcome': (context) => const WelcomePage(),
         'post_write': (context) => const PostWritePage(title: 'New Post'),
         'post_detail': (context) => const PostDetailPage(title: 'Community'),
       },
