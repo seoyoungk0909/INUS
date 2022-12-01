@@ -32,7 +32,13 @@ class PostDetailPageState extends State<PostDetailPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(controller.post.text),
-            Text(controller.post.likes.toString()),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("views • "),
+                Text(controller.post.views.toString()),
+              ],
+            ),
           ],
         ),
       ),
