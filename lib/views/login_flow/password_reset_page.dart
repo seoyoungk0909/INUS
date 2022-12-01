@@ -26,11 +26,8 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                   style: TextStyle(fontSize: 30),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(
-                  height: 80,
-                ),
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 32, 0, 0),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -94,42 +91,57 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Theme.of(context).primaryColor,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
+                        elevation: 3,
+                        side: const BorderSide(
+                          color: Colors.transparent,
+                          width: 1,
+                        ),
+                      ),
+                      child: SizedBox(
+                        width: 150,
+                        height: 50,
+                        child: Center(
+                          child: Text(
+                            !emailSent
+                                ? "Send Reset Email"
+                                : "Take me back to login",
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (emailSent) {
+                          Navigator.pop(context);
+                        } else {
+                          // FirebaseAuth.instance
+                          //     .sendPasswordResetEmail(
+                          //         email: emailController.text)
+                          //     .then((_) {
+                          //   showErrorDialog(
+                          //       context,
+                          //       "Reset Email Sent!",
+                          //       Exception(
+                          //           "We have sent a password reset link to your email."));
+                          //   setState(() {
+                          //     emailSent = true;
+                          //   });
+                          // }).catchError((error) {
+                          //   showErrorDialog(context, "Invalid Email", error);
+                          // });
+                        }
+                      }),
                 ),
-                TextButton(
-                    style: TextButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColorDark),
-                    child: Text(
-                        !emailSent
-                            ? "Send Reset Email"
-                            : "Take me back to login",
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(color: Colors.white)),
-                    onPressed: () {
-                      if (emailSent) {
-                        Navigator.pop(context);
-                      } else {
-                        // FirebaseAuth.instance
-                        //     .sendPasswordResetEmail(
-                        //         email: emailController.text)
-                        //     .then((_) {
-                        //   showErrorDialog(
-                        //       context,
-                        //       "Reset Email Sent!",
-                        //       Exception(
-                        //           "We have sent a password reset link to your email."));
-                        //   setState(() {
-                        //     emailSent = true;
-                        //   });
-                        // }).catchError((error) {
-                        //   showErrorDialog(context, "Invalid Email", error);
-                        // });
-                      }
-                    }),
               ],
             ),
           ),

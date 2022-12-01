@@ -24,21 +24,36 @@ class _VerifyPageState extends State<VerifyPage> {
                 style: TextStyle(fontSize: 30),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(
-                height: 100,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 32, 0, 0),
+                child: TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Theme.of(context).primaryColor,
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      elevation: 3,
+                      side: const BorderSide(
+                        color: Colors.transparent,
+                        width: 1,
+                      ),
+                    ),
+                    child: SizedBox(
+                      width: 150,
+                      height: 50,
+                      child: Center(
+                        child: Text(
+                          "Go back to Sign In!",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }),
               ),
-              TextButton(
-                  style: TextButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColorDark),
-                  child: Text("Take me back to Sign In!",
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.copyWith(color: Colors.white)),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
             ]),
           ),
         ),
