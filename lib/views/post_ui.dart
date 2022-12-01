@@ -16,7 +16,7 @@ Widget postListView(List<Widget> children) {
 Widget postUI(BuildContext context, PostController controller,
     {Function? setState}) {
   return Container(
-    decoration: BoxDecoration(color: Colors.blue[50]),
+    decoration: BoxDecoration(color: Theme.of(context).cardColor),
     margin: EdgeInsets.symmetric(
       vertical: 20,
       horizontal: MediaQuery.of(context).size.width * 0.05,

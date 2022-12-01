@@ -35,10 +35,8 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        foregroundColor: Theme.of(context).primaryColorDark,
+        backgroundColor: Theme.of(context).primaryColor,
         elevation: 0,
       ),
       body: SafeArea(
@@ -313,7 +311,8 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
                         },
                         style: TextButton.styleFrom(
                           primary: Theme.of(context).primaryColor,
-                          backgroundColor: Theme.of(context).primaryColorDark,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondary,
                           elevation: 3,
                           side: const BorderSide(
                             color: Colors.transparent,

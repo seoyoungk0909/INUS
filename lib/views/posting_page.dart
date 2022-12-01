@@ -49,6 +49,7 @@ class _PostListPageState extends State<PostListPage> {
               Container(
                 color: Theme.of(context).primaryColor,
                 child: const TabBar(
+                  indicatorColor: Colors.white,
                   tabs: [
                     Tab(text: "Recent"),
                     Tab(text: "Popular"),
