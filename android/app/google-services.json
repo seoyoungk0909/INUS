@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1025622893706",
+    "project_id": "apdi-aus",
+    "storage_bucket": "apdi-aus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1025622893706:android:47f13e7af80a95e54cf973",
+        "android_client_info": {
+          "package_name": "com.example.aus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1025622893706-1cv0l16d0rik1rbf7m8re134im8evpf3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9KPFats2bHBcTzKIdpPnvBLcALPj42Rw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1025622893706-1cv0l16d0rik1rbf7m8re134im8evpf3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
