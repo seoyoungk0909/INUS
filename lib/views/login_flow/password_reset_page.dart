@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../components/popup_dialog.dart';
 
 class PasswordResetPage extends StatefulWidget {
   const PasswordResetPage({Key? key}) : super(key: key);
@@ -124,21 +127,19 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                         if (emailSent) {
                           Navigator.pop(context);
                         } else {
-                          // FirebaseAuth.instance
-                          //     .sendPasswordResetEmail(
-                          //         email: emailController.text)
-                          //     .then((_) {
-                          //   showErrorDialog(
-                          //       context,
-                          //       "Reset Email Sent!",
-                          //       Exception(
-                          //           "We have sent a password reset link to your email."));
-                          //   setState(() {
-                          //     emailSent = true;
-                          //   });
-                          // }).catchError((error) {
-                          //   showErrorDialog(context, "Invalid Email", error);
-                          // });
+                          FirebaseAuth.instance
+                              .sendPasswordResetEmail(
+                                  email: emailController.text)
+                              .then((_) {
+                            popUpDialog(context, "Reset Email Sent!",
+                                "We have sent a password reset link to your email.");
+                            setState(() {
+                              emailSent = true;
+                            });
+                          }).catchError((error) {
+                            popUpDialog(
+                                context, "Invalid Email", error.message);
+                          });
                         }
                       }),
                 ),

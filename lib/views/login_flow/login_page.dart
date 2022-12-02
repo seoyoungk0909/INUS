@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../components/popup_dialog.dart';
+import '../../firebase_login_state.dart';
 
 class LoginPageWidget extends StatefulWidget {
   const LoginPageWidget({Key? key}) : super(key: key);
@@ -29,6 +33,44 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
     emailTextController?.dispose();
     passwordTextController?.dispose();
     super.dispose();
+  }
+
+  void loginOrSignup(LoginState appState) {
+    if (!isSignup) {
+      // do login
+      appState
+          .signInWithEmailAndPassword(
+              emailTextController!.text, passwordTextController!.text)
+          .then((registerState) {
+        switch (registerState) {
+          case RegisterState.emailVerified:
+            Navigator.pushNamed(context, 'welcome');
+            break;
+          case RegisterState.setupComplete:
+            Navigator.pushNamed(context, 'welcome');
+            break;
+          default:
+            throw Exception("This should not happen: "
+                "the signInWithEmailAndPassword function "
+                "should've thrown another exception");
+        }
+      }).catchError((error) {
+        popUpDialog(context, 'Login Failed', error.message);
+      });
+    } else {
+      // do register
+      appState
+          .registerAccount(
+              emailTextController!.text, passwordTextController!.text)
+          .then((value) {
+        Navigator.pushNamed(context, 'verify');
+        setState(() {
+          isSignup = false;
+        });
+      }).catchError((error) {
+        popUpDialog(context, 'Sign Up Failed', error.message);
+      });
+    }
   }
 
   @override
@@ -292,47 +334,34 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
                           ),
                         ),
                       ),
-                      TextButton(
-                        onPressed: () async {
-                          // send sign up firebase auth
-                          if (isSignup) {
-                            Navigator.pushNamed(context, 'verify');
-                          } else {
-                            Navigator.pushNamed(context, 'welcome');
-                          }
-                          // final user = await signInWithEmail(
-                          //   context,
-                          //   emailTextController!.text,
-                          //   passwordTextController!.text,
-                          // );
-                          // if (user == null) {
-                          //   return;
-                          // }
-                        },
-                        style: TextButton.styleFrom(
-                          primary: Theme.of(context).primaryColor,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                          elevation: 3,
-                          side: const BorderSide(
-                            color: Colors.transparent,
-                            width: 1,
+                      Consumer<LoginState>(builder: (context, appState, _) {
+                        return TextButton(
+                          onPressed: () => loginOrSignup(appState),
+                          style: TextButton.styleFrom(
+                            primary: Theme.of(context).primaryColor,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
+                            elevation: 3,
+                            side: const BorderSide(
+                              color: Colors.transparent,
+                              width: 1,
+                            ),
                           ),
-                        ),
-                        child: SizedBox(
-                          width: 150,
-                          height: 50,
-                          child: Center(
-                            child: Text(
-                              isSignup ? 'Sign Up' : 'Login',
-                              style: const TextStyle(
-                                fontFamily: 'Poppins',
-                                color: Colors.white,
+                          child: SizedBox(
+                            width: 150,
+                            height: 50,
+                            child: Center(
+                              child: Text(
+                                isSignup ? 'Sign Up' : 'Login',
+                                style: const TextStyle(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                     ],
                   ),
                 ),

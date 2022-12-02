@@ -36,13 +36,6 @@ class HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(widget.title),
         centerTitle: false,
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, 'login');
-              },
-              icon: const Icon(Icons.person))
-        ],
       ),
       body: Center(
         child: pageBuilder(_selectedIndex),
