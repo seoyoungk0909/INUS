@@ -15,43 +15,42 @@ Widget eventListView(List<Widget> children) {
   );
 }
 
+//event photo
 Widget eventPhoto(BuildContext context, EventController controller) {
   return Container(
-    width: 200,
+    width: 197,
     height: 130,
     decoration: BoxDecoration(
-        color: Colors.grey, borderRadius: BorderRadius.circular(8)),
+        color: hexStringToColor("#737373"),
+        borderRadius: BorderRadius.circular(8)),
   );
 }
-
-// Widget eventCategoryUI(
-//     BuildContext context, String hexButtonColor, EventController controller) {
-//   return;
-// } maybe use to change color of category widget?
 
 Widget contentUI(BuildContext context, EventController controller) {
   return Column(
     children: [
       Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(4, 8, 4, 0),
+        padding: const EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
         child: Row(
           mainAxisSize: MainAxisSize.max,
+          //category button
           children: [
             Container(
-              width: 52,
+              width: controller.event.buttonWidth,
               height: 20,
               decoration: BoxDecoration(
                 color: hexStringToColor("#3E3E3E"),
                 borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: Color.fromARGB(255, 0, 221, 255)),
+                border: Border.all(
+                    color: hexStringToColor(controller.event.categoryColor)),
               ),
               child: Center(
                 child: Text(
                   controller.event.category,
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
                         fontFamily: 'Outfit',
-                        color: Color.fromARGB(255, 0, 221, 255),
-                        fontSize: 8,
+                        color: hexStringToColor(controller.event.categoryColor),
+                        fontSize: 9,
                         fontWeight: FontWeight.bold,
                       ),
                 ),
@@ -60,8 +59,10 @@ Widget contentUI(BuildContext context, EventController controller) {
           ],
         ),
       ),
+
+      //event title
       Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(4, 8, 4, 0),
+        padding: const EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -73,7 +74,7 @@ Widget contentUI(BuildContext context, EventController controller) {
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontFamily: 'Outfit',
                       color: Colors.white,
-                      fontSize: 17,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -81,8 +82,10 @@ Widget contentUI(BuildContext context, EventController controller) {
           ],
         ),
       ),
+
+      //event date
       Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(4, 8, 4, 0),
+        padding: const EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -92,15 +95,17 @@ Widget contentUI(BuildContext context, EventController controller) {
               style: Theme.of(context).textTheme.bodyText2?.copyWith(
                     fontFamily: 'Outfit',
                     color: hexStringToColor("#AAAAAA"),
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: FontWeight.normal,
                   ),
             ),
           ],
         ),
       ),
+
+      //event tag
       Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(4, 8, 4, 4),
+        padding: const EdgeInsetsDirectional.fromSTEB(5, 10, 5, 6),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -110,7 +115,7 @@ Widget contentUI(BuildContext context, EventController controller) {
               style: Theme.of(context).textTheme.bodyText2?.copyWith(
                     fontFamily: 'Outfit',
                     color: hexStringToColor("#AAAAAA"),
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: FontWeight.normal,
                   ),
             ),
@@ -139,7 +144,7 @@ Widget eventUI(BuildContext context, EventController controller,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(4),
+        padding: const EdgeInsetsDirectional.fromSTEB(6, 8, 6, 4),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,

@@ -19,10 +19,19 @@ class EventPage extends StatefulWidget {
 
 class EventPageState extends State<EventPage> {
   EventController controller1 = EventController(Event());
-  EventController controller2 = EventController(
-      Event(eventCategory: "Workshop", eventTag: "#career #intern"));
+  EventController controller2 = EventController(Event(
+      eventTitle: "LinkedIn Learning at HKUST",
+      eventCategory: "Workshop",
+      eventCategoryColor: workshopColor,
+      eventButtonWidth: workshopButtonWidth,
+      eventTag: "#career #intern"));
   EventController controller3 = EventController(Event(
-      eventCategory: "Competition", eventTag: "#engineering #sustainable"));
+      eventTitle:
+          "Chun Wo Innovation Student Awards Engineers for a Sustainable Tomorrow",
+      eventCategory: "Competition",
+      eventCategoryColor: competitionColor,
+      eventButtonWidth: competitionButtonWidth,
+      eventTag: "#engineering #sustainable"));
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +69,11 @@ class EventPageState extends State<EventPage> {
                       Column(
                         children: [
                           eventListView([
+                            eventUI(context, controller1, setState: setState)
+                          ]),
+                          eventListView([
                             eventUI(context, controller3, setState: setState)
-                          ])
+                          ]),
                         ],
                       ),
                     ],
@@ -74,13 +86,19 @@ class EventPageState extends State<EventPage> {
                           eventListView([
                             eventUI(context, controller1, setState: setState)
                           ]),
+                          eventListView([
+                            eventUI(context, controller2, setState: setState)
+                          ]),
                         ],
                       ),
                       Column(
                         children: [
                           eventListView([
-                            eventUI(context, controller2, setState: setState)
-                          ])
+                            eventUI(context, controller1, setState: setState)
+                          ]),
+                          eventListView([
+                            eventUI(context, controller3, setState: setState)
+                          ]),
                         ],
                       ),
                     ],
