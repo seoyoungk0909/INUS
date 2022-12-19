@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import '../controllers/event_controller.dart';
@@ -18,8 +16,8 @@ Widget eventListView(List<Widget> children) {
 //event photo
 Widget eventPhoto(BuildContext context, EventController controller) {
   return Container(
-    width: 197,
-    height: 130,
+    width: 180,
+    height: 120,
     decoration: BoxDecoration(
         color: hexStringToColor("#737373"),
         borderRadius: BorderRadius.circular(8)),
@@ -110,14 +108,18 @@ Widget contentUI(BuildContext context, EventController controller) {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              controller.event.tag,
-              style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                    fontFamily: 'Outfit',
-                    color: hexStringToColor("#AAAAAA"),
-                    fontSize: 12,
-                    fontWeight: FontWeight.normal,
-                  ),
+            Expanded(
+              child: Text(
+                controller.event.tag,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                      fontFamily: 'Outfit',
+                      color: hexStringToColor("#AAAAAA"),
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                    ),
+              ),
             ),
           ],
         ),
@@ -129,9 +131,9 @@ Widget contentUI(BuildContext context, EventController controller) {
 Widget eventUI(BuildContext context, EventController controller,
     {Function? setState}) {
   return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(16, 14, 16, 0),
+    padding: const EdgeInsetsDirectional.fromSTEB(8, 14, 6, 0),
     child: Container(
-      width: 210,
+      width: 176,
       decoration: BoxDecoration(
         color: hexStringToColor("#3E3E3E"),
         boxShadow: const [
