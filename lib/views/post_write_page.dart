@@ -19,7 +19,7 @@ class PostWritePage extends StatefulWidget {
 }
 
 class PostWritePageState extends State<PostWritePage> {
-  Future<void> uploadPost() async {
+  Future<void> uploadPost(String currentUserId) async {
     DocumentReference newPost =
         await FirebaseFirestore.instance.collection("post").add({
       'title': postTitle.text.trim(),
@@ -30,13 +30,14 @@ class PostWritePageState extends State<PostWritePage> {
       'commentCount': 0,
       'saveCount': 0,
       'comments': '',
-      'user': currentUser.uid,
+      'user': FirebaseFirestore.instance.doc('user_info/$currentUserId'),
     });
   }
 
   final TextEditingController postTitle = TextEditingController();
   final TextEditingController postContent = TextEditingController();
   final User currentUser = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,7 +135,7 @@ class PostWritePageState extends State<PostWritePage> {
                               ),
                               TextButton(
                                   onPressed: () {
-                                    uploadPost();
+                                    uploadPost(currentUser.uid);
                                     setState(() {});
                                     Navigator.pushNamed(
                                       context,
