@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class PostWritePage extends StatefulWidget {
   const PostWritePage({Key? key, required this.title}) : super(key: key);
@@ -15,8 +19,24 @@ class PostWritePage extends StatefulWidget {
 }
 
 class PostWritePageState extends State<PostWritePage> {
-  final TextEditingController title = TextEditingController();
-  final TextEditingController content = TextEditingController();
+  Future<void> uploadPost() async {
+    DocumentReference newPost =
+        await FirebaseFirestore.instance.collection("post").add({
+      'title': postTitle.text.trim(),
+      'content': postContent.text.trim(),
+      'catagory': '',
+      'time': Timestamp.now(),
+      'viewCount': 0,
+      'commentCount': 0,
+      'saveCount': 0,
+      'comments': '',
+      'user': currentUser.uid,
+    });
+  }
+
+  final TextEditingController postTitle = TextEditingController();
+  final TextEditingController postContent = TextEditingController();
+  final User currentUser = FirebaseAuth.instance.currentUser!;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +47,9 @@ class PostWritePageState extends State<PostWritePage> {
       body: Center(
         child: Column(
           children: [
+            SizedBox(
+              height: 30,
+            ),
             Text(
               "Category",
             ),
@@ -74,7 +97,7 @@ class PostWritePageState extends State<PostWritePage> {
             ),
             Text("Title"),
             TextField(
-                controller: title,
+                controller: postTitle,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Write Your Title Here",
@@ -84,10 +107,26 @@ class PostWritePageState extends State<PostWritePage> {
             ),
             Text("Content"),
             TextField(
-                controller: content,
+                controller: postContent,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Write Your Contents Here",
+                )),
+            SizedBox(
+              height: 50,
+            ),
+            SizedBox(
+                width: 350,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    uploadPost();
+                    setState(() {});
+                  },
+                  child: const Text(
+                    'Post',
+                    style: TextStyle(color: Colors.white, fontSize: 20.0),
+                  ),
                 )),
           ],
         ),
