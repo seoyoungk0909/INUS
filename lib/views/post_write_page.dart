@@ -120,8 +120,31 @@ class PostWritePageState extends State<PostWritePage> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    uploadPost();
-                    setState(() {});
+                    showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Create Post'),
+                            content: Text(
+                                "Are you sure you want to create this post?"),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text("No"),
+                              ),
+                              TextButton(
+                                  onPressed: () {
+                                    uploadPost();
+                                    setState(() {});
+                                    Navigator.pushNamed(
+                                      context,
+                                      '/',
+                                    );
+                                  },
+                                  child: Text("yes"))
+                            ],
+                          );
+                        });
                   },
                   child: const Text(
                     'Post',
