@@ -22,15 +22,11 @@ class EventPageState extends State<EventPage> {
   EventController controller2 = EventController(Event(
       eventTitle: "LinkedIn Learning at HKUST",
       eventCategory: "Workshop",
-      eventCategoryColor: workshopColor,
-      eventButtonWidth: workshopButtonWidth,
       eventTag: "#career #intern"));
   EventController controller3 = EventController(Event(
       eventTitle:
           "Chun Wo Innovation Student Awards Engineers for a Sustainable Tomorrow",
       eventCategory: "Competition",
-      eventCategoryColor: competitionColor,
-      eventButtonWidth: competitionButtonWidth,
       eventTag: "#engineering #sustainable"));
 
   @override

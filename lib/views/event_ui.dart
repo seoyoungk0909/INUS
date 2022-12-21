@@ -1,6 +1,27 @@
 import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import '../controllers/event_controller.dart';
+import 'package:intl/intl.dart';
+
+//determine color of category button, default color is mint (seminarColor)
+String buttonColor(String eventCategory) {
+  if (eventCategory == "Competition") {
+    return "#ef8632"; //orange
+  } else if (eventCategory == "Workshop") {
+    return "#4ca98f"; //green
+  }
+  return "#56bed2"; //mint
+}
+
+//determine width of category button, default as longest width (competition)
+double buttonWidth(String eventCategory) {
+  if (eventCategory == "Seminar") {
+    return 50;
+  } else if (eventCategory == "Workshop") {
+    return 58;
+  }
+  return 68;
+}
 
 Widget eventListView(List<Widget> children) {
   return SingleChildScrollView(
@@ -34,20 +55,22 @@ Widget contentUI(BuildContext context, EventController controller) {
           //category button
           children: [
             Container(
-              width: controller.event.buttonWidth,
+              width: buttonWidth(controller.event.category),
               height: 20,
               decoration: BoxDecoration(
                 color: hexStringToColor("#3E3E3E"),
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(
-                    color: hexStringToColor(controller.event.categoryColor)),
+                    color: hexStringToColor(
+                        buttonColor(controller.event.category))),
               ),
               child: Center(
                 child: Text(
                   controller.event.category,
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
                         fontFamily: 'Outfit',
-                        color: hexStringToColor(controller.event.categoryColor),
+                        color: hexStringToColor(
+                            buttonColor(controller.event.category)),
                         fontSize: 9,
                         fontWeight: FontWeight.bold,
                       ),
@@ -89,7 +112,7 @@ Widget contentUI(BuildContext context, EventController controller) {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              controller.event.date,
+              DateFormat('dd.MM.yyyy').format(controller.event.timestamp),
               style: Theme.of(context).textTheme.bodyText2?.copyWith(
                     fontFamily: 'Outfit',
                     color: hexStringToColor("#AAAAAA"),
