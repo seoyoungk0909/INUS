@@ -15,18 +15,80 @@ class PostWritePage extends StatefulWidget {
 }
 
 class PostWritePageState extends State<PostWritePage> {
+  final TextEditingController title = TextEditingController();
+  final TextEditingController content = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        centerTitle: false,
+        centerTitle: true,
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Hello World"),
+            Text(
+              "Category",
+            ),
+            Container(
+              height: 50,
+              child: ListView(
+                itemExtent: 150,
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 2, color: Colors.grey),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: const Center(
+                        child: Text(
+                      'Relationship',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    )),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 2, color: Colors.grey),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: const Center(
+                        child: Text(
+                      'Just Talk',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    )),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 2, color: Colors.grey),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: const Center(
+                        child: Text(
+                      'Academic',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    )),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text("Title"),
+            TextField(
+                controller: title,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Write Your Title Here",
+                )),
+            SizedBox(
+              height: 50,
+            ),
+            Text("Content"),
+            TextField(
+                controller: content,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Write Your Contents Here",
+                )),
           ],
         ),
       ),

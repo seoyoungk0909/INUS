@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
           'password_reset': (context) => const PasswordResetPage(),
           'verify': (context) => const VerifyPage(),
           'welcome': (context) => const WelcomePage(),
-          'post_write': (context) => const PostWritePage(title: 'New Post'),
+          'post_write': (context) => const PostWritePage(title: 'Create Post'),
           'post_detail': (context) => const PostDetailPage(title: 'Community'),
         },
       ),
