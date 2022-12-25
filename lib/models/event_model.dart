@@ -1,8 +1,14 @@
-const List EVENT_CATEGORY = ["Seminar", "Workshop", "Competition"];
+const List EVENT_CATEGORY = [
+  "Seminar",
+  "Workshop",
+  "Competition",
+  "Webinar",
+  "Party"
+];
 
 class Event {
-  String title = "The Inequality of Lifetime Pensions";
-  String category = "Seminar";
+  String title = "Tissue-engineering Integrated";
+  String category = "Event";
   String tag = "#environment #education";
   late DateTime timestamp;
 

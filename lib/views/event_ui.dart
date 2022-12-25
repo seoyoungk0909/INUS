@@ -3,24 +3,46 @@ import 'package:flutter/material.dart';
 import '../controllers/event_controller.dart';
 import 'package:intl/intl.dart';
 
-//determine color of category button, default color is mint (seminarColor)
+//determine color of category button, default color is blue
 String buttonColor(String eventCategory) {
-  if (eventCategory == "Competition") {
+  if (eventCategory == "Seminar" || eventCategory == "Webinar") {
+    return "#56bed2"; //mint
+  } else if (eventCategory == "Competition") {
     return "#ef8632"; //orange
   } else if (eventCategory == "Workshop") {
     return "#4ca98f"; //green
+  } else if (eventCategory == "Party") {
+    return "8d65f2"; //purple
   }
-  return "#56bed2"; //mint
+  return "#4ba7f8"; //blue
 }
 
-//determine width of category button, default as longest width (competition)
+//determine thumbnail image of events, default image is seminar
+String eventImage(String eventCategory) {
+  if (eventCategory == "Webinar") {
+    return 'assets/imgs/event_webinar.png';
+  } else if (eventCategory == "Workshop") {
+    return 'assets/imgs/event_workshop.png';
+  } else if (eventCategory == "Party") {
+    return 'assets/imgs/event_party.png';
+  }
+  return 'assets/imgs/event_seminar.png';
+}
+
+//determine width of category button, default as Event
 double buttonWidth(String eventCategory) {
   if (eventCategory == "Seminar") {
-    return 50;
+    return 56;
+  } else if (eventCategory == "Webinar") {
+    return 57;
   } else if (eventCategory == "Workshop") {
-    return 58;
+    return 67;
+  } else if (eventCategory == "Competition") {
+    return 79;
+  } else if (eventCategory == "Party") {
+    return 43;
   }
-  return 68;
+  return 42;
 }
 
 Widget eventListView(List<Widget> children) {
@@ -38,9 +60,12 @@ Widget eventListView(List<Widget> children) {
 Widget eventPhoto(BuildContext context, EventController controller) {
   return Container(
     width: 180,
-    height: 120,
+    height: 110,
     decoration: BoxDecoration(
-        color: hexStringToColor("#737373"),
+        image: DecorationImage(
+          image: AssetImage(eventImage(controller.event.category)),
+          fit: BoxFit.cover,
+        ),
         borderRadius: BorderRadius.circular(8)),
   );
 }
@@ -71,7 +96,7 @@ Widget contentUI(BuildContext context, EventController controller) {
                         fontFamily: 'Outfit',
                         color: hexStringToColor(
                             buttonColor(controller.event.category)),
-                        fontSize: 9,
+                        fontSize: 11,
                         fontWeight: FontWeight.bold,
                       ),
                 ),
@@ -95,8 +120,7 @@ Widget contentUI(BuildContext context, EventController controller) {
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontFamily: 'Outfit',
                       color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
               ),
             ),
@@ -154,7 +178,7 @@ Widget contentUI(BuildContext context, EventController controller) {
 Widget eventUI(BuildContext context, EventController controller,
     {Function? setState}) {
   return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(8, 14, 6, 0),
+    padding: const EdgeInsetsDirectional.fromSTEB(8, 12, 6, 0),
     child: Container(
       width: 176,
       decoration: BoxDecoration(
