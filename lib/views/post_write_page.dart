@@ -29,7 +29,7 @@ class PostWritePageState extends State<PostWritePage> {
       'viewCount': 0,
       'commentCount': 0,
       'saveCount': 0,
-      'comments': '',
+      'comments': [],
       'user': FirebaseFirestore.instance.doc('user_info/$currentUserId'),
     });
   }
