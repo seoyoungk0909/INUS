@@ -24,7 +24,7 @@ class PostWritePageState extends State<PostWritePage> {
         await FirebaseFirestore.instance.collection("post").add({
       'title': postTitle.text.trim(),
       'content': postContent.text.trim(),
-      'catagory': '',
+      'catagory': trueCategories,
       'time': Timestamp.now(),
       'viewCount': 0,
       'commentCount': 0,
@@ -44,6 +44,7 @@ class PostWritePageState extends State<PostWritePage> {
     'Academic': false,
     'Tips': false
   };
+  final List trueCategories = [];
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +86,7 @@ class PostWritePageState extends State<PostWritePage> {
                               fontSize: 15, color: Colors.white),
                         ),
                         onPressed: () {
+                          trueCategories.add(category);
                           setState(() {
                             categories[category] == true
                                 ? categories[category] = false
