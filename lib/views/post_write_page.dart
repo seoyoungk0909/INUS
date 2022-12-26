@@ -56,22 +56,25 @@ class PostWritePageState extends State<PostWritePage> {
         child: Column(
           children: [
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             Text(
               "Category",
+              style: TextStyle(fontSize: 25),
             ),
+            SizedBox(height: 20),
             Container(
               height: 50,
               child: ListView(
-                itemExtent: 150,
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(4.0),
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
                   for (var category in categories.keys)
                     Container(
                       decoration: BoxDecoration(
                           border: Border.all(
-                              width: 2,
+                              width: 1.5,
                               color: categories[category]!
                                   ? Colors.blue
                                   : Colors.grey),
@@ -79,7 +82,7 @@ class PostWritePageState extends State<PostWritePage> {
                       child: TextButton(
                         style: TextButton.styleFrom(
                           textStyle: const TextStyle(
-                              fontSize: 20, color: Colors.white),
+                              fontSize: 15, color: Colors.white),
                         ),
                         onPressed: () {
                           setState(() {
@@ -104,7 +107,10 @@ class PostWritePageState extends State<PostWritePage> {
             SizedBox(
               height: 20,
             ),
-            Text("Title"),
+            Text(
+              "Title",
+              style: TextStyle(fontSize: 25),
+            ),
             TextField(
                 controller: postTitle,
                 decoration: InputDecoration(
@@ -114,7 +120,10 @@ class PostWritePageState extends State<PostWritePage> {
             SizedBox(
               height: 50,
             ),
-            Text("Content"),
+            Text(
+              "Content",
+              style: TextStyle(fontSize: 25),
+            ),
             TextField(
                 controller: postContent,
                 decoration: InputDecoration(
