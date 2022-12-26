@@ -37,6 +37,13 @@ class PostWritePageState extends State<PostWritePage> {
   final TextEditingController postTitle = TextEditingController();
   final TextEditingController postContent = TextEditingController();
   final User currentUser = FirebaseAuth.instance.currentUser!;
+  Map<String, bool> categories = {
+    'Relationship': false,
+    '19+': false,
+    'Just Talk': false,
+    'Academic': false,
+    'Tips': false
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -60,36 +67,37 @@ class PostWritePageState extends State<PostWritePage> {
                 itemExtent: 150,
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: const Center(
+                  for (var category in categories.keys)
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 2,
+                              color: categories[category]!
+                                  ? Colors.blue
+                                  : Colors.grey),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: const TextStyle(
+                              fontSize: 20, color: Colors.white),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            categories[category] == true
+                                ? categories[category] = false
+                                : categories[category] = true;
+                          });
+                        },
                         child: Text(
-                      'Relationship',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    )),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: const Center(
-                        child: Text(
-                      'Just Talk',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    )),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: const Center(
-                        child: Text(
-                      'Academic',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    )),
-                  ),
+                          category,
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: categories[category]!
+                                  ? Colors.blue
+                                  : Colors.grey),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
