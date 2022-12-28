@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
@@ -23,14 +25,35 @@ class PostListPage extends StatefulWidget {
 }
 
 class _PostListPageState extends State<PostListPage> {
-  PostController controller1 = PostController(Post(
-    postWriter: User(userName: "John Doe", userSchool: School.HKUST),
-  ));
-  PostController controller2 = PostController(
-      Post(postWriter: User(userName: "Apple Seed", userSchool: School.CUHK)));
+  List<PostController> recentPostsControllers = [
+    PostController(Post(
+      postWriter: User(userName: "John Doe", userSchool: School.HKUST),
+    )),
+    PostController(Post(
+        postWriter: User(userName: "Apple Seed", userSchool: School.CUHK))),
+  ];
 
-  PostController controller3 = PostController(
-      Post(postWriter: User(userName: "Claire Eve", userSchool: School.HKU)));
+  List<PostController> popularPostsControllers = [
+    PostController(
+        Post(postWriter: User(userName: "Claire Eve", userSchool: School.HKU))),
+  ];
+
+  Future<void> refreshPosts({bool popular = false}) async {
+    // List<Post> posts = await Post.getPostsFromFirebase(popular: popular);
+    int randInt = Random().nextInt(20);
+    List<Post> posts = List.generate(randInt, (i) => Post());
+    List<PostController> _controllers = [];
+    for (Post post in posts) {
+      _controllers.add(PostController(post));
+    }
+    setState(() {
+      if (popular) {
+        popularPostsControllers = _controllers;
+      } else {
+        recentPostsControllers = _controllers;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,33 +66,53 @@ class _PostListPageState extends State<PostListPage> {
     return Scaffold(
       body: DefaultTabController(
         length: 2,
-        child: Scaffold(
-          body: Column(
-            children: [
-              Container(
-                color: Theme.of(context).primaryColor,
-                child: const TabBar(
-                  indicatorColor: Colors.white,
-                  tabs: [
-                    Tab(text: "Recent"),
-                    Tab(text: "Popular"),
-                  ],
-                ),
+        child: Column(
+          children: [
+            Container(
+              color: Theme.of(context).primaryColor,
+              child: const TabBar(
+                indicatorColor: Colors.white,
+                tabs: [
+                  Tab(text: "Recent"),
+                  Tab(text: "Popular"),
+                ],
               ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    postListView([
-                      postUI(context, controller1, setState: setState),
-                      postUI(context, controller2, setState: setState)
-                    ]),
-                    postListView(
-                        [postUI(context, controller3, setState: setState)]),
-                  ],
-                ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  RefreshIndicator(
+                    onRefresh: () async {
+                      refreshPosts(popular: false);
+                    },
+                    color: Theme.of(context).colorScheme.secondary,
+                    child: ListView.builder(
+                      // physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: recentPostsControllers.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return postUI(context, recentPostsControllers[index],
+                            setState: setState);
+                      },
+                    ),
+                  ),
+                  RefreshIndicator(
+                    onRefresh: () async {
+                      await refreshPosts(popular: true);
+                    },
+                    color: Theme.of(context).colorScheme.secondary,
+                    child: ListView.builder(
+                      // physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: popularPostsControllers.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return postUI(context, popularPostsControllers[index],
+                            setState: setState);
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
