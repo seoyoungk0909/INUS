@@ -2,6 +2,7 @@ import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import '../controllers/event_controller.dart';
 import 'package:intl/intl.dart';
+import '../views/event_detail_page.dart';
 
 //determine color of category button, default color is blue
 String buttonColor(String eventCategory) {
@@ -194,13 +195,23 @@ Widget eventUI(BuildContext context, EventController controller,
       ),
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(6, 8, 6, 4),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            eventPhoto(context, controller),
-            contentUI(context, controller),
-          ],
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (BuildContext context) {
+              return const EventDetailPage(
+                title: ' ',
+              );
+            }));
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              eventPhoto(context, controller),
+              contentUI(context, controller)
+            ],
+          ),
         ),
       ),
     ),
