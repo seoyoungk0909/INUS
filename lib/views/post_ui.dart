@@ -22,15 +22,16 @@ Widget viewCommentSave(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
+        //view
         Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
                 child: Icon(
-                  Icons.keyboard_double_arrow_up_rounded,
+                  Icons.remove_red_eye_outlined,
                   color: hexStringToColor(hexButtonColor),
                   size: 24,
                 ),
@@ -48,7 +49,7 @@ Widget viewCommentSave(
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(4, 0, 8, 0),
+                padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
                 child: Text(
                   controller.post.views.toString(),
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -62,8 +63,9 @@ Widget viewCommentSave(
             ],
           ),
         ),
+        //comment
         Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -76,7 +78,7 @@ Widget viewCommentSave(
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(4, 0, 8, 0),
+                padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
                 child: Text(
                   'Comment',
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -88,7 +90,7 @@ Widget viewCommentSave(
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(4, 0, 8, 0),
+                padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
                 child: Text(
                   controller.post.comments.length.toString(),
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -102,17 +104,18 @@ Widget viewCommentSave(
             ],
           ),
         ),
+        //save
         TextButton(
           style:
               TextButton.styleFrom(primary: hexStringToColor(hexButtonColor)),
           onPressed: () {},
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
                   child: Icon(
                     Icons.bookmark_border,
                     color: hexStringToColor(hexButtonColor),
@@ -120,7 +123,7 @@ Widget viewCommentSave(
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(4, 0, 8, 0),
+                  padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
                   child: Text(
                     'Save',
                     style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -280,14 +283,14 @@ Widget postUI(BuildContext context, PostController controller,
     child: Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: hexStringToColor("#3E3E3E"),
-        boxShadow: const [
-          BoxShadow(
-            blurRadius: 5,
-            color: Color(0x3416202A),
-            offset: Offset(0, 3),
-          )
-        ],
+        // color: hexStringToColor("#3E3E3E"),
+        // boxShadow: const [
+        //   BoxShadow(
+        //     blurRadius: 5,
+        //     color: Color(0x3416202A),
+        //     offset: Offset(0, 3),
+        //   )
+        // ],
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
@@ -304,14 +307,14 @@ Widget postUI(BuildContext context, PostController controller,
               },
               child: contentUI(context, controller),
             ),
+            viewCommentSave(context, "#AAAAAA", controller),
             const Divider(
               height: 8,
               thickness: 1,
               indent: 4,
               endIndent: 4,
-              color: Color(0xFFF1F4F8),
+              color: Color.fromARGB(255, 74, 74, 74),
             ),
-            viewCommentSave(context, "#AAAAAA", controller),
           ],
         ),
       ),
