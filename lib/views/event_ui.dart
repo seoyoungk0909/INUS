@@ -67,7 +67,7 @@ Widget eventPhoto(BuildContext context, EventController controller) {
           image: AssetImage(eventImage(controller.event.category)),
           fit: BoxFit.cover,
         ),
-        borderRadius: BorderRadius.circular(8)),
+        borderRadius: BorderRadius.circular(5)),
   );
 }
 
@@ -180,19 +180,8 @@ Widget eventUI(BuildContext context, EventController controller,
     {Function? setState}) {
   return Padding(
     padding: const EdgeInsetsDirectional.fromSTEB(8, 12, 6, 0),
-    child: Container(
+    child: SizedBox(
       width: 176,
-      decoration: BoxDecoration(
-        color: hexStringToColor("#3E3E3E"),
-        boxShadow: const [
-          BoxShadow(
-            blurRadius: 5,
-            color: Color(0x3416202A),
-            offset: Offset(0, 3),
-          )
-        ],
-        borderRadius: BorderRadius.circular(8),
-      ),
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(6, 8, 6, 4),
         child: GestureDetector(

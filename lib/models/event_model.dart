@@ -1,4 +1,5 @@
 const List EVENT_CATEGORY = [
+  "Event",
   "Seminar",
   "Workshop",
   "Competition",
