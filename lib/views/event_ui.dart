@@ -29,22 +29,6 @@ String eventImage(String eventCategory) {
   return 'assets/imgs/event_seminar.png';
 }
 
-//determine width of category button, default as Event
-double buttonWidth(String eventCategory) {
-  if (eventCategory == "Seminar") {
-    return 56;
-  } else if (eventCategory == "Webinar") {
-    return 57;
-  } else if (eventCategory == "Workshop") {
-    return 67;
-  } else if (eventCategory == "Competition") {
-    return 79;
-  } else if (eventCategory == "Party") {
-    return 43;
-  }
-  return 42;
-}
-
 Widget eventListView(List<Widget> children) {
   return SingleChildScrollView(
     child: Center(
@@ -75,23 +59,25 @@ Widget categoryButton(BuildContext context, EventController controller) {
   return Padding(
     padding: const EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
     child: Container(
-      width: buttonWidth(controller.event.category),
-      height: 20,
       decoration: BoxDecoration(
         color: hexStringToColor("#3E3E3E"),
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
             color: hexStringToColor(buttonColor(controller.event.category))),
       ),
-      child: Center(
-        child: Text(
-          controller.event.category,
-          style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                fontFamily: 'Outfit',
-                color: hexStringToColor(buttonColor(controller.event.category)),
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
+      child: Flexible(
+        child: Container(
+          padding: const EdgeInsetsDirectional.fromSTEB(8, 3, 8, 3),
+          child: Text(
+            controller.event.category,
+            style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                  fontFamily: 'Outfit',
+                  color:
+                      hexStringToColor(buttonColor(controller.event.category)),
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
         ),
       ),
     ),
