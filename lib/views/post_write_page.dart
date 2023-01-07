@@ -50,7 +50,10 @@ class PostWritePageState extends State<PostWritePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(
+          widget.title,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: Column(
@@ -59,72 +62,81 @@ class PostWritePageState extends State<PostWritePage> {
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
           ),
-          Text(
-            " Category",
-            style: TextStyle(fontSize: 25),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
+            child: Text(
+              " Category",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
           ),
           Container(
-            height: 50,
-            child: ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(4.0),
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                for (var category in categories.keys)
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 1.5,
-                            color: categories[category]!
-                                ? Colors.blue
-                                : Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        textStyle:
-                            const TextStyle(fontSize: 15, color: Colors.white),
-                      ),
-                      onPressed: () {
-                        trueCategories.add(category);
-                        setState(() {
-                          categories[category] == true
-                              ? categories[category] = false
-                              : categories[category] = true;
-                        });
-                      },
-                      child: Text(
-                        category,
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: categories[category]!
-                                ? Colors.blue
-                                : Colors.grey),
+            height: 45,
+            child: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
+              child: ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(4.0),
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  for (var category in categories.keys)
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 1.5,
+                              color: categories[category]!
+                                  ? Colors.blue
+                                  : Colors.white70),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: const TextStyle(
+                              fontSize: 15, color: Colors.white),
+                        ),
+                        onPressed: () {
+                          trueCategories.add(category);
+                          setState(() {
+                            categories[category] == true
+                                ? categories[category] = false
+                                : categories[category] = true;
+                          });
+                        },
+                        child: Text(
+                          category,
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: categories[category]!
+                                  ? Colors.blue
+                                  : Colors.white70),
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-          ),
-          Text(
-            " Title",
-            style: TextStyle(fontSize: 25),
+            padding: const EdgeInsetsDirectional.fromSTEB(15, 20, 0, 0),
+            child: Text(
+              " Title",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
           ),
           Center(
             child: SizedBox(
-              width: 370,
+              width: 350,
+              height: 48,
               child: TextField(
                   controller: postTitle,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: InputBorder.none,
+                    filled: true,
+                    fillColor: Colors.black,
                     hintText: "Write Your Title Here",
                   )),
             ),
@@ -132,22 +144,30 @@ class PostWritePageState extends State<PostWritePage> {
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
           ),
-          Text(
-            " Content",
-            style: TextStyle(fontSize: 25),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
+            child: Text(
+              " Content",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
           ),
           Center(
             child: SizedBox(
-              width: 370,
+              width: 350,
+              height: 247,
               child: TextField(
-                  controller: postContent,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Write Your Contents Here",
-                  )),
+                controller: postContent,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  filled: true,
+                  fillColor: Colors.black,
+                  hintText: "Write your contents Here",
+                ),
+                maxLines: 10,
+              ),
             ),
           ),
           Padding(
@@ -155,8 +175,8 @@ class PostWritePageState extends State<PostWritePage> {
           ),
           Center(
             child: SizedBox(
-                width: 370,
-                height: 50,
+                width: 350,
+                height: 55,
                 child: ElevatedButton(
                   onPressed: () {
                     showDialog<void>(
