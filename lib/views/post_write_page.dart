@@ -56,14 +56,16 @@ class PostWritePageState extends State<PostWritePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 20,
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
           ),
           Text(
             " Category",
             style: TextStyle(fontSize: 25),
           ),
-          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+          ),
           Container(
             height: 50,
             child: ListView(
@@ -106,14 +108,16 @@ class PostWritePageState extends State<PostWritePage> {
               ],
             ),
           ),
-          SizedBox(
-            height: 20,
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
           ),
           Text(
             " Title",
             style: TextStyle(fontSize: 25),
           ),
-          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+          ),
           Center(
             child: SizedBox(
               width: 370,
@@ -125,14 +129,16 @@ class PostWritePageState extends State<PostWritePage> {
                   )),
             ),
           ),
-          SizedBox(
-            height: 20,
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
           ),
           Text(
             " Content",
             style: TextStyle(fontSize: 25),
           ),
-          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+          ),
           Center(
             child: SizedBox(
               width: 370,
@@ -144,8 +150,8 @@ class PostWritePageState extends State<PostWritePage> {
                   )),
             ),
           ),
-          SizedBox(
-            height: 50,
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
           ),
           Center(
             child: SizedBox(
