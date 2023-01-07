@@ -73,10 +73,11 @@ Widget eventDetailPhoto(BuildContext context, EventController controller) {
   );
 }
 
-//category hashtag
-Widget categoryHashtag(BuildContext context, EventController controller) {
+//category hashtag each element
+Widget categoryHashtag(
+    BuildContext context, EventController controller, hashtag) {
   return Padding(
-    padding: const EdgeInsets.only(top: 14),
+    padding: const EdgeInsets.only(top: 14, right: 10),
     child: Expanded(
       child: Container(
         height: 22,
@@ -87,9 +88,20 @@ Widget categoryHashtag(BuildContext context, EventController controller) {
         child: Flexible(
             child: Container(
                 padding: const EdgeInsetsDirectional.fromSTEB(9, 5, 9, 0),
-                child: text(context, controller, controller.event.tag, 12))),
+                child: text(context, controller, hashtag, 12))),
       ),
     ),
+  );
+}
+
+//all of category hashtags in a row
+Widget categoryHashtagRow(BuildContext context, EventController controller) {
+  final hashtagArr = (controller.event.tag).split(' ');
+  return Row(
+    children: [
+      categoryHashtag(context, controller, hashtagArr[0]),
+      categoryHashtag(context, controller, hashtagArr[1]),
+    ],
   );
 }
 
@@ -263,6 +275,47 @@ Widget detailedView(BuildContext context, EventController controller) {
       ));
 }
 
+//register and save button
+Widget registerSave(BuildContext context, EventController controller) {
+  bool savedEvents = false;
+
+  return Padding(
+    padding: const EdgeInsets.only(top: 40),
+    child: Container(
+      width: double.infinity,
+      child: Stack(
+        children: [
+          ElevatedButton(
+            onPressed: () {},
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(hexStringToColor("#8d65f2")),
+                padding: MaterialStateProperty.all(
+                    const EdgeInsetsDirectional.fromSTEB(120, 13, 120, 13)),
+                textStyle: MaterialStateProperty.all(const TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Outfit',
+                  fontWeight: FontWeight.w600,
+                ))),
+            child: const Text('Register'),
+          ),
+          Positioned(
+            right: 0,
+            child: IconButton(
+              onPressed: () {},
+              icon: (savedEvents == false)
+                  ? const Icon(Icons.bookmark_border)
+                  : const Icon(Icons.bookmark),
+              color: hexStringToColor("#AAAAAA"),
+              iconSize: 37.0,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 Widget eventDetailUI(BuildContext context, EventController controller,
     {Function? setState}) {
   return ListView(
@@ -275,10 +328,11 @@ Widget eventDetailUI(BuildContext context, EventController controller,
           children: [
             categoryButton(context, controller),
             eventTitle(context, controller),
-            categoryHashtag(context, controller),
+            categoryHashtagRow(context, controller),
             quickView(context, controller),
             eventDescription(context, controller),
             detailedView(context, controller),
+            registerSave(context, controller)
           ],
         ),
       ),
