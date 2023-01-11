@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class PostWritePage extends StatefulWidget {
-  const PostWritePage({Key? key, required this.title}) : super(key: key);
+class EventWritePage extends StatefulWidget {
+  const EventWritePage({Key? key, required this.title}) : super(key: key);
 
   // This class is the configuration for the state. It holds the values (in this
   // case the title) provided by the parent (in this case the App widget) and
@@ -15,14 +15,14 @@ class PostWritePage extends StatefulWidget {
   final String title;
 
   @override
-  State<PostWritePage> createState() => PostWritePageState();
+  State<EventWritePage> createState() => EventWritePageState();
 }
 
-class PostWritePageState extends State<PostWritePage> {
+class EventWritePageState extends State<EventWritePage> {
   Future<void> uploadPost(String currentUserId) async {
     DocumentReference newPost =
         await FirebaseFirestore.instance.collection("post").add({
-      'title': postTitle.text.trim(),
+      'title': eventTitle.text.trim(),
       'content': postContent.text.trim(),
       'catagory': trueCategories,
       'time': Timestamp.now(),
@@ -34,13 +34,14 @@ class PostWritePageState extends State<PostWritePage> {
     });
   }
 
-  final TextEditingController postTitle = TextEditingController();
+  final TextEditingController eventTitle = TextEditingController();
   final TextEditingController postContent = TextEditingController();
   final User currentUser = FirebaseAuth.instance.currentUser!;
   Map<String, bool> categories = {
-    'Just Talk': true,
-    'Academic': false,
-    '19+': false,
+    'Party': true,
+    'Workshop': false,
+    'Seminar': false,
+    'Webinar': false,
   };
   String trueCategories = "";
 
@@ -127,33 +128,48 @@ class PostWritePageState extends State<PostWritePage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(15, 30, 0, 0),
-          ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
+            child: Text(
+              " Title",
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white70,
+                  fontWeight: FontWeight.bold),
+            ),
           ),
           Center(
             child: SizedBox(
-              width: 350,
-              height: 48,
+              width: 340,
+              height: 50,
               child: TextField(
-                  controller: postTitle,
+                  controller: eventTitle,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "Write your title here.",
-                    hintStyle: TextStyle(fontSize: 20.0, color: Colors.white24),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          width: 1, color: Colors.white24), //<-- SEE HERE
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    hintText: "Input event name",
+                    hintStyle: TextStyle(fontSize: 15.0, color: Colors.white10),
                   )),
             ),
           ),
-          const Divider(
-            color: Colors.white24,
-            height: 0,
-            thickness: 2,
-            indent: 20,
-            endIndent: 20,
-          ),
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
+            child: Row(children: [
+              Text(
+                " Title",
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white70,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                " (max. 1-2)",
+                style: TextStyle(fontSize: 16, color: Colors.white10),
+              ),
+            ]),
           ),
           Center(
             child: SizedBox(

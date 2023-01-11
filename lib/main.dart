@@ -1,3 +1,4 @@
+import 'package:aus/views/Event_write_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,8 @@ class MyApp extends StatelessWidget {
           'verify': (context) => const VerifyPage(),
           'welcome': (context) => const WelcomePage(),
           'post_write': (context) => const PostWritePage(title: 'Create Post'),
+          'event_write': (context) =>
+              const EventWritePage(title: 'Create Event'),
           'post_detail': (context) => const PostDetailPage(title: 'Community'),
         },
       ),

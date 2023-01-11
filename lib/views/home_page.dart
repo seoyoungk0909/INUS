@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'posting_page.dart';
 import 'event_page.dart';
 import 'profile_page.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -63,10 +64,23 @@ class HomePageState extends State<HomePage> {
           });
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, 'post_write'),
-        child: const Icon(Icons.add),
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.add_event,
+        children: [
+          SpeedDialChild(
+              child: Icon(Icons.save),
+              label: "Create Post",
+              onTap: () => Navigator.pushNamed(context, 'post_write')),
+          SpeedDialChild(
+              child: Icon(Icons.event),
+              label: "Create Event",
+              onTap: () => Navigator.pushNamed(context, 'event_write')),
+        ],
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () => Navigator.pushNamed(context, 'post_write'),
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }
