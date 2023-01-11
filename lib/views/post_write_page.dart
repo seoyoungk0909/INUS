@@ -38,11 +38,9 @@ class PostWritePageState extends State<PostWritePage> {
   final TextEditingController postContent = TextEditingController();
   final User currentUser = FirebaseAuth.instance.currentUser!;
   Map<String, bool> categories = {
-    'Relationship': false,
-    '19+': false,
-    'Just Talk': false,
+    'Just Talk': true,
     'Academic': false,
-    'Tips': false
+    '19+': false,
   };
   String trueCategories = "";
 
@@ -60,67 +58,76 @@ class PostWritePageState extends State<PostWritePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-          ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
             child: Text(
               " Category",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white70,
+                  fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-          ),
           Container(
-            height: 45,
+            height: 55,
             child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
               child: ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(4.0),
+                shrinkWrap: false,
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
                   for (var category in categories.keys)
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 1.5,
-                              color: categories[category]!
-                                  ? Colors.blue
-                                  : Colors.white70),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          textStyle: const TextStyle(
-                              fontSize: 15, color: Colors.white),
-                        ),
-                        onPressed: () {
-                          for (var reset in categories.keys) {
-                            categories[reset] = false;
-                          }
-                          setState(() {
-                            categories[category] == true
-                                ? categories[category] = false
-                                : categories[category] = true;
-                          });
-                        },
-                        child: Text(
-                          category,
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: categories[category]!
-                                  ? Colors.blue
-                                  : Colors.white70),
+                    Row(children: <Widget>[
+                      Container(
+                        width: 100,
+                        height: 35,
+                        decoration: BoxDecoration(
+                            color: categories[category]!
+                                ? Colors.white10
+                                : Colors.transparent,
+                            border: Border.all(
+                                width: 0.5,
+                                color: categories[category]!
+                                    ? Colors.white10
+                                    : Colors.white70),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            textStyle: const TextStyle(
+                                fontSize: 15, color: Colors.white),
+                          ),
+                          onPressed: () {
+                            for (var reset in categories.keys) {
+                              categories[reset] = false;
+                            }
+                            setState(() {
+                              categories[category] == true
+                                  ? categories[category] = false
+                                  : categories[category] = true;
+                            });
+                          },
+                          child: Text(
+                            category,
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: categories[category]!
+                                    ? FontWeight.w500
+                                    : FontWeight.normal,
+                                color: categories[category]!
+                                    ? Color(0xff57AD9E)
+                                    : Colors.white70),
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(
+                        width: 10,
+                      )
+                    ]),
                 ],
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(15, 20, 0, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(15, 30, 0, 0),
             child: Text(
               " Title",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
