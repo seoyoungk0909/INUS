@@ -1,8 +1,11 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 import '../controllers/event_controller.dart';
 import '../models/event_model.dart';
 import 'package:aus/utils/color_utils.dart';
 import '../views/event_ui.dart';
+import 'package:intl/intl.dart';
 
 class EventDetailPage extends StatefulWidget {
   const EventDetailPage({Key? key, required this.title}) : super(key: key);
@@ -135,7 +138,11 @@ Widget quickView(BuildContext context, EventController controller) {
                                   child: text(context, controller, 'Date', 14,
                                       textColor: '#AAAAAA'),
                                 ),
-                                text(context, controller, controller.event.date,
+                                text(
+                                    context,
+                                    controller,
+                                    DateFormat('dd MMM y')
+                                        .format(controller.event.uploadTime),
                                     15,
                                     bold: true),
                               ],
@@ -150,8 +157,12 @@ Widget quickView(BuildContext context, EventController controller) {
                                     child: text(context, controller, 'Time', 14,
                                         textColor: '#AAAAAA'),
                                   ),
-                                  text(context, controller,
-                                      controller.event.time, 15,
+                                  text(
+                                      context,
+                                      controller,
+                                      DateFormat('Hm')
+                                          .format(controller.event.uploadTime),
+                                      15,
                                       bold: true),
                                 ],
                               ),
@@ -212,7 +223,11 @@ Widget detailedView(BuildContext context, EventController controller) {
                                 child: text(context, controller, 'Date', 14,
                                     textColor: '#AAAAAA'),
                               ),
-                              text(context, controller, controller.event.date,
+                              text(
+                                  context,
+                                  controller,
+                                  DateFormat('dd MMM y')
+                                      .format(controller.event.uploadTime),
                                   15,
                                   bold: true),
                             ],
@@ -228,7 +243,11 @@ Widget detailedView(BuildContext context, EventController controller) {
                                 child: text(context, controller, 'Time', 14,
                                     textColor: '#AAAAAA'),
                               ),
-                              text(context, controller, controller.event.time,
+                              text(
+                                  context,
+                                  controller,
+                                  DateFormat('Hm')
+                                      .format(controller.event.uploadTime),
                                   15,
                                   bold: true),
                             ],

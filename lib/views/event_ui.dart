@@ -117,7 +117,7 @@ Widget eventDate(BuildContext context, EventController controller) {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          DateFormat('dd.MM.yyyy').format(controller.event.timestamp),
+          DateFormat('dd.MM.yyyy').format(controller.event.uploadTime),
           style: Theme.of(context).textTheme.bodyText2?.copyWith(
                 fontFamily: 'Outfit',
                 color: hexStringToColor("#AAAAAA"),
