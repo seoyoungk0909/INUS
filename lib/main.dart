@@ -1,4 +1,4 @@
-import 'package:aus/views/Event_write_page.dart';
+import 'package:aus/views/event_write_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
