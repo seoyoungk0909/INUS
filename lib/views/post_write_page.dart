@@ -96,7 +96,9 @@ class PostWritePageState extends State<PostWritePage> {
                               fontSize: 15, color: Colors.white),
                         ),
                         onPressed: () {
-                          trueCategories.add(category);
+                          for (var reset in categories.keys) {
+                            categories[reset] = false;
+                          }
                           setState(() {
                             categories[category] == true
                                 ? categories[category] = false
@@ -193,6 +195,12 @@ class PostWritePageState extends State<PostWritePage> {
                               ),
                               TextButton(
                                   onPressed: () {
+                                    for (var category in categories.keys) {
+                                      categories[category] == true
+                                          ? trueCategories
+                                              .add(categories[category])
+                                          : {};
+                                    }
                                     uploadPost(currentUser.uid);
                                     setState(() {});
                                     Navigator.pushNamed(
