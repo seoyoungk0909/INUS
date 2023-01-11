@@ -66,7 +66,10 @@ class MyApp extends StatelessWidget {
           'welcome': (context) => const WelcomePage(),
           'post_write': (context) => const PostWritePage(title: 'New Post'),
           'post_detail': (context) => const PostDetailPage(title: 'Community'),
-          'event_detail': (context) => const EventDetailPage(title: 'Events')
+          'event_detail': (context) => const EventDetailPage(
+                title: 'Events',
+                savedEvent: false,
+              )
         },
       ),
     );
