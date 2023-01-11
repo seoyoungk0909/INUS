@@ -128,10 +128,6 @@ class PostWritePageState extends State<PostWritePage> {
           ),
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(15, 30, 0, 0),
-            child: Text(
-              " Title",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
           ),
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
@@ -144,21 +140,17 @@ class PostWritePageState extends State<PostWritePage> {
                   controller: postTitle,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    filled: true,
-                    fillColor: Colors.black,
-                    hintText: "Write Your Title Here",
+                    hintText: "Write your title here.",
+                    hintStyle: TextStyle(fontSize: 20.0, color: Colors.white10),
                   )),
             ),
           ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-          ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
-            child: Text(
-              " Content",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
+          const Divider(
+            color: Colors.white10,
+            height: 0,
+            thickness: 2,
+            indent: 20,
+            endIndent: 20,
           ),
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
@@ -171,9 +163,8 @@ class PostWritePageState extends State<PostWritePage> {
                 controller: postContent,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  filled: true,
-                  fillColor: Colors.black,
-                  hintText: "Write your contents Here",
+                  hintText: "Write your contents here.",
+                  hintStyle: TextStyle(fontSize: 16.0, color: Colors.white10),
                 ),
                 maxLines: 10,
               ),
