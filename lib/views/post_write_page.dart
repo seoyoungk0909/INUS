@@ -44,7 +44,7 @@ class PostWritePageState extends State<PostWritePage> {
     'Academic': false,
     'Tips': false
   };
-  final List trueCategories = [];
+  String trueCategories = "";
 
   @override
   Widget build(BuildContext context) {
@@ -197,8 +197,7 @@ class PostWritePageState extends State<PostWritePage> {
                                   onPressed: () {
                                     for (var category in categories.keys) {
                                       categories[category] == true
-                                          ? trueCategories
-                                              .add(categories[category])
+                                          ? trueCategories = category
                                           : {};
                                     }
                                     uploadPost(currentUser.uid);
