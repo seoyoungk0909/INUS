@@ -18,11 +18,28 @@ class EventPage extends StatefulWidget {
   State<EventPage> createState() => EventPageState();
 }
 
+List organiseEventColumn(List eventList) {
+  List organisedColumn = [];
+  List evenColumn = [];
+  List oddColumn = [];
+  for (int i = 0; i < eventList.length; i++) {
+    if (eventList[i] != null && i % 2 == 0) {
+      evenColumn.add(eventList[i]);
+    } else if (eventList[i] != null && i % 2 == 1) {
+      oddColumn.add(eventList[i]);
+    }
+  }
+  organisedColumn.add(evenColumn);
+  organisedColumn.add(oddColumn);
+  return organisedColumn;
+}
+
 class EventPageState extends State<EventPage> {
   List<EventController> formalEventsControllers = [
     EventController(Event(eventCategory: "Webinar")),
     EventController(Event(eventCategory: "Workshop")),
     EventController(Event(eventCategory: "Seminar")),
+    // EventController(Event(eventCategory: "Party")),
   ];
 
   List<EventController> casualEventsControllers = [
@@ -72,23 +89,27 @@ class EventPageState extends State<EventPage> {
                 },
                 color: Theme.of(context).colorScheme.secondary,
                 child: ListView.builder(
-                    itemCount: formalEventsControllers.length,
+                    itemCount: ((formalEventsControllers.length) ~/ 2),
                     itemBuilder: (BuildContext context, int index) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Column(
                             children: [
-                              // if (index % 2 == 0)
-                              eventUI(context, formalEventsControllers[index],
+                              eventUI(
+                                  context,
+                                  (organiseEventColumn(
+                                      formalEventsControllers))[0][index],
                                   setState: setState)
                             ],
                           ),
                           Column(
                             children: [
-                              // if (index % 2 != 0)
-                              eventUI(context, formalEventsControllers[index],
-                                  setState: setState)
+                              eventUI(
+                                  context,
+                                  (organiseEventColumn(
+                                      formalEventsControllers))[1][index],
+                                  setState: setState),
                             ],
                           ),
                         ],
@@ -100,21 +121,27 @@ class EventPageState extends State<EventPage> {
                 },
                 color: Theme.of(context).colorScheme.secondary,
                 child: ListView.builder(
-                    itemCount: casualEventsControllers.length,
+                    itemCount: ((casualEventsControllers.length) ~/ 2),
                     itemBuilder: (BuildContext context, int index) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Column(
                             children: [
-                              eventUI(context, casualEventsControllers[index],
-                                  setState: setState)
+                              eventUI(
+                                  context,
+                                  (organiseEventColumn(
+                                      casualEventsControllers))[0][index],
+                                  setState: setState),
                             ],
                           ),
                           Column(
                             children: [
-                              eventUI(context, casualEventsControllers[index],
-                                  setState: setState)
+                              eventUI(
+                                  context,
+                                  (organiseEventColumn(
+                                      casualEventsControllers))[1][index],
+                                  setState: setState),
                             ],
                           ),
                         ],
