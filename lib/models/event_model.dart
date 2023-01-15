@@ -21,6 +21,7 @@ class Event {
   late DateTime eventTime;
   late DateTime uploadTime;
   bool formal = false;
+  bool save = false;
   DocumentReference<Map<String, dynamic>>? firebaseDocRef;
 
   Event({
@@ -33,6 +34,7 @@ class Event {
     DateTime? eventHeldTime,
     DateTime? eventUploadTime,
     bool? eventFormality,
+    bool? savedEvent,
     DocumentReference<Map<String, dynamic>>? docRef,
   }) {
     title = eventTitle ?? title;
@@ -44,6 +46,7 @@ class Event {
     uploadTime = eventUploadTime ?? DateTime.now();
     eventTime = eventHeldTime ?? DateTime.now();
     formal = eventFormality ?? formal;
+    save = savedEvent ?? save;
     firebaseDocRef = docRef;
   }
 
@@ -62,6 +65,7 @@ class Event {
         eventUploadTime: (eventData.get('timestamp') as Timestamp).toDate(),
         eventHeldTime: (eventData.get('timestamp') as Timestamp).toDate(),
         eventFormality: (eventData.get('formal')),
+        savedEvent: (eventData.get('save')),
         docRef: firebaseDoc);
   }
 

@@ -8,9 +8,7 @@ import '../views/event_ui.dart';
 import 'package:intl/intl.dart';
 
 class EventDetailPage extends StatefulWidget {
-  const EventDetailPage(
-      {Key? key, required this.title, required this.savedEvent})
-      : super(key: key);
+  const EventDetailPage({Key? key, required this.title}) : super(key: key);
 
   // This class is the configuration for the state. It holds the values (in this
   // case the title) provided by the parent (in this case the App widget) and
@@ -18,15 +16,12 @@ class EventDetailPage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-  final bool savedEvent;
 
   @override
   State<EventDetailPage> createState() => EventDetailPageState();
 }
 
 class EventDetailPageState extends State<EventDetailPage> {
-  bool savedEvent = false;
-
   @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
@@ -76,10 +71,10 @@ class EventDetailPageState extends State<EventDetailPage> {
                         child: IconButton(
                           onPressed: () => {
                             setState(() {
-                              savedEvent = !savedEvent;
+                              controller.changeSave();
                             })
                           },
-                          icon: (savedEvent == false)
+                          icon: (controller.event.save == false)
                               ? const Icon(Icons.bookmark_border)
                               : const Icon(Icons.bookmark),
                           color: hexStringToColor("#AAAAAA"),
