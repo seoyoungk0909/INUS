@@ -1,3 +1,4 @@
+import 'package:aus/views/comment_box.dart';
 import 'package:flutter/material.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
@@ -27,20 +28,25 @@ class PostDetailPageState extends State<PostDetailPage> {
         title: Text(widget.title),
         centerTitle: false,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(controller.post.text),
-            Row(
+      body: Column(
+        children: [
+          Expanded(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("views • "),
-                Text(controller.post.views.toString()),
+                Text(controller.post.text),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("views • "),
+                    Text(controller.post.views.toString()),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+          CommentBox(),
+        ],
       ),
     );
   }
