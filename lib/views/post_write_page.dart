@@ -178,6 +178,9 @@ class PostWritePageState extends State<PostWritePage> {
                 width: 350,
                 height: 55,
                 child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.white60),
+                  ),
                   onPressed: () {
                     showDialog<void>(
                         context: context,

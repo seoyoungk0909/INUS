@@ -19,19 +19,62 @@ class EventWritePage extends StatefulWidget {
 }
 
 class EventWritePageState extends State<EventWritePage> {
-  Future<void> uploadPost(String currentUserId) async {
-    DocumentReference newPost =
-        await FirebaseFirestore.instance.collection("post").add({
+  Future<void> uploadEvent(String currentUserId) async {
+    DocumentReference newEvent =
+        await FirebaseFirestore.instance.collection("event").add({
       'title': eventTitle.text.trim(),
-      'content': postContent.text.trim(),
+      'tag': tags.text.trim(),
+      'time': [getDate(), getTime()],
+      'language': trueLanguages,
       'catagory': trueCategories,
-      'time': Timestamp.now(),
+      'location': eventLocation.text.trim(),
+      'registration link': eventRegistrationLink.text.trim(),
+      'event detail': eventDetail.text.trim(),
       'viewCount': 0,
-      'commentCount': 0,
       'saveCount': 0,
       'comments': [],
       'user': FirebaseFirestore.instance.doc('user_info/$currentUserId'),
     });
+  }
+
+  DateTime? _selectedDate;
+  String? _selectedTime;
+
+  String getDate() {
+    if (_selectedDate == null) {
+      return 'DD/MM/YYYY';
+    } else {
+      return DateFormat('dd-MM-yyyy').format(_selectedDate!);
+    }
+  }
+
+  String getTime() {
+    if (_selectedTime == null) {
+      return '--:--AM';
+    } else {
+      return '$_selectedTime';
+    }
+  }
+
+  Future _pickDateDialog(BuildContext context) async {
+    final initialDate = DateTime.now();
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(DateTime.now().year - 3),
+      lastDate: DateTime(DateTime.now().year + 3),
+    );
+    if (pickedDate == null) return;
+    setState(() => _selectedDate = pickedDate);
+  }
+
+  Future _pickTimeDialog(BuildContext context) async {
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (pickedTime == null) return;
+    setState(() => _selectedTime = pickedTime.format(context));
   }
 
   final TextEditingController eventTitle = TextEditingController();
@@ -205,7 +248,7 @@ class EventWritePageState extends State<EventWritePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
+                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
                 child: Text(
                   " Date and Time",
                   style: TextStyle(
@@ -214,9 +257,45 @@ class EventWritePageState extends State<EventWritePage> {
                       fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(25, 20, 0, 0),
+                  child: Row(children: <Widget>[
+                    SizedBox(
+                        width: 140,
+                        height: 50,
+                        child: OutlinedButton(
+                            child: Text(getDate(),
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.white10)),
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(5.0))),
+                            ),
+                            onPressed: () {
+                              _pickDateDialog(context);
+                            })),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                        width: 140,
+                        height: 50,
+                        child: OutlinedButton(
+                            child: Text(getTime(),
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.white10)),
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(5.0))),
+                            ),
+                            onPressed: () {
+                              _pickTimeDialog(context);
+                            }))
+                  ])),
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
                 child: Text(
@@ -372,12 +451,16 @@ class EventWritePageState extends State<EventWritePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                 child: Center(
                   child: SizedBox(
                       width: 350,
-                      height: 55,
+                      height: 46,
                       child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.white60),
+                        ),
                         onPressed: () {
                           showDialog<void>(
                               context: context,
@@ -398,7 +481,13 @@ class EventWritePageState extends State<EventWritePage> {
                                                 ? trueLanguages.add(language)
                                                 : {};
                                           }
-
+                                          for (var category
+                                              in categories.keys) {
+                                            categories[category] == true
+                                                ? trueCategories = category
+                                                : {};
+                                          }
+                                          uploadEvent(currentUser.uid);
                                           setState(() {});
                                           Navigator.pushNamedAndRemoveUntil(
                                               context, '/', (route) => false);
