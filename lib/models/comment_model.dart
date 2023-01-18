@@ -6,6 +6,7 @@ const List commentWriter = ["Anonymous", "Writer"];
 class Comment {
   bool writerFlag = false;
   String writer = "Anonymous";
+  // User writer = User();
   String body = "Wow that is amazing!";
   late DateTime time;
   DocumentReference<Map<String, dynamic>>? commentReference;
@@ -29,9 +30,7 @@ class Comment {
     User commentWriter = await User.fromUserRef(commentData['writer']);
 
     return Comment(
-      isPostWriter: commentData.get('writerFlag') == true
-          ? true
-          : false, // TODO: check writer
+      isPostWriter: commentData.get('writerFlag'),
       commentWriter:
           commentData.get('writerFlag') == true ? "Writer" : "Anonymous",
       content: commentData.get('body'),
