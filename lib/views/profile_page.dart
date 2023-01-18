@@ -1,6 +1,7 @@
-import 'package:aus/views/post_ui.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fbauth;
 import 'package:flutter/material.dart';
 
+import 'post_ui.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
 import '../models/user_model.dart';
@@ -32,19 +33,28 @@ class ProfilePageState extends State<ProfilePage> {
   Widget userGreetings() {
     return Column(
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(20, 30, 20, 20),
-            child: Text(
-              "Welcome, ${currentUser.name}",
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(20, 30, 20, 20),
+              child: Text(
+                "Welcome, ${currentUser.name}",
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
+            TextButton(
+                onPressed: () {
+                  fbauth.FirebaseAuth.instance.signOut();
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, 'login', (route) => false);
+                },
+                child: const Text("sign out")),
+          ],
         ),
         Align(
           alignment: Alignment.centerLeft,
