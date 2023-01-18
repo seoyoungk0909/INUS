@@ -38,7 +38,7 @@ class Post {
     firebaseDocRef = docRef;
   }
 
-  String getWriterSchool() => writer.school.toString().split('.').last;
+  String getWriterSchool() => writer.getSchool();
 
   // factory for posts
   static Future<Post> fromDocRef(
