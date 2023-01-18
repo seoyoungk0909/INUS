@@ -29,8 +29,11 @@ class Post {
     timestamp = time ?? DateTime.now();
     views = postViews ?? views;
     // comments = commentList ?? comments;
-    for (Comment comment in commentList!) {
-      comments.add(comment);
+
+    if (commentList != null && commentList.isNotEmpty) {
+      for (Comment comment in commentList) {
+        comments.add(comment);
+      }
     }
     firebaseDocRef = docRef;
   }
