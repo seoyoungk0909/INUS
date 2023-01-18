@@ -1,9 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fbauth;
 import 'package:flutter/material.dart';
+
+import 'post_ui.dart';
+import '../controllers/post_controller.dart';
+import '../models/post_model.dart';
+import '../models/user_model.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key, required this.title}) : super(key: key);
-
   // This class is the configuration for the state. It holds the values (in this
   // case the title) provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
@@ -16,21 +20,87 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+  User currentUser = User(userName: "red bird", userSchool: School.HKU);
+  PostController controller1 = PostController(Post(
+    postWriter: User(userName: "John Doe", userSchool: School.HKUST),
+  ));
+  PostController controller2 = PostController(
+      Post(postWriter: User(userName: "Apple Seed", userSchool: School.CUHK)));
+
+  PostController controller3 = PostController(
+      Post(postWriter: User(userName: "Claire Eve", userSchool: School.HKU)));
+
+  Widget userGreetings() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(widget.title),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(20, 30, 20, 20),
+              child: Text(
+                "Welcome, ${currentUser.name}",
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             TextButton(
                 onPressed: () {
-                  FirebaseAuth.instance.signOut();
+                  fbauth.FirebaseAuth.instance.signOut();
                   Navigator.pushNamedAndRemoveUntil(
                       context, 'login', (route) => false);
                 },
-                child: const Text("sign out"))
+                child: const Text("sign out")),
+          ],
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+            child: Text(
+              currentUser.getSchool(),
+              style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w100,
+                  color: Colors.grey),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).primaryColor,
+        body: Column(
+          children: [
+            userGreetings(),
+            TabBar(
+              indicatorColor: Colors.white,
+              tabs: [
+                Tab(text: "My Post"),
+                Tab(text: "Saved"),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  postListView([
+                    postUI(context, controller1, setState: setState),
+                    postUI(context, controller2, setState: setState)
+                  ]),
+                  postListView(
+                      [postUI(context, controller3, setState: setState)]),
+                ],
+              ),
+            ),
           ],
         ),
       ),
