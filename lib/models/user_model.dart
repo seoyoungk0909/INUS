@@ -58,6 +58,7 @@ class User {
       userName: userData.get('name'),
       userSchool: string2School(userData.get('school')),
       userID: userRef.id,
+      userRef: userRef,
     );
   }
 }
