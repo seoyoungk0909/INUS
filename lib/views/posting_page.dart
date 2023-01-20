@@ -1,4 +1,5 @@
 import 'package:aus/models/comment_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
@@ -24,6 +25,7 @@ class PostListPage extends StatefulWidget {
 }
 
 class _PostListPageState extends State<PostListPage> {
+  // TODO: get rid of these controllers and update the refresh part
   List<PostController> recentPostsControllers = [
     PostController(Post(
       postWriter: User(userName: "John Doe", userSchool: School.HKUST),
@@ -83,12 +85,32 @@ class _PostListPageState extends State<PostListPage> {
                       refreshPosts(popular: false);
                     },
                     color: Theme.of(context).colorScheme.secondary,
-                    child: ListView.builder(
-                      // physics: const AlwaysScrollableScrollPhysics(),
-                      itemCount: recentPostsControllers.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return postUI(context, recentPostsControllers[index],
-                            setState: setState);
+                    child: StreamBuilder(
+                      stream: Post.getPostsQuery(popular: false).snapshots(),
+                      builder: (context,
+                          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                              snap) {
+                        if (snap.data == null) {
+                          return const CircularProgressIndicator();
+                        }
+                        return ListView.builder(
+                          // physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: snap.data!.size,
+                          itemBuilder: (BuildContext context, int i) {
+                            return FutureBuilder<Post>(
+                              future: Post.fromDocRef(
+                                  firebaseSnap: snap.data!.docs[i]),
+                              builder: (context, snapshot) {
+                                if (snapshot.data == null) {
+                                  return const Center();
+                                }
+                                return postUI(
+                                    context, PostController(snapshot.data!),
+                                    setState: setState);
+                              },
+                            );
+                          },
+                        );
                       },
                     ),
                   ),
@@ -97,12 +119,32 @@ class _PostListPageState extends State<PostListPage> {
                       await refreshPosts(popular: true);
                     },
                     color: Theme.of(context).colorScheme.secondary,
-                    child: ListView.builder(
-                      // physics: const AlwaysScrollableScrollPhysics(),
-                      itemCount: popularPostsControllers.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return postUI(context, popularPostsControllers[index],
-                            setState: setState);
+                    child: StreamBuilder(
+                      stream: Post.getPostsQuery(popular: true).snapshots(),
+                      builder: (context,
+                          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                              snap) {
+                        if (snap.data == null) {
+                          return const CircularProgressIndicator();
+                        }
+                        return ListView.builder(
+                          // physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: snap.data!.size,
+                          itemBuilder: (BuildContext context, int i) {
+                            return FutureBuilder<Post>(
+                              future: Post.fromDocRef(
+                                  firebaseSnap: snap.data!.docs[i]),
+                              builder: (context, snapshot) {
+                                if (snapshot.data == null) {
+                                  return const Center();
+                                }
+                                return postUI(
+                                    context, PostController(snapshot.data!),
+                                    setState: setState);
+                              },
+                            );
+                          },
+                        );
                       },
                     ),
                   ),

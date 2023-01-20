@@ -42,8 +42,18 @@ class Post {
 
   // factory for posts
   static Future<Post> fromDocRef(
-      DocumentReference<Map<String, dynamic>> firebaseDoc) async {
-    DocumentSnapshot<Map<String, dynamic>> postData = await firebaseDoc.get();
+      {DocumentReference<Map<String, dynamic>>? firebaseDoc,
+      QueryDocumentSnapshot<Map<String, dynamic>>? firebaseSnap}) async {
+    DocumentSnapshot<Map<String, dynamic>> postData;
+
+    if (firebaseSnap == null) {
+      assert(firebaseDoc != null);
+      postData = await firebaseDoc!.get();
+    } else {
+      postData = firebaseSnap;
+      firebaseDoc ??= postData.reference;
+    }
+
     List commentList = postData.get('comments') as List;
     List<Comment> comments = [];
     if (commentList.isNotEmpty) {
@@ -65,9 +75,21 @@ class Post {
   // factory for list of posts
   static Future<List<Post>> getPostsFromFirebase({bool popular = false}) async {
     List<Post> posts = [];
+    Query<Map<String, dynamic>> firebaseQuery = getPostsQuery(popular: popular);
+
+    QuerySnapshot<Map<String, dynamic>> firebasePosts =
+        await firebaseQuery.get(const GetOptions(source: Source.cache));
+
+    for (QueryDocumentSnapshot<Map<String, dynamic>> fbPost
+        in firebasePosts.docs) {
+      posts.add(await Post.fromDocRef(firebaseDoc: fbPost.reference));
+    }
+    return posts;
+  }
+
+  static Query<Map<String, dynamic>> getPostsQuery({bool popular = false}) {
     CollectionReference<Map<String, dynamic>> postCollection =
         FirebaseFirestore.instance.collection('post');
-
     Query<Map<String, dynamic>> firebaseQuery;
     if (popular) {
       firebaseQuery = postCollection
@@ -78,14 +100,6 @@ class Post {
       firebaseQuery =
           postCollection.orderBy('time', descending: true).limit(20);
     }
-
-    QuerySnapshot<Map<String, dynamic>> firebasePosts =
-        await firebaseQuery.get(const GetOptions(source: Source.cache));
-
-    for (QueryDocumentSnapshot<Map<String, dynamic>> fbPost
-        in firebasePosts.docs) {
-      posts.add(await Post.fromDocRef(fbPost.reference));
-    }
-    return posts;
+    return firebaseQuery;
   }
 }

@@ -3,17 +3,6 @@ import 'package:flutter/material.dart';
 import '../controllers/post_controller.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-Widget postListView(List<Widget> children) {
-  return SingleChildScrollView(
-    child: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: children,
-      ),
-    ),
-  );
-}
-
 Widget viewCommentSave(
     BuildContext context, String hexButtonColor, PostController controller,
     {bool showText = true}) {
