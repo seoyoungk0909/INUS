@@ -1,4 +1,5 @@
 import 'package:aus/views/event_detail_page.dart';
+import 'package:aus/views/event_write_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,9 @@ class MyApp extends StatelessWidget {
           'password_reset': (context) => const PasswordResetPage(),
           'verify': (context) => const VerifyPage(),
           'welcome': (context) => const WelcomePage(),
-          'post_write': (context) => const PostWritePage(title: 'New Post'),
+          'post_write': (context) => const PostWritePage(title: 'Create Post'),
+          'event_write': (context) =>
+              const EventWritePage(title: 'Create Event'),
           'post_detail': (context) => const PostDetailPage(title: 'Community'),
           'event_detail': (context) => const EventDetailPage(title: 'Events'),
         },

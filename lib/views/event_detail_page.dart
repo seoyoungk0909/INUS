@@ -141,10 +141,10 @@ Widget categoryHashtag(
         color: hexStringToColor("#3E3E3E"),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Flexible(
-          child: Container(
-              padding: const EdgeInsetsDirectional.fromSTEB(9, 5, 9, 0),
-              child: text(context, controller, hashtag, 12))),
+      child: Container(
+        padding: const EdgeInsetsDirectional.fromSTEB(9, 5, 9, 0),
+        child: text(context, controller, hashtag, 12),
+      ),
     ),
   );
 }
@@ -170,58 +170,58 @@ Widget quickView(BuildContext context, EventController controller) {
         color: hexStringToColor("#3E3E3E"),
         borderRadius: BorderRadius.circular(6),
       ),
-      child: Flexible(
-          child: Container(
-              padding: const EdgeInsetsDirectional.fromSTEB(17, 22, 17, 22),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  text(context, controller, 'Quick View', 15, bold: true),
-                  Padding(
-                      padding: const EdgeInsets.only(top: 15),
-                      child: Row(
+      child: Container(
+        padding: const EdgeInsetsDirectional.fromSTEB(17, 22, 17, 22),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            text(context, controller, 'Quick View', 15, bold: true),
+            Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4.0),
+                          child: text(context, controller, 'Date', 14,
+                              textColor: '#AAAAAA'),
+                        ),
+                        text(
+                            context,
+                            controller,
+                            DateFormat('dd MMM y')
+                                .format(controller.event.uploadTime),
+                            15,
+                            bold: true),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 100),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 4.0),
-                                child: text(context, controller, 'Date', 14,
-                                    textColor: '#AAAAAA'),
-                              ),
-                              text(
-                                  context,
-                                  controller,
-                                  DateFormat('dd MMM y')
-                                      .format(controller.event.uploadTime),
-                                  15,
-                                  bold: true),
-                            ],
-                          ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 100),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 4.0),
-                                  child: text(context, controller, 'Time', 14,
-                                      textColor: '#AAAAAA'),
-                                ),
-                                text(
-                                    context,
-                                    controller,
-                                    DateFormat('Hm')
-                                        .format(controller.event.uploadTime),
-                                    15,
-                                    bold: true),
-                              ],
-                            ),
+                            padding: const EdgeInsets.only(bottom: 4.0),
+                            child: text(context, controller, 'Time', 14,
+                                textColor: '#AAAAAA'),
                           ),
+                          text(
+                              context,
+                              controller,
+                              DateFormat('Hm')
+                                  .format(controller.event.uploadTime),
+                              15,
+                              bold: true),
                         ],
-                      ))
-                ],
-              ))),
+                      ),
+                    ),
+                  ],
+                ))
+          ],
+        ),
+      ),
     ),
   );
 }
@@ -243,97 +243,93 @@ Widget eventDescription(BuildContext context, EventController controller) {
 //detailed view
 Widget detailedView(BuildContext context, EventController controller) {
   return Padding(
-      padding: const EdgeInsets.only(top: 18),
+    padding: const EdgeInsets.only(top: 18),
+    child: Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: hexStringToColor("#3E3E3E"),
+        borderRadius: BorderRadius.circular(6),
+      ),
       child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: hexStringToColor("#3E3E3E"),
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Flexible(
-              child: Container(
-                  padding: const EdgeInsetsDirectional.fromSTEB(17, 22, 17, 22),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      text(context, controller, 'Detailed View', 15,
-                          bold: true),
-                      //date
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 53),
-                              child: text(context, controller, 'Date', 14,
-                                  textColor: '#AAAAAA'),
-                            ),
-                            text(
-                                context,
-                                controller,
-                                DateFormat('dd MMM y')
-                                    .format(controller.event.uploadTime),
-                                15,
-                                bold: true),
-                          ],
-                        ),
-                      ),
-                      //time
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 52),
-                              child: text(context, controller, 'Time', 14,
-                                  textColor: '#AAAAAA'),
-                            ),
-                            text(
-                                context,
-                                controller,
-                                DateFormat('Hm')
-                                    .format(controller.event.uploadTime),
-                                15,
-                                bold: true),
-                          ],
-                        ),
-                      ),
-                      //language
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 20),
-                              child: text(context, controller, 'Language', 14,
-                                  textColor: '#AAAAAA'),
-                            ),
-                            text(context, controller, controller.event.language,
-                                15,
-                                bold: true),
-                          ],
-                        ),
-                      ),
-                      //location
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 28),
-                              child: text(context, controller, 'Location', 14,
-                                  textColor: '#AAAAAA'),
-                            ),
-                            Expanded(
-                              child: text(context, controller,
-                                  controller.event.location, 15,
-                                  bold: true),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )))));
+        padding: const EdgeInsetsDirectional.fromSTEB(17, 22, 17, 22),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            text(context, controller, 'Detailed View', 15, bold: true),
+            //date
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 53),
+                    child: text(context, controller, 'Date', 14,
+                        textColor: '#AAAAAA'),
+                  ),
+                  text(
+                      context,
+                      controller,
+                      DateFormat('dd MMM y')
+                          .format(controller.event.uploadTime),
+                      15,
+                      bold: true),
+                ],
+              ),
+            ),
+            //time
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 52),
+                    child: text(context, controller, 'Time', 14,
+                        textColor: '#AAAAAA'),
+                  ),
+                  text(context, controller,
+                      DateFormat('Hm').format(controller.event.uploadTime), 15,
+                      bold: true),
+                ],
+              ),
+            ),
+            //language
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: text(context, controller, 'Language', 14,
+                        textColor: '#AAAAAA'),
+                  ),
+                  text(context, controller, controller.event.language, 15,
+                      bold: true),
+                ],
+              ),
+            ),
+            //location
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 28),
+                    child: text(context, controller, 'Location', 14,
+                        textColor: '#AAAAAA'),
+                  ),
+                  Expanded(
+                    child: text(
+                        context, controller, controller.event.location, 15,
+                        bold: true),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

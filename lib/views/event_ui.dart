@@ -65,19 +65,16 @@ Widget categoryButton(BuildContext context, EventController controller) {
         border: Border.all(
             color: hexStringToColor(buttonColor(controller.event.category))),
       ),
-      child: Flexible(
-        child: Container(
-          padding: const EdgeInsetsDirectional.fromSTEB(8, 3, 8, 3),
-          child: Text(
-            controller.event.category,
-            style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                  fontFamily: 'Outfit',
-                  color:
-                      hexStringToColor(buttonColor(controller.event.category)),
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
+      child: Container(
+        padding: const EdgeInsetsDirectional.fromSTEB(8, 3, 8, 3),
+        child: Text(
+          controller.event.category,
+          style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                fontFamily: 'Outfit',
+                color: hexStringToColor(buttonColor(controller.event.category)),
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
         ),
       ),
     ),
