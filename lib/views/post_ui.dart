@@ -39,7 +39,7 @@ Widget viewCommentSave(
                             ),
                       ),
                     )
-                  : Center(),
+                  : SizedBox.shrink(),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
                 child: Text(
@@ -82,11 +82,11 @@ Widget viewCommentSave(
                             ),
                       ),
                     )
-                  : Center(),
+                  : SizedBox.shrink(),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
                 child: Text(
-                  controller.post.comments.length.toString(),
+                  controller.post.numComments().toString(),
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
                         fontFamily: 'Outfit',
                         color: hexStringToColor(hexButtonColor),

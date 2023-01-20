@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'user_model.dart';
 import 'comment_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +16,7 @@ class Post {
   int views = 0;
   DocumentReference<Map<String, dynamic>>? firebaseDocRef;
   List<Comment> comments = [];
+  List commentRefs = [];
 
   Post(
       {User? postWriter,
@@ -22,12 +25,14 @@ class Post {
       DateTime? time,
       int? postViews,
       List<Comment>? commentList,
+      List? commentRefList,
       DocumentReference<Map<String, dynamic>>? docRef}) {
     writer = postWriter ?? writer;
     title = postTitle ?? title;
     text = content ?? text;
     timestamp = time ?? DateTime.now();
     views = postViews ?? views;
+    commentRefs = commentRefList ?? commentRefs;
     // comments = commentList ?? comments;
 
     if (commentList != null && commentList.isNotEmpty) {
@@ -40,10 +45,13 @@ class Post {
 
   String getWriterSchool() => writer.getSchool();
 
+  int numComments() => max(comments.length, commentRefs.length);
+
   // factory for posts
   static Future<Post> fromDocRef(
       {DocumentReference<Map<String, dynamic>>? firebaseDoc,
-      QueryDocumentSnapshot<Map<String, dynamic>>? firebaseSnap}) async {
+      QueryDocumentSnapshot<Map<String, dynamic>>? firebaseSnap,
+      bool lazyLoadComment = true}) async {
     DocumentSnapshot<Map<String, dynamic>> postData;
 
     if (firebaseSnap == null) {
@@ -54,10 +62,11 @@ class Post {
       firebaseDoc ??= postData.reference;
     }
 
-    List commentList = postData.get('comments') as List;
+    List commentRefList = postData.get('comments') as List;
     List<Comment> comments = [];
-    if (commentList.isNotEmpty) {
-      comments = await Comment.getCommentsFromFirebase(commentList, postData);
+    if (!lazyLoadComment && commentRefList.isNotEmpty) {
+      comments =
+          await Comment.getCommentsFromFirebase(commentRefList, postData);
     }
 
     User postWriter = await User.fromUserRef(postData.get('user'));
@@ -69,7 +78,18 @@ class Post {
         time: (postData.get('time') as Timestamp).toDate(),
         postViews: postData.get('viewCount'),
         commentList: comments,
+        commentRefList: commentRefList,
         docRef: firebaseDoc);
+  }
+
+  Future<bool> loadComments() async {
+    if (commentRefs.isNotEmpty && firebaseDocRef != null) {
+      DocumentSnapshot<Map<String, dynamic>> postData =
+          await firebaseDocRef!.get();
+      comments = await Comment.getCommentsFromFirebase(commentRefs, postData);
+      return true;
+    }
+    return false;
   }
 
   // factory for list of posts

@@ -25,21 +25,32 @@ class PostDetailPageState extends State<PostDetailPage> {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
     PostController controller = PostController(arguments['post'] ?? Post());
+    if (controller.post.comments.length != controller.post.commentRefs.length) {
+      controller.post.loadComments();
+    }
     return Scaffold(
       appBar: AppBar(),
       body: Column(
         children: [
           postUI(context, controller, isDetail: true),
-          controller.post.comments.isNotEmpty
-              ? Expanded(
-                  child: ListView.builder(
-                      itemCount: controller.post.comments.length,
-                      itemBuilder: (context, idx) {
-                        return CommentUI(controller.post.comments[idx]);
-                      }))
-              : const Padding(
-                  padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                  child: Center(child: Text("No Comments"))),
+          FutureBuilder(
+            future: controller.post.loadComments(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const SizedBox.shrink();
+              }
+              return controller.post.comments.isNotEmpty
+                  ? Expanded(
+                      child: ListView.builder(
+                          itemCount: controller.post.comments.length,
+                          itemBuilder: (context, idx) {
+                            return CommentUI(controller.post.comments[idx]);
+                          }))
+                  : const Padding(
+                      padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+                      child: Center(child: Text("No Comments")));
+            },
+          ),
         ],
       ),
     );

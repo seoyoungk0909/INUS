@@ -102,7 +102,8 @@ class _PostListPageState extends State<PostListPage> {
                                   firebaseSnap: snap.data!.docs[i]),
                               builder: (context, snapshot) {
                                 if (snapshot.data == null) {
-                                  return const Center();
+                                  return const SizedBox
+                                      .shrink(); //NOTE: empty widget
                                 }
                                 return postUI(
                                     context, PostController(snapshot.data!),
@@ -136,7 +137,7 @@ class _PostListPageState extends State<PostListPage> {
                                   firebaseSnap: snap.data!.docs[i]),
                               builder: (context, snapshot) {
                                 if (snapshot.data == null) {
-                                  return const Center();
+                                  return const SizedBox.shrink();
                                 }
                                 return postUI(
                                     context, PostController(snapshot.data!),
