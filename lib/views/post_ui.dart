@@ -15,7 +15,8 @@ Widget postListView(List<Widget> children) {
 }
 
 Widget viewCommentSave(
-    BuildContext context, String hexButtonColor, PostController controller) {
+    BuildContext context, String hexButtonColor, PostController controller,
+    {bool showText = true}) {
   return Padding(
     padding: const EdgeInsetsDirectional.fromSTEB(4, 0, 4, 4),
     child: Row(
@@ -36,18 +37,20 @@ Widget viewCommentSave(
                   size: 24,
                 ),
               ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
-                child: Text(
-                  'View',
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        fontFamily: 'Outfit',
-                        color: hexStringToColor(hexButtonColor),
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
+              showText
+                  ? Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
+                      child: Text(
+                        'View',
+                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                              fontFamily: 'Outfit',
+                              color: hexStringToColor(hexButtonColor),
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
                       ),
-                ),
-              ),
+                    )
+                  : Center(),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
                 child: Text(
@@ -77,18 +80,20 @@ Widget viewCommentSave(
                   size: 24,
                 ),
               ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
-                child: Text(
-                  'Comment',
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        fontFamily: 'Outfit',
-                        color: hexStringToColor(hexButtonColor),
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
+              showText
+                  ? Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
+                      child: Text(
+                        'Comment',
+                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                              fontFamily: 'Outfit',
+                              color: hexStringToColor(hexButtonColor),
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
                       ),
-                ),
-              ),
+                    )
+                  : Center(),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
                 child: Text(
@@ -229,7 +234,8 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
   ]);
 }
 
-Widget contentUI(BuildContext context, PostController controller) {
+Widget contentUI(BuildContext context, PostController controller,
+    {bool isDetail = false}) {
   return Column(
     children: [
       Padding(
@@ -259,7 +265,7 @@ Widget contentUI(BuildContext context, PostController controller) {
             Expanded(
               child: Text(
                 controller.post.text,
-                maxLines: 2,
+                maxLines: isDetail ? 1000 : 2,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText2?.copyWith(
                       fontFamily: 'Outfit',
@@ -277,7 +283,7 @@ Widget contentUI(BuildContext context, PostController controller) {
 }
 
 Widget postUI(BuildContext context, PostController controller,
-    {Function? setState}) {
+    {Function? setState, bool isDetail = false}) {
   return Padding(
     padding: const EdgeInsetsDirectional.fromSTEB(16, 14, 16, 0),
     child: Container(
@@ -301,18 +307,18 @@ Widget postUI(BuildContext context, PostController controller,
             writerInfoUI(context, controller),
             GestureDetector(
               onTap: () {
+                if (isDetail) return;
                 Navigator.pushNamed(context, 'post_detail',
                     arguments: {'post': controller.post});
                 setState!(controller.incrementView);
               },
-              child: contentUI(context, controller),
+              child: contentUI(context, controller, isDetail: isDetail),
             ),
-            viewCommentSave(context, "#AAAAAA", controller),
+            viewCommentSave(context, "#AAAAAA", controller,
+                showText: !isDetail),
             const Divider(
               height: 8,
               thickness: 1,
-              indent: 4,
-              endIndent: 4,
               color: Color.fromARGB(255, 74, 74, 74),
             ),
           ],

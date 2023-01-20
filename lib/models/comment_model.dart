@@ -5,7 +5,6 @@ const List commentWriter = ["Anonymous", "Writer"];
 
 class Comment {
   bool writerFlag = false;
-  String writer = "Anonymous";
   // User writer = User();
   String body = "Wow that is amazing!";
   late DateTime time;
@@ -13,16 +12,16 @@ class Comment {
 
   Comment(
       {bool? isPostWriter,
-      String? commentWriter,
       String? content,
       DateTime? timestamp,
       DocumentReference<Map<String, dynamic>>? firebaseDocRef}) {
     writerFlag = isPostWriter ?? writerFlag;
-    writer = commentWriter ?? writer;
     body = content ?? body;
     time = timestamp ?? DateTime.now();
     commentReference = firebaseDocRef;
   }
+
+  String writerToString() => writerFlag ? "Writer" : "Anonymous";
 
   static Future<Comment> fromCommentRef(
       DocumentReference<Map<String, dynamic>> commentRef) async {
@@ -31,8 +30,6 @@ class Comment {
 
     return Comment(
       isPostWriter: commentData.get('writerFlag'),
-      commentWriter:
-          commentData.get('writerFlag') == true ? "Writer" : "Anonymous",
       content: commentData.get('body'),
       timestamp: (commentData.get('time') as Timestamp).toDate(),
       firebaseDocRef: commentRef,

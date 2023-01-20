@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:aus/models/comment_model.dart';
 import 'package:flutter/material.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
@@ -28,9 +29,15 @@ class _PostListPageState extends State<PostListPage> {
   List<PostController> recentPostsControllers = [
     PostController(Post(
       postWriter: User(userName: "John Doe", userSchool: School.HKUST),
+      commentList: [
+        Comment(content: "Good", isPostWriter: false),
+        Comment(content: "Thank you", isPostWriter: true),
+      ],
     )),
     PostController(Post(
-        postWriter: User(userName: "Apple Seed", userSchool: School.CUHK))),
+      postWriter: User(userName: "Apple Seed", userSchool: School.CUHK),
+      commentList: [Comment(content: "Good", isPostWriter: false)],
+    )),
   ];
 
   List<PostController> popularPostsControllers = [
