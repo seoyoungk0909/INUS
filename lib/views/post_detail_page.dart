@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
+import 'post_ui.dart';
+import 'comment_ui.dart';
 
 class PostDetailPage extends StatefulWidget {
   const PostDetailPage({Key? key, required this.title}) : super(key: key);
@@ -23,24 +26,21 @@ class PostDetailPageState extends State<PostDetailPage> {
         <String, dynamic>{}) as Map;
     PostController controller = PostController(arguments['post'] ?? Post());
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        centerTitle: false,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(controller.post.text),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("views • "),
-                Text(controller.post.views.toString()),
-              ],
-            ),
-          ],
-        ),
+      appBar: AppBar(),
+      body: Column(
+        children: [
+          postUI(context, controller, isDetail: true),
+          controller.post.comments.isNotEmpty
+              ? Expanded(
+                  child: ListView.builder(
+                      itemCount: controller.post.comments.length,
+                      itemBuilder: (context, idx) {
+                        return CommentUI(controller.post.comments[idx]);
+                      }))
+              : const Padding(
+                  padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+                  child: Center(child: Text("No Comments"))),
+        ],
       ),
     );
   }
