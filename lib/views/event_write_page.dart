@@ -26,7 +26,7 @@ class EventWritePageState extends State<EventWritePage> {
       'tag': tags.text.trim(),
       'time': [getDate(), getTime()],
       'language': trueLanguages,
-      'catagory': trueCategories,
+      'category': trueCategories,
       'location': eventLocation.text.trim(),
       'registration link': eventRegistrationLink.text.trim(),
       'event detail': eventDetail.text.trim(),

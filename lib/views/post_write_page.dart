@@ -24,7 +24,7 @@ class PostWritePageState extends State<PostWritePage> {
         await FirebaseFirestore.instance.collection("post").add({
       'title': postTitle.text.trim(),
       'content': postContent.text.trim(),
-      'catagory': trueCategories,
+      'category': trueCategories,
       'time': Timestamp.now(),
       'viewCount': 0,
       'commentCount': 0,

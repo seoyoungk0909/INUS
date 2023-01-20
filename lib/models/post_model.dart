@@ -21,6 +21,7 @@ class Post {
   Post(
       {User? postWriter,
       String? postTitle,
+      String? postCategory,
       String? content,
       DateTime? time,
       int? postViews,
@@ -29,6 +30,7 @@ class Post {
       DocumentReference<Map<String, dynamic>>? docRef}) {
     writer = postWriter ?? writer;
     title = postTitle ?? title;
+    category = postCategory ?? category;
     text = content ?? text;
     timestamp = time ?? DateTime.now();
     views = postViews ?? views;
@@ -74,6 +76,7 @@ class Post {
     return Post(
         postWriter: postWriter,
         postTitle: postData.get('title'),
+        postCategory: postData.get('category'),
         content: postData.get('content'),
         time: (postData.get('time') as Timestamp).toDate(),
         postViews: postData.get('viewCount'),
