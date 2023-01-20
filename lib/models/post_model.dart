@@ -44,19 +44,20 @@ class Post {
   static Future<Post> fromDocRef(
       DocumentReference<Map<String, dynamic>> firebaseDoc) async {
     DocumentSnapshot<Map<String, dynamic>> postData = await firebaseDoc.get();
-    List<DocumentReference> commentList = postData.get('comments');
-    List<Comment> comments =
-        await Comment.getCommentsFromFirebase(commentList, postData);
-    User postWriter = User(
-        userName: postData.get('name'),
-        userSchool: string2School(postData.get('school')));
+    List commentList = postData.get('comments') as List;
+    List<Comment> comments = [];
+    if (commentList.isNotEmpty) {
+      comments = await Comment.getCommentsFromFirebase(commentList, postData);
+    }
+
+    User postWriter = await User.fromUserRef(postData.get('user'));
 
     return Post(
         postWriter: postWriter,
         postTitle: postData.get('title'),
         content: postData.get('content'),
-        time: (postData.get('timestamp') as Timestamp).toDate(),
-        postViews: postData.get('views'),
+        time: (postData.get('time') as Timestamp).toDate(),
+        postViews: postData.get('viewCount'),
         commentList: comments,
         docRef: firebaseDoc);
   }
@@ -65,21 +66,21 @@ class Post {
   static Future<List<Post>> getPostsFromFirebase({bool popular = false}) async {
     List<Post> posts = [];
     CollectionReference<Map<String, dynamic>> postCollection =
-        FirebaseFirestore.instance.collection('posts');
+        FirebaseFirestore.instance.collection('post');
 
     Query<Map<String, dynamic>> firebaseQuery;
     if (popular) {
       firebaseQuery = postCollection
-          .orderBy('timestamp', descending: true)
-          .orderBy('views', descending: true)
+          .orderBy('time', descending: true)
+          .orderBy('viewCount', descending: true)
           .limit(20);
     } else {
       firebaseQuery =
-          postCollection.orderBy('timestamp', descending: true).limit(20);
+          postCollection.orderBy('time', descending: true).limit(20);
     }
 
     QuerySnapshot<Map<String, dynamic>> firebasePosts =
-        await firebaseQuery.get();
+        await firebaseQuery.get(const GetOptions(source: Source.cache));
 
     for (QueryDocumentSnapshot<Map<String, dynamic>> fbPost
         in firebasePosts.docs) {

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:aus/models/comment_model.dart';
 import 'package:flutter/material.dart';
 import '../controllers/post_controller.dart';
@@ -46,9 +44,7 @@ class _PostListPageState extends State<PostListPage> {
   ];
 
   Future<void> refreshPosts({bool popular = false}) async {
-    // List<Post> posts = await Post.getPostsFromFirebase(popular: popular);
-    int randInt = Random().nextInt(20);
-    List<Post> posts = List.generate(randInt, (i) => Post());
+    List<Post> posts = await Post.getPostsFromFirebase(popular: popular);
     List<PostController> _controllers = [];
     for (Post post in posts) {
       _controllers.add(PostController(post));
@@ -64,12 +60,6 @@ class _PostListPageState extends State<PostListPage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       body: DefaultTabController(
         length: 2,
