@@ -26,7 +26,6 @@ class Comment {
   static Future<Comment> fromCommentRef(
       DocumentReference<Map<String, dynamic>> commentRef) async {
     DocumentSnapshot<Map<String, dynamic>> commentData = await commentRef.get();
-    User commentWriter = await User.fromUserRef(commentData['writer']);
 
     return Comment(
       isPostWriter: commentData.get('writerFlag'),
