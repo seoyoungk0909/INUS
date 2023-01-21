@@ -1,3 +1,4 @@
+import 'package:aus/views/comment_box.dart';
 import 'package:flutter/material.dart';
 
 import '../controllers/post_controller.dart';
@@ -51,6 +52,7 @@ class PostDetailPageState extends State<PostDetailPage> {
                       child: Center(child: Text("No Comments")));
             },
           ),
+          CommentBox(),
         ],
       ),
     );
