@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart' as fbauth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/comment_model.dart';
 import 'post_ui.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
@@ -26,11 +25,6 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   User defaultUser = User(userName: "", userSchool: School.PolyU);
-
-  List<PostController> savedPostsController = [
-    PostController(
-        Post(postWriter: User(userName: "Claire Eve", userSchool: School.HKU))),
-  ];
 
   Widget userGreetings(User currentUser) {
     return Column(
@@ -129,7 +123,7 @@ class ProfilePageState extends State<ProfilePage> {
                     StreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection('user_info')
-                            .doc(state.currentUser!.uid)
+                            .doc(state.currentUser?.uid)
                             .snapshots(),
                         builder: (context,
                             AsyncSnapshot<
@@ -140,12 +134,57 @@ class ProfilePageState extends State<ProfilePage> {
                           }
                           try {
                             List postRefs = snap.data!.get('posts');
+                            postRefs = postRefs.reversed.toList();
+                            List savedPostRefs = snap.data!.get('savedPosts');
                             if (postRefs.isEmpty) {
                               return const Center(child: Text("No Posts"));
                             }
                             return ListView.builder(
                               // physics: const AlwaysScrollableScrollPhysics(),
-                              reverse: true,
+                              itemCount: postRefs.length,
+                              itemBuilder: (BuildContext context, int idx) {
+                                bool saved =
+                                    savedPostRefs.contains(postRefs[idx]);
+                                return FutureBuilder<Post>(
+                                  future: Post.fromDocRef(
+                                      firebaseDoc: postRefs[idx]),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.data == null) {
+                                      return const SizedBox.shrink();
+                                    }
+                                    return postUI(
+                                        context, PostController(snapshot.data!),
+                                        setState: setState, saved: saved);
+                                  },
+                                );
+                              },
+                            );
+                          } catch (e) {
+                            print(e);
+                            return const Center(child: Text("No Posts"));
+                          }
+                        }),
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('user_info')
+                            .doc(state.currentUser?.uid)
+                            .snapshots(),
+                        builder: (context,
+                            AsyncSnapshot<
+                                    DocumentSnapshot<Map<String, dynamic>>>
+                                snap) {
+                          if (snap.data == null) {
+                            return const CircularProgressIndicator();
+                          }
+                          try {
+                            List postRefs = snap.data!.get('savedPosts');
+                            postRefs = postRefs.reversed.toList();
+                            if (postRefs.isEmpty) {
+                              return const Center(
+                                  child: Text("No Saved Posts"));
+                            }
+                            return ListView.builder(
+                              // physics: const AlwaysScrollableScrollPhysics(),
                               itemCount: postRefs.length,
                               itemBuilder: (BuildContext context, int idx) {
                                 return FutureBuilder<Post>(
@@ -157,24 +196,16 @@ class ProfilePageState extends State<ProfilePage> {
                                     }
                                     return postUI(
                                         context, PostController(snapshot.data!),
-                                        setState: setState);
+                                        setState: setState, saved: true);
                                   },
                                 );
                               },
                             );
                           } catch (e) {
                             print(e);
-                            return const Center(child: Text("No Posts"));
+                            return const Center(child: Text("No Saved Posts"));
                           }
                         }),
-                    ListView.builder(
-                      // physics: const AlwaysScrollableScrollPhysics(),
-                      itemCount: savedPostsController.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return postUI(context, savedPostsController[index],
-                            setState: setState);
-                      },
-                    ),
                   ],
                 ),
               ),

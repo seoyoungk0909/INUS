@@ -1,5 +1,6 @@
 import 'package:aus/models/comment_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:flutter/material.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
@@ -25,43 +26,65 @@ class PostListPage extends StatefulWidget {
 }
 
 class _PostListPageState extends State<PostListPage> {
-  // TODO: get rid of these controllers and update the refresh part
-  List<PostController> recentPostsControllers = [
-    PostController(Post(
-      postWriter: User(userName: "John Doe", userSchool: School.HKUST),
-      commentList: [
-        Comment(content: "Good", isPostWriter: false),
-        Comment(content: "Thank you", isPostWriter: true),
-      ],
-    )),
-    PostController(Post(
-      postWriter: User(userName: "Apple Seed", userSchool: School.CUHK),
-      commentList: [Comment(content: "Good", isPostWriter: false)],
-    )),
-  ];
-
-  List<PostController> popularPostsControllers = [
-    PostController(
-        Post(postWriter: User(userName: "Claire Eve", userSchool: School.HKU))),
-  ];
-
   Future<void> refreshPosts({bool popular = false}) async {
-    List<Post> posts = await Post.getPostsFromFirebase(popular: popular);
-    List<PostController> _controllers = [];
-    for (Post post in posts) {
-      _controllers.add(PostController(post));
-    }
-    setState(() {
-      if (popular) {
-        popularPostsControllers = _controllers;
-      } else {
-        recentPostsControllers = _controllers;
-      }
-    });
+    // List<Post> posts = await Post.getPostsFromFirebase(popular: popular);
+    // List<PostController> _controllers = [];
+    // for (Post post in posts) {
+    //   _controllers.add(PostController(post));
+    // }
+    // setState(() {
+    //   if (popular) {
+    //     popularPostsControllers = _controllers;
+    //   } else {
+    //     recentPostsControllers = _controllers;
+    //   }
+    // });
+  }
+
+  Widget postsStreamView({bool popular = false, List? savedPosts}) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        refreshPosts(popular: popular);
+      },
+      color: Theme.of(context).colorScheme.secondary,
+      child: StreamBuilder(
+        stream: Post.getPostsQuery(popular: popular).snapshots(),
+        builder:
+            (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snap) {
+          if (snap.data == null) {
+            return const CircularProgressIndicator();
+          }
+          return ListView.builder(
+            // physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: snap.data!.size,
+            itemBuilder: (BuildContext context, int i) {
+              return FutureBuilder<Post>(
+                future: Post.fromDocRef(firebaseSnap: snap.data!.docs[i]),
+                builder: (context, snapshot) {
+                  if (snapshot.data == null) {
+                    return const SizedBox.shrink(); //NOTE: empty widget
+                  }
+                  bool saved =
+                      savedPosts?.contains(snapshot.data!.firebaseDocRef) ??
+                          false;
+                  return postUI(context, PostController(snapshot.data!),
+                      setState: setState, saved: saved);
+                },
+              );
+            },
+          );
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    DocumentReference userRef = FirebaseFirestore.instance
+        .collection('user_info')
+        .doc(fba.FirebaseAuth.instance.currentUser?.uid);
+    Future<DocumentSnapshot> snapshots = userRef.get();
+
     return Scaffold(
       body: DefaultTabController(
         length: 2,
@@ -80,75 +103,28 @@ class _PostListPageState extends State<PostListPage> {
             Expanded(
               child: TabBarView(
                 children: [
-                  RefreshIndicator(
-                    onRefresh: () async {
-                      refreshPosts(popular: false);
-                    },
-                    color: Theme.of(context).colorScheme.secondary,
-                    child: StreamBuilder(
-                      stream: Post.getPostsQuery(popular: false).snapshots(),
-                      builder: (context,
-                          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                              snap) {
-                        if (snap.data == null) {
+                  FutureBuilder(
+                      future: snapshots,
+                      builder:
+                          (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.data == null) {
                           return const CircularProgressIndicator();
                         }
-                        return ListView.builder(
-                          // physics: const AlwaysScrollableScrollPhysics(),
-                          itemCount: snap.data!.size,
-                          itemBuilder: (BuildContext context, int i) {
-                            return FutureBuilder<Post>(
-                              future: Post.fromDocRef(
-                                  firebaseSnap: snap.data!.docs[i]),
-                              builder: (context, snapshot) {
-                                if (snapshot.data == null) {
-                                  return const SizedBox
-                                      .shrink(); //NOTE: empty widget
-                                }
-                                return postUI(
-                                    context, PostController(snapshot.data!),
-                                    setState: setState);
-                              },
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  RefreshIndicator(
-                    onRefresh: () async {
-                      await refreshPosts(popular: true);
-                    },
-                    color: Theme.of(context).colorScheme.secondary,
-                    child: StreamBuilder(
-                      stream: Post.getPostsQuery(popular: true).snapshots(),
-                      builder: (context,
-                          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                              snap) {
-                        if (snap.data == null) {
+                        return postsStreamView(
+                            popular: false,
+                            savedPosts: snapshot.data!.get('savedPosts'));
+                      }),
+                  FutureBuilder(
+                      future: snapshots,
+                      builder:
+                          (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.data == null) {
                           return const CircularProgressIndicator();
                         }
-                        return ListView.builder(
-                          // physics: const AlwaysScrollableScrollPhysics(),
-                          itemCount: snap.data!.size,
-                          itemBuilder: (BuildContext context, int i) {
-                            return FutureBuilder<Post>(
-                              future: Post.fromDocRef(
-                                  firebaseSnap: snap.data!.docs[i]),
-                              builder: (context, snapshot) {
-                                if (snapshot.data == null) {
-                                  return const SizedBox.shrink();
-                                }
-                                return postUI(
-                                    context, PostController(snapshot.data!),
-                                    setState: setState);
-                              },
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
+                        return postsStreamView(
+                            popular: true,
+                            savedPosts: snapshot.data!.get('savedPosts'));
+                      }),
                 ],
               ),
             ),

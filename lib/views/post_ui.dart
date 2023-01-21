@@ -1,139 +1,86 @@
 import 'package:aus/utils/color_utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../controllers/post_controller.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-Widget viewCommentSave(
-    BuildContext context, String hexButtonColor, PostController controller,
-    {bool showText = true}) {
-  return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(4, 0, 4, 4),
-    child: Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        //view
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
-                // TODO: use eye-open
-                child: Icon(
-                  Icons.remove_red_eye_outlined,
-                  color: hexStringToColor(hexButtonColor),
-                  size: 24,
-                ),
-              ),
-              showText
-                  ? Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
-                      child: Text(
-                        'View',
-                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                              fontFamily: 'Outfit',
-                              color: hexStringToColor(hexButtonColor),
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal,
-                            ),
-                      ),
-                    )
-                  : SizedBox.shrink(),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
-                child: Text(
-                  controller.post.views.toString(),
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        fontFamily: 'Outfit',
-                        color: hexStringToColor(hexButtonColor),
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
-                      ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        //comment
-        Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
-                // child: Icon(
-                //   Icons.comment,
-                //   color: hexStringToColor(hexButtonColor),
-                //   size: 24,
-                // ),
-                child: SvgPicture.asset(
-                  'assets/icons/message-square-typing.svg',
-                  color: hexStringToColor(hexButtonColor),
-                  height: 24,
-                ),
-              ),
-              showText
-                  ? Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
-                      child: Text(
-                        'Comment',
-                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                              fontFamily: 'Outfit',
-                              color: hexStringToColor(hexButtonColor),
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal,
-                            ),
-                      ),
-                    )
-                  : SizedBox.shrink(),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
-                child: Text(
-                  controller.post.numComments().toString(),
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        fontFamily: 'Outfit',
-                        color: hexStringToColor(hexButtonColor),
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
-                      ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        //save
-        TextButton(
-          style:
-              TextButton.styleFrom(primary: hexStringToColor(hexButtonColor)),
-          onPressed: () {},
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
+class ViewCommentSave extends StatefulWidget {
+  const ViewCommentSave(
+      {Key? key,
+      required this.hexButtonColor,
+      required this.controller,
+      this.showText = true,
+      this.saved = false})
+      : super(key: key);
+
+  final String hexButtonColor;
+  final PostController controller;
+  final bool showText;
+  final bool saved;
+
+  @override
+  State<ViewCommentSave> createState() => ViewCommentSaveState();
+}
+
+class ViewCommentSaveState extends State<ViewCommentSave> {
+  bool saved = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    saved = widget.saved;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(4, 0, 4, 4),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          //view
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
-                    // child: Icon(
-                    //   Icons.bookmark_border,
-                    //   color: hexStringToColor(hexButtonColor),
-                    //   size: 24,
-                    // ),
-                    child: SvgPicture.asset(
-                      'assets/icons/save_false.svg',
-                      color: hexStringToColor(hexButtonColor),
-                      height: 24,
-                    )),
+                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
+                  // TODO: use eye-open
+                  child: Icon(
+                    Icons.remove_red_eye_outlined,
+                    color: hexStringToColor(widget.hexButtonColor),
+                    size: 24,
+                  ),
+                ),
+                widget.showText
+                    ? Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
+                        child: Text(
+                          'View',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText2
+                              ?.copyWith(
+                                fontFamily: 'Outfit',
+                                color: hexStringToColor(widget.hexButtonColor),
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                        ),
+                      )
+                    : SizedBox.shrink(),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
                   child: Text(
-                    'Save',
+                    widget.controller.post.views.toString(),
                     style: Theme.of(context).textTheme.bodyText2?.copyWith(
                           fontFamily: 'Outfit',
-                          color: hexStringToColor(hexButtonColor),
+                          color: hexStringToColor(widget.hexButtonColor),
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
                         ),
@@ -142,10 +89,121 @@ Widget viewCommentSave(
               ],
             ),
           ),
-        ),
-      ],
-    ),
-  );
+          //comment
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
+                  // child: Icon(
+                  //   Icons.comment,
+                  //   color: hexStringToColor(hexButtonColor),
+                  //   size: 24,
+                  // ),
+                  child: SvgPicture.asset(
+                    'assets/icons/message-square-typing.svg',
+                    color: hexStringToColor(widget.hexButtonColor),
+                    height: 24,
+                  ),
+                ),
+                widget.showText
+                    ? Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
+                        child: Text(
+                          'Comment',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText2
+                              ?.copyWith(
+                                fontFamily: 'Outfit',
+                                color: hexStringToColor(widget.hexButtonColor),
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                        ),
+                      )
+                    : SizedBox.shrink(),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
+                  child: Text(
+                    widget.controller.post.numComments().toString(),
+                    style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                          fontFamily: 'Outfit',
+                          color: hexStringToColor(widget.hexButtonColor),
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          //save
+          TextButton(
+            style: TextButton.styleFrom(
+                primary: hexStringToColor(widget.hexButtonColor)),
+            onPressed: () {
+              setState(() {
+                saved = !saved;
+                DocumentReference userRef = FirebaseFirestore.instance
+                    .collection('user_info')
+                    .doc(FirebaseAuth.instance.currentUser?.uid);
+                if (saved) {
+                  // saved = false -> true; now we save
+                  userRef.update({
+                    'savedPosts': FieldValue.arrayUnion(
+                        [widget.controller.post.firebaseDocRef])
+                  });
+                } else {
+                  // saved = true -> false; now we remove
+                  userRef.update({
+                    'savedPosts': FieldValue.arrayRemove(
+                        [widget.controller.post.firebaseDocRef])
+                  });
+                }
+              });
+            },
+            child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+                      // child: Icon(
+                      //   Icons.bookmark_border,
+                      //   color: hexStringToColor(hexButtonColor),
+                      //   size: 24,
+                      // ),
+                      child: SvgPicture.asset(
+                        saved
+                            ? 'assets/icons/save_true.svg'
+                            : 'assets/icons/save_false.svg',
+                        color: hexStringToColor(widget.hexButtonColor),
+                        height: 24,
+                      )),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
+                    child: Text(
+                      saved ? 'Saved' : 'Save',
+                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                            fontFamily: 'Outfit',
+                            color: hexStringToColor(widget.hexButtonColor),
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 Widget writerInfoUI(BuildContext context, PostController controller) {
@@ -298,7 +356,7 @@ Widget contentUI(BuildContext context, PostController controller,
 }
 
 Widget postUI(BuildContext context, PostController controller,
-    {Function? setState, bool isDetail = false}) {
+    {Function? setState, bool isDetail = false, bool saved = false}) {
   return Padding(
     padding: const EdgeInsetsDirectional.fromSTEB(16, 14, 16, 0),
     child: Container(
@@ -324,13 +382,16 @@ Widget postUI(BuildContext context, PostController controller,
               onTap: () {
                 if (isDetail) return;
                 Navigator.pushNamed(context, 'post_detail',
-                    arguments: {'post': controller.post});
+                    arguments: {'post': controller.post, 'saved': saved});
                 setState!(controller.incrementView);
               },
               child: contentUI(context, controller, isDetail: isDetail),
             ),
-            viewCommentSave(context, "#AAAAAA", controller,
-                showText: !isDetail),
+            ViewCommentSave(
+                hexButtonColor: "#AAAAAA",
+                controller: controller,
+                showText: !isDetail,
+                saved: saved),
             const Divider(
               height: 8,
               thickness: 1,

@@ -27,9 +27,12 @@ class PostDetailPageState extends State<PostDetailPage> {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
     PostController controller = PostController(arguments['post'] ?? Post());
+    bool saved = arguments['saved'] ?? false;
+
     if (controller.post.comments.length != controller.post.commentRefs.length) {
       controller.post.loadComments();
     }
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -40,7 +43,7 @@ class PostDetailPageState extends State<PostDetailPage> {
       ),
       body: Column(
         children: [
-          postUI(context, controller, isDetail: true),
+          postUI(context, controller, isDetail: true, saved: saved),
           Expanded(
             child: FutureBuilder(
               future: controller.post.loadComments(),
