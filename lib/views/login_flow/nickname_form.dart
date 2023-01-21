@@ -1,17 +1,22 @@
 import 'package:aus/utils/color_utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../firebase_login_state.dart';
+import '../components/popup_dialog.dart';
 
-class VerifyPage extends StatefulWidget {
-  const VerifyPage({Key? key}) : super(key: key);
+class NickNameFormPage extends StatefulWidget {
+  const NickNameFormPage({Key? key}) : super(key: key);
 
   @override
-  State<VerifyPage> createState() => VerifyPageState();
+  State<NickNameFormPage> createState() => NickNameFormPageState();
 }
 
-class VerifyPageState extends State<VerifyPage> {
+class NickNameFormPageState extends State<NickNameFormPage> {
+  final TextEditingController nickNameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
@@ -33,7 +38,7 @@ class VerifyPageState extends State<VerifyPage> {
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "The email has been sent.",
+                  "Almost Done! What is your nickname?",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                   textAlign: TextAlign.left,
                 ),
@@ -43,12 +48,44 @@ class VerifyPageState extends State<VerifyPage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Check your school email and come back after completing authentication.",
+                    "How should others call you?",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                         color: hexStringToColor("##A3A3A3")),
                     textAlign: TextAlign.left,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 48, 0, 0),
+                child: Container(
+                  height: 46,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: BorderDirectional(
+                        top: BorderSide(color: hexStringToColor("#2C2C31")),
+                        bottom: BorderSide(color: hexStringToColor("#2C2C31")),
+                        start: BorderSide(color: hexStringToColor("#2C2C31")),
+                        end: BorderSide(color: hexStringToColor("#2C2C31")),
+                      )),
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
+                    child: TextFormField(
+                      controller: nickNameController,
+                      obscureText: false,
+                      autocorrect: false,
+                      enableSuggestions: false,
+                      decoration: InputDecoration(
+                        labelText: 'Enter your username',
+                        labelStyle: Theme.of(context).textTheme.labelMedium,
+                        hintStyle: Theme.of(context).textTheme.labelMedium,
+                        contentPadding: const EdgeInsetsDirectional.fromSTEB(
+                            20, 24, 20, 24),
+                      ),
+                      style: Theme.of(context).textTheme.bodyText1,
+                      maxLines: 1,
+                    ),
                   ),
                 ),
               ),
@@ -59,7 +96,7 @@ class VerifyPageState extends State<VerifyPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "4",
+                        "5",
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary),
                       ),
@@ -93,18 +130,23 @@ class VerifyPageState extends State<VerifyPage> {
                       ),
                     ),
                     onPressed: () {
-                      // if (FirebaseAuth.instance.currentUser!.emailVerified) {
-                      Navigator.pushNamed(context, 'nickname_form', arguments: {
-                        'first': firstName,
-                        'last': lastName,
-                        'email': email,
-                        'school': school,
-                      });
-                      // } else {
-                      //   print(FirebaseAuth.instance.currentUser);
-                      //   popUpDialog(context, 'Field Required',
-                      //       "Please verify your email first.");
-                      // }
+                      if (nickNameController.text.isEmpty) {
+                        popUpDialog(context, 'Field Required',
+                            "Please input your username.");
+                      } else {
+                        DocumentReference ref = FirebaseFirestore.instance
+                            .collection("user_info")
+                            .doc(FirebaseAuth.instance.currentUser?.uid);
+                        ref.set({
+                          "email": email,
+                          "firstName": firstName,
+                          "lastName": lastName,
+                          "name": nickNameController.text,
+                          "school": school,
+                        });
+                        appState.updateCurrentUser();
+                        Navigator.pushNamed(context, 'welcome');
+                      }
                     }),
               ),
             ],

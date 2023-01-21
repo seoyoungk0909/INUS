@@ -1,22 +1,26 @@
 import 'package:aus/utils/color_utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../firebase_login_state.dart';
 import '../components/popup_dialog.dart';
 
-class PasswordResetPage extends StatefulWidget {
-  const PasswordResetPage({Key? key}) : super(key: key);
+class EmailFormPage extends StatefulWidget {
+  const EmailFormPage({Key? key}) : super(key: key);
 
   @override
-  State<PasswordResetPage> createState() => _PasswordResetPageState();
+  State<EmailFormPage> createState() => EmailFormPageState();
 }
 
-class _PasswordResetPageState extends State<PasswordResetPage> {
+class EmailFormPageState extends State<EmailFormPage> {
   final TextEditingController emailController = TextEditingController();
-  bool emailSent = false;
 
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    String firstName = arguments['first'];
+    String lastName = arguments['last'];
+
     return Scaffold(
       backgroundColor: hexStringToColor("##121212"),
       appBar: AppBar(
@@ -30,7 +34,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Forgot your password?",
+                  "What is your school email?",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                   textAlign: TextAlign.left,
                 ),
@@ -40,7 +44,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "We will send a password recovery email to your school email.",
+                    "We will send an authentication link to your school email.",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -69,7 +73,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                       autocorrect: false,
                       enableSuggestions: false,
                       decoration: InputDecoration(
-                        labelText: 'Your email address',
+                        labelText: '@connect.ust.hk',
                         labelStyle: Theme.of(context).textTheme.labelMedium,
                         hintStyle: Theme.of(context).textTheme.labelMedium,
                         contentPadding: const EdgeInsetsDirectional.fromSTEB(
@@ -82,6 +86,19 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                 ),
               ),
               const Spacer(),
+              Padding(
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "2",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary),
+                      ),
+                      Text(" / 5"),
+                    ],
+                  )),
               TextButton(
                   style: TextButton.styleFrom(
                     primary: Theme.of(context).primaryColor,
@@ -108,20 +125,23 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                     ),
                   ),
                   onPressed: () {
-                    if (emailSent) {
-                      Navigator.pop(context);
+                    if (emailController.text.isEmpty) {
+                      popUpDialog(context, 'Field Required',
+                          "Please input your email.");
                     } else {
-                      FirebaseAuth.instance
-                          .sendPasswordResetEmail(email: emailController.text)
-                          .then((_) {
-                        popUpDialog(context, "Reset Email Sent!",
-                            "We have sent a password reset link to your email.");
-                        setState(() {
-                          emailSent = true;
-                        });
-                      }).catchError((error) {
-                        popUpDialog(context, "Invalid Email", error.message);
-                      });
+                      try {
+                        String school = verifyEmail(emailController.text);
+                        Navigator.pushNamed(context, 'password_form',
+                            arguments: {
+                              'first': firstName,
+                              'last': lastName,
+                              'email': emailController.text,
+                              'school': school,
+                            });
+                      } on Exception catch (error) {
+                        popUpDialog(context, 'Login Failed',
+                            error.toString().split(':')[1]);
+                      }
                     }
                   }),
             ],
