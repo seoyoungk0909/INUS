@@ -10,10 +10,14 @@ import 'firebase_options.dart';
 // import views (screens)
 import 'views/post_detail_page.dart';
 import 'views/post_write_page.dart';
-import 'views/login_flow/login_page.dart';
+import 'views/login_flow/new_login_page.dart';
 import 'views/login_flow/password_reset_page.dart';
 import 'views/login_flow/verify_page.dart';
 import 'views/login_flow/welcome_page.dart';
+import 'views/login_flow/name_form.dart';
+import 'views/login_flow/email_form.dart';
+import 'views/login_flow/nickname_form.dart';
+import 'views/login_flow/password_form.dart';
 import 'views/home_page.dart';
 
 import 'utils/color_utils.dart';
@@ -55,14 +59,20 @@ class MyApp extends StatelessWidget {
               errorColor: Colors.red[300],
               brightness: Brightness.dark,
             ),
-            textTheme: const TextTheme(
-              bodyText2: TextStyle(color: Colors.white),
+            textTheme: TextTheme(
+              bodyText2: const TextStyle(color: Colors.white),
+              labelMedium:
+                  TextStyle(color: hexStringToColor("##A3A3A3"), fontSize: 14),
             )),
         initialRoute: initialRoute,
         routes: {
           '/': (context) => const HomePage(title: 'APDI'),
-          'login': (context) => const LoginPageWidget(),
+          'login': (context) => const LoginPage(),
           'password_reset': (context) => const PasswordResetPage(),
+          'name_form': (context) => const NameFormPage(),
+          'email_form': (context) => const EmailFormPage(),
+          'nickname_form': (context) => const NickNameFormPage(),
+          'password_form': (context) => const PasswordFormPage(),
           'verify': (context) => const VerifyPage(),
           'welcome': (context) => const WelcomePage(),
           'post_write': (context) => const PostWritePage(title: 'Create Post'),
