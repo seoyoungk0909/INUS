@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'models/user_model.dart' as um;
 
 enum ApplicationLoginState {
   loggedOut,
@@ -21,11 +22,13 @@ class LoginState extends ChangeNotifier {
   }
 
   Future<void> init() async {
-    FirebaseAuth.instance.userChanges().listen((user) {
+    FirebaseAuth.instance.userChanges().listen((user) async {
       if (user != null) {
         _loginState = ApplicationLoginState.loggedIn;
         _displayName = user.displayName;
         _email = user.email;
+        _currentUser = await um.User.fromUserRef(
+            FirebaseFirestore.instance.doc('user_info/${user.uid}'));
       } else {
         _loginState = ApplicationLoginState.loggedOut;
       }
@@ -41,6 +44,9 @@ class LoginState extends ChangeNotifier {
 
   String? _displayName;
   String? get username => _displayName;
+
+  um.User? _currentUser;
+  um.User? get currentUser => _currentUser;
 
   void verifyEmail(
     String email,

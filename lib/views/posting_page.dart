@@ -1,3 +1,5 @@
+import 'package:aus/models/comment_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
@@ -23,53 +25,134 @@ class PostListPage extends StatefulWidget {
 }
 
 class _PostListPageState extends State<PostListPage> {
-  PostController controller1 = PostController(Post(
-    postWriter: User(userName: "John Doe", userSchool: School.HKUST),
-  ));
-  PostController controller2 = PostController(
-      Post(postWriter: User(userName: "Apple Seed", userSchool: School.CUHK)));
+  // TODO: get rid of these controllers and update the refresh part
+  List<PostController> recentPostsControllers = [
+    PostController(Post(
+      postWriter: User(userName: "John Doe", userSchool: School.HKUST),
+      commentList: [
+        Comment(content: "Good", isPostWriter: false),
+        Comment(content: "Thank you", isPostWriter: true),
+      ],
+    )),
+    PostController(Post(
+      postWriter: User(userName: "Apple Seed", userSchool: School.CUHK),
+      commentList: [Comment(content: "Good", isPostWriter: false)],
+    )),
+  ];
 
-  PostController controller3 = PostController(
-      Post(postWriter: User(userName: "Claire Eve", userSchool: School.HKU)));
+  List<PostController> popularPostsControllers = [
+    PostController(
+        Post(postWriter: User(userName: "Claire Eve", userSchool: School.HKU))),
+  ];
+
+  Future<void> refreshPosts({bool popular = false}) async {
+    List<Post> posts = await Post.getPostsFromFirebase(popular: popular);
+    List<PostController> _controllers = [];
+    for (Post post in posts) {
+      _controllers.add(PostController(post));
+    }
+    setState(() {
+      if (popular) {
+        popularPostsControllers = _controllers;
+      } else {
+        recentPostsControllers = _controllers;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       body: DefaultTabController(
         length: 2,
-        child: Scaffold(
-          body: Column(
-            children: [
-              Container(
-                color: Theme.of(context).primaryColor,
-                child: const TabBar(
-                  indicatorColor: Colors.white,
-                  tabs: [
-                    Tab(text: "Recent"),
-                    Tab(text: "Popular"),
-                  ],
-                ),
+        child: Column(
+          children: [
+            Container(
+              color: Theme.of(context).primaryColor,
+              child: const TabBar(
+                indicatorColor: Colors.white,
+                tabs: [
+                  Tab(text: "Recent"),
+                  Tab(text: "Popular"),
+                ],
               ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    postListView([
-                      postUI(context, controller1, setState: setState),
-                      postUI(context, controller2, setState: setState)
-                    ]),
-                    postListView(
-                        [postUI(context, controller3, setState: setState)]),
-                  ],
-                ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  RefreshIndicator(
+                    onRefresh: () async {
+                      refreshPosts(popular: false);
+                    },
+                    color: Theme.of(context).colorScheme.secondary,
+                    child: StreamBuilder(
+                      stream: Post.getPostsQuery(popular: false).snapshots(),
+                      builder: (context,
+                          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                              snap) {
+                        if (snap.data == null) {
+                          return const CircularProgressIndicator();
+                        }
+                        return ListView.builder(
+                          // physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: snap.data!.size,
+                          itemBuilder: (BuildContext context, int i) {
+                            return FutureBuilder<Post>(
+                              future: Post.fromDocRef(
+                                  firebaseSnap: snap.data!.docs[i]),
+                              builder: (context, snapshot) {
+                                if (snapshot.data == null) {
+                                  return const SizedBox
+                                      .shrink(); //NOTE: empty widget
+                                }
+                                return postUI(
+                                    context, PostController(snapshot.data!),
+                                    setState: setState);
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  RefreshIndicator(
+                    onRefresh: () async {
+                      await refreshPosts(popular: true);
+                    },
+                    color: Theme.of(context).colorScheme.secondary,
+                    child: StreamBuilder(
+                      stream: Post.getPostsQuery(popular: true).snapshots(),
+                      builder: (context,
+                          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                              snap) {
+                        if (snap.data == null) {
+                          return const CircularProgressIndicator();
+                        }
+                        return ListView.builder(
+                          // physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: snap.data!.size,
+                          itemBuilder: (BuildContext context, int i) {
+                            return FutureBuilder<Post>(
+                              future: Post.fromDocRef(
+                                  firebaseSnap: snap.data!.docs[i]),
+                              builder: (context, snapshot) {
+                                if (snapshot.data == null) {
+                                  return const SizedBox.shrink();
+                                }
+                                return postUI(
+                                    context, PostController(snapshot.data!),
+                                    setState: setState);
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
