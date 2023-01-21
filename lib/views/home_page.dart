@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 // import views
 import 'posting_page.dart';
 import 'event_page.dart';
@@ -42,17 +43,42 @@ class HomePageState extends State<HomePage> {
         child: pageBuilder(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        selectedFontSize: 12.0,
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
+            activeIcon: SvgPicture.asset(
+              'assets/icons/users-profiles-02.svg',
+              color: Colors.white,
+            ),
+            icon: SvgPicture.asset(
+              'assets/icons/users-profiles-02.svg',
+              color: Colors.grey,
+            ),
+            // icon: Icon(Icons.calendar_today),
             label: 'Posting',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.group),
+            activeIcon: SvgPicture.asset(
+              'assets/icons/calendar-01.svg',
+              color: Colors.white,
+            ),
+            icon: SvgPicture.asset(
+              'assets/icons/calendar-01.svg',
+              color: Colors.grey,
+            ),
+            // icon: Icon(Icons.group),
             label: 'Events',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.stars_sharp),
+            activeIcon: SvgPicture.asset(
+              'assets/icons/user-profile-circle.svg',
+              color: Colors.white,
+            ),
+            icon: SvgPicture.asset(
+              'assets/icons/user-profile-circle.svg',
+              color: Colors.grey,
+            ),
+            // icon: Icon(Icons.stars_sharp),
             label: 'Profile',
           ),
         ],

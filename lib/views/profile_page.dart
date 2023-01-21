@@ -1,5 +1,8 @@
+import 'package:aus/firebase_login_state.dart';
+import 'package:aus/utils/color_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fbauth;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/comment_model.dart';
 import 'post_ui.dart';
@@ -21,9 +24,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  User currentUser = User(userName: "red bird", userSchool: School.HKU);
+  User defaultUser = User(userName: "", userSchool: School.PolyU);
 
-  List<PostController> MyPostsController = [
+  List<PostController> myPostsController = [
     PostController(Post(
       postWriter: User(userName: "John Doe", userSchool: School.HKUST),
       commentList: [
@@ -37,61 +40,83 @@ class ProfilePageState extends State<ProfilePage> {
     )),
   ];
 
-  List<PostController> SavedPostsController = [
+  List<PostController> savedPostsController = [
     PostController(
         Post(postWriter: User(userName: "Claire Eve", userSchool: School.HKU))),
   ];
 
-  // PostController controller1 = PostController(Post(
-  //   postWriter: User(userName: "John Doe", userSchool: School.HKUST),
-  // ));
-  // PostController controller2 = PostController(
-  //     Post(postWriter: User(userName: "Apple Seed", userSchool: School.CUHK)));
-
-  // PostController controller3 = PostController(
-  //     Post(postWriter: User(userName: "Claire Eve", userSchool: School.HKU)));
-
-  Widget userGreetings() {
+  Widget userGreetings(User currentUser) {
     return Column(
       children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 30, 20, 20),
+            child: Text(
+              "Welcome, ${currentUser.name}",
+              style: const TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(20, 30, 20, 20),
+              padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
               child: Text(
-                "Welcome, ${currentUser.name}",
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
+                currentUser.getSchool(),
+                style: const TextStyle(
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w100,
+                    color: Colors.grey),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 20, 0),
+              child: TextButton(
+                onPressed: () {
+                  showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Sign Out'),
+                          content: Text("Are you sure you want to sign out?"),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text(
+                                "No",
+                                style: TextStyle(color: Colors.redAccent),
+                              ),
+                            ),
+                            TextButton(
+                                onPressed: () {
+                                  fbauth.FirebaseAuth.instance.signOut();
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context, 'login', (route) => false);
+                                },
+                                child: const Text("Yes")),
+                          ],
+                        );
+                      });
+                },
+                child: Text(
+                  "sign out",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: hexStringToColor("##57AD9E")),
                 ),
               ),
             ),
-            TextButton(
-                onPressed: () {
-                  fbauth.FirebaseAuth.instance.signOut();
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, 'login', (route) => false);
-                },
-                child: const Text("sign out")),
           ],
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-            child: Text(
-              currentUser.getSchool(),
-              style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontWeight: FontWeight.w100,
-                  color: Colors.grey),
-            ),
-          ),
         ),
       ],
     );
+    // });
   }
 
   @override
@@ -102,7 +127,9 @@ class ProfilePageState extends State<ProfilePage> {
         backgroundColor: Theme.of(context).primaryColor,
         body: Column(
           children: [
-            userGreetings(),
+            Consumer<LoginState>(
+                builder: (context, state, _) =>
+                    userGreetings(state.currentUser ?? defaultUser)),
             const TabBar(
               indicatorColor: Colors.white,
               tabs: [
@@ -115,17 +142,17 @@ class ProfilePageState extends State<ProfilePage> {
                 children: [
                   ListView.builder(
                     // physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: MyPostsController.length,
+                    itemCount: myPostsController.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return postUI(context, MyPostsController[index],
+                      return postUI(context, myPostsController[index],
                           setState: setState);
                     },
                   ),
                   ListView.builder(
                     // physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: SavedPostsController.length,
+                    itemCount: savedPostsController.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return postUI(context, SavedPostsController[index],
+                      return postUI(context, savedPostsController[index],
                           setState: setState);
                     },
                   ),

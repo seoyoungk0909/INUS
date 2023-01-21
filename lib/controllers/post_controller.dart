@@ -6,7 +6,7 @@ class PostController {
 
   void incrementView() {
     post.views++;
-    post.firebaseDocRef?.update({"views": FieldValue.increment(1)});
+    post.firebaseDocRef?.update({"viewCount": FieldValue.increment(1)});
   }
 
   PostController(this.post);

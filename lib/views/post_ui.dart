@@ -1,18 +1,8 @@
 import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import '../controllers/post_controller.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
-Widget postListView(List<Widget> children) {
-  return SingleChildScrollView(
-    child: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: children,
-      ),
-    ),
-  );
-}
 
 Widget viewCommentSave(
     BuildContext context, String hexButtonColor, PostController controller,
@@ -31,6 +21,7 @@ Widget viewCommentSave(
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
+                // TODO: use eye-open
                 child: Icon(
                   Icons.remove_red_eye_outlined,
                   color: hexStringToColor(hexButtonColor),
@@ -50,7 +41,7 @@ Widget viewCommentSave(
                             ),
                       ),
                     )
-                  : Center(),
+                  : SizedBox.shrink(),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
                 child: Text(
@@ -74,10 +65,15 @@ Widget viewCommentSave(
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
-                child: Icon(
-                  Icons.comment,
+                // child: Icon(
+                //   Icons.comment,
+                //   color: hexStringToColor(hexButtonColor),
+                //   size: 24,
+                // ),
+                child: SvgPicture.asset(
+                  'assets/icons/message-square-typing.svg',
                   color: hexStringToColor(hexButtonColor),
-                  size: 24,
+                  height: 24,
                 ),
               ),
               showText
@@ -93,11 +89,11 @@ Widget viewCommentSave(
                             ),
                       ),
                     )
-                  : Center(),
+                  : SizedBox.shrink(),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
                 child: Text(
-                  controller.post.comments.length.toString(),
+                  controller.post.numComments().toString(),
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
                         fontFamily: 'Outfit',
                         color: hexStringToColor(hexButtonColor),
@@ -120,13 +116,17 @@ Widget viewCommentSave(
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
-                  child: Icon(
-                    Icons.bookmark_border,
-                    color: hexStringToColor(hexButtonColor),
-                    size: 24,
-                  ),
-                ),
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+                    // child: Icon(
+                    //   Icons.bookmark_border,
+                    //   color: hexStringToColor(hexButtonColor),
+                    //   size: 24,
+                    // ),
+                    child: SvgPicture.asset(
+                      'assets/icons/save_false.svg',
+                      color: hexStringToColor(hexButtonColor),
+                      height: 24,
+                    )),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
                   child: Text(
@@ -149,6 +149,23 @@ Widget viewCommentSave(
 }
 
 Widget writerInfoUI(BuildContext context, PostController controller) {
+  Widget profileImage;
+  switch (controller.post.category) {
+    case "Academic":
+      // profileImage = SvgPicture.asset('assets/imgs/Academic.svg');
+      profileImage = const Image(image: AssetImage('assets/imgs/Academic.png'));
+      break;
+    case "19+":
+      profileImage = SvgPicture.asset('assets/imgs/19+.svg');
+      break;
+    case "Just Talk":
+      // profileImage = SvgPicture.asset('assets/imgs/Just Talk.svg');
+      profileImage =
+          const Image(image: AssetImage('assets/imgs/Just Talk.png'));
+      break;
+    default:
+      profileImage = const Image(image: AssetImage('assets/imgs/profile.jpeg'));
+  }
   return Column(children: [
     Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(8, 12, 8, 16),
@@ -162,9 +179,7 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
             ),
-            child: Image(
-              image: AssetImage('assets/imgs/profile.jpeg'),
-            ),
+            child: profileImage,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
