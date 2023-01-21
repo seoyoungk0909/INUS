@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class PostWritePage extends StatefulWidget {
   const PostWritePage({Key? key, required this.title}) : super(key: key);
@@ -20,6 +19,8 @@ class PostWritePage extends StatefulWidget {
 
 class PostWritePageState extends State<PostWritePage> {
   Future<void> uploadPost(String currentUserId) async {
+    DocumentReference userRef =
+        FirebaseFirestore.instance.doc('user_info/$currentUserId');
     DocumentReference newPost =
         await FirebaseFirestore.instance.collection("post").add({
       'title': postTitle.text.trim(),
@@ -30,7 +31,10 @@ class PostWritePageState extends State<PostWritePage> {
       'commentCount': 0,
       'saveCount': 0,
       'comments': [],
-      'user': FirebaseFirestore.instance.doc('user_info/$currentUserId'),
+      'user': userRef,
+    });
+    userRef.update({
+      'posts': FieldValue.arrayUnion([newPost])
     });
   }
 
