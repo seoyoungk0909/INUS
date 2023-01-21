@@ -29,17 +29,6 @@ String eventImage(String eventCategory) {
   return 'assets/imgs/event_seminar.png';
 }
 
-Widget eventListView(List<Widget> children) {
-  return SingleChildScrollView(
-    child: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: children,
-      ),
-    ),
-  );
-}
-
 //event photo
 Widget eventPhoto(BuildContext context, EventController controller) {
   return Container(

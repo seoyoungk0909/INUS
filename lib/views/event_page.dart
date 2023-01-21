@@ -65,62 +65,41 @@ class EventPageState extends State<EventPage> {
             ),
           ),
           Expanded(
-              child: TabBarView(children: [
-            RefreshIndicator(
+            child: TabBarView(children: [
+              RefreshIndicator(
                 onRefresh: () async {
                   refreshEvents(formal: true);
                 },
                 color: Theme.of(context).colorScheme.secondary,
-                child: ListView.builder(
-                    itemCount: formalEventsControllers.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            children: [
-                              // if (index % 2 == 0)
-                              eventUI(context, formalEventsControllers[index],
-                                  setState: setState)
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              // if (index % 2 != 0)
-                              eventUI(context, formalEventsControllers[index],
-                                  setState: setState)
-                            ],
-                          ),
-                        ],
-                      );
-                    })),
-            RefreshIndicator(
+                child: GridView.builder(
+                  itemCount: formalEventsControllers.length,
+                  itemBuilder: (context, index) => eventUI(
+                      context, formalEventsControllers[index],
+                      setState: setState),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.73,
+                  ),
+                ),
+              ),
+              RefreshIndicator(
                 onRefresh: () async {
                   refreshEvents(formal: false);
                 },
                 color: Theme.of(context).colorScheme.secondary,
-                child: ListView.builder(
-                    itemCount: casualEventsControllers.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            children: [
-                              eventUI(context, casualEventsControllers[index],
-                                  setState: setState)
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              eventUI(context, casualEventsControllers[index],
-                                  setState: setState)
-                            ],
-                          ),
-                        ],
-                      );
-                    }))
-          ])),
+                child: GridView.builder(
+                  itemCount: casualEventsControllers.length,
+                  itemBuilder: (context, index) => eventUI(
+                      context, casualEventsControllers[index],
+                      setState: setState),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.73,
+                  ),
+                ),
+              )
+            ]),
+          ),
         ],
       )),
     ));
