@@ -30,7 +30,7 @@ class CommentBoxState extends State<CommentBox> {
               ),
             ),
             TextButton(
-              style: TextButton.styleFrom(foregroundColor: Colors.blue),
+              style: TextButton.styleFrom(primary: Colors.blue),
               onPressed: userEnterMessage.trim().isEmpty ? null : () {},
               child: Text("Post"),
             ),
