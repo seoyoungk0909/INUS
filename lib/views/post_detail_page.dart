@@ -34,23 +34,25 @@ class PostDetailPageState extends State<PostDetailPage> {
       body: Column(
         children: [
           postUI(context, controller, isDetail: true),
-          FutureBuilder(
-            future: controller.post.loadComments(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const SizedBox.shrink();
-              }
-              return controller.post.comments.isNotEmpty
-                  ? Expanded(
-                      child: ListView.builder(
-                          itemCount: controller.post.comments.length,
-                          itemBuilder: (context, idx) {
-                            return CommentUI(controller.post.comments[idx]);
-                          }))
-                  : const Padding(
-                      padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                      child: Center(child: Text("No Comments")));
-            },
+          Expanded(
+            child: FutureBuilder(
+              future: controller.post.loadComments(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const SizedBox.shrink();
+                }
+                return controller.post.comments.isNotEmpty
+                    ? Expanded(
+                        child: ListView.builder(
+                            itemCount: controller.post.comments.length,
+                            itemBuilder: (context, idx) {
+                              return CommentUI(controller.post.comments[idx]);
+                            }))
+                    : const Padding(
+                        padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+                        child: Center(child: Text("No Comments")));
+              },
+            ),
           ),
           CommentBox(),
         ],
