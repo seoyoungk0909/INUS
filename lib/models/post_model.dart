@@ -113,15 +113,10 @@ class Post {
   static Query<Map<String, dynamic>> getPostsQuery({bool popular = false}) {
     CollectionReference<Map<String, dynamic>> postCollection =
         FirebaseFirestore.instance.collection('post');
-    Query<Map<String, dynamic>> firebaseQuery;
+    Query<Map<String, dynamic>> firebaseQuery =
+        postCollection.orderBy('time', descending: true).limit(20);
     if (popular) {
-      firebaseQuery = postCollection
-          .orderBy('time', descending: true)
-          .orderBy('viewCount', descending: true)
-          .limit(20);
-    } else {
-      firebaseQuery =
-          postCollection.orderBy('time', descending: true).limit(20);
+      firebaseQuery = firebaseQuery.orderBy('viewCount', descending: true);
     }
     return firebaseQuery;
   }

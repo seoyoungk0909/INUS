@@ -1,5 +1,6 @@
 import 'package:aus/views/comment_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
@@ -30,7 +31,13 @@ class PostDetailPageState extends State<PostDetailPage> {
       controller.post.loadComments();
     }
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset('assets/icons/Report.svg'))
+        ],
+      ),
       body: Column(
         children: [
           postUI(context, controller, isDetail: true),

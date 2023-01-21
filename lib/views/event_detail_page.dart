@@ -1,6 +1,7 @@
 // import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import '../controllers/event_controller.dart';
 import '../models/event_model.dart';
 import 'package:aus/utils/color_utils.dart';
@@ -29,8 +30,13 @@ class EventDetailPageState extends State<EventDetailPage> {
     EventController controller = EventController(arguments['event'] ?? Event());
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-        centerTitle: false,
+        // title: Text(widget.title),
+        // centerTitle: false,
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset('assets/icons/Report.svg'))
+        ],
       ),
       body: ListView(
         children: [
