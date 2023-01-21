@@ -133,7 +133,7 @@ class ProfilePageState extends State<ProfilePage> {
                             return const CircularProgressIndicator();
                           }
                           try {
-                            List postRefs = snap.data!.get('posts');
+                            List postRefs = snap.data!.get('myPosts');
                             postRefs = postRefs.reversed.toList();
                             List savedPostRefs = snap.data!.get('savedPosts');
                             if (postRefs.isEmpty) {

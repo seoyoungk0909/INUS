@@ -34,7 +34,7 @@ class PostWritePageState extends State<PostWritePage> {
       'user': userRef,
     });
     userRef.update({
-      'posts': FieldValue.arrayUnion([newPost])
+      'myPosts': FieldValue.arrayUnion([newPost])
     });
   }
 
