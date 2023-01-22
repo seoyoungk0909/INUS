@@ -62,7 +62,7 @@ class EventDetailPageState extends State<EventDetailPage> {
                         onPressed: () {},
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
-                                hexStringToColor("#8d65f2")),
+                                Theme.of(context).colorScheme.secondary),
                             padding: MaterialStateProperty.all(
                                 const EdgeInsetsDirectional.fromSTEB(
                                     120, 13, 120, 13)),

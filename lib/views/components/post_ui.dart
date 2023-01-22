@@ -190,7 +190,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                       ? Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
                           child: Text(
-                            saved ? 'Saved' : 'Save',
+                            'Save',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText2
