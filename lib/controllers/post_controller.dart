@@ -9,6 +9,16 @@ class PostController {
     post.firebaseDocRef?.update({"viewCount": FieldValue.increment(1)});
   }
 
+  void postSave() {
+    post.saveCount++;
+    post.firebaseDocRef?.update({"saveCount": FieldValue.increment(1)});
+  }
+
+  void postSaveCancel() {
+    post.saveCount--;
+    post.firebaseDocRef?.update({"saveCount": FieldValue.increment(-1)});
+  }
+
   PostController(this.post);
 
   String getPostWriterSchool() => post.getWriterSchool();

@@ -152,12 +152,14 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                     .doc(FirebaseAuth.instance.currentUser?.uid);
                 if (saved) {
                   // saved = false -> true; now we save
+                  widget.controller.postSave();
                   userRef.update({
                     'savedPosts': FieldValue.arrayUnion(
                         [widget.controller.post.firebaseDocRef])
                   });
                 } else {
                   // saved = true -> false; now we remove
+                  widget.controller.postSaveCancel();
                   userRef.update({
                     'savedPosts': FieldValue.arrayRemove(
                         [widget.controller.post.firebaseDocRef])
@@ -184,18 +186,39 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                         color: hexStringToColor(widget.hexButtonColor),
                         height: 24,
                       )),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
-                    child: Text(
-                      saved ? 'Saved' : 'Save',
-                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                            fontFamily: 'Outfit',
-                            color: hexStringToColor(widget.hexButtonColor),
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
+                  widget.showText
+                      ? Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
+                          child: Text(
+                            saved ? 'Saved' : 'Save',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText2
+                                ?.copyWith(
+                                  fontFamily: 'Outfit',
+                                  color:
+                                      hexStringToColor(widget.hexButtonColor),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                ),
                           ),
-                    ),
-                  ),
+                        )
+                      : Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
+                          child: Text(
+                            widget.controller.post.saveCount.toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText2
+                                ?.copyWith(
+                                  fontFamily: 'Outfit',
+                                  color:
+                                      hexStringToColor(widget.hexButtonColor),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                          ),
+                        ),
                 ],
               ),
             ),

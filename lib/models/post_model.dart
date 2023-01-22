@@ -14,6 +14,7 @@ class Post {
       "Earth is the third planet from the Sun and the only astronomical object known to harbor life. Earth is the third planet from the Sun and the only astronomical object known to harbor life. Earth is the third planet from the Sun and the only astronomical object known to harbor life. Earth is the third planet from the Sun and the only astronomical object known to harbor life.";
   late DateTime timestamp;
   int views = 0;
+  int saveCount = 0;
   DocumentReference<Map<String, dynamic>>? firebaseDocRef;
   List<Comment> comments = [];
   List commentRefs = [];
@@ -25,6 +26,7 @@ class Post {
       String? content,
       DateTime? time,
       int? postViews,
+      int? postSaves,
       List<Comment>? commentList,
       List? commentRefList,
       DocumentReference<Map<String, dynamic>>? docRef}) {
@@ -34,6 +36,7 @@ class Post {
     text = content ?? text;
     timestamp = time ?? DateTime.now();
     views = postViews ?? views;
+    saveCount = postSaves ?? saveCount;
     commentRefs = commentRefList ?? commentRefs;
     // comments = commentList ?? comments;
 
@@ -80,6 +83,7 @@ class Post {
         content: postData.get('content'),
         time: (postData.get('time') as Timestamp).toDate(),
         postViews: postData.get('viewCount'),
+        postSaves: postData.get('saveCount'),
         commentList: comments,
         commentRefList: commentRefList,
         docRef: firebaseDoc);
