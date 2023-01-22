@@ -1,3 +1,4 @@
+import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -8,13 +9,10 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  bool islogin = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
+      backgroundColor: Theme.of(context).primaryColorDark,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
@@ -22,42 +20,42 @@ class _WelcomePageState extends State<WelcomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  "Welcome to AUS!",
-                  style: TextStyle(fontSize: 30),
-                  textAlign: TextAlign.center,
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      "Welcome to AUS!",
+                      style: TextStyle(fontSize: 30),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 32, 0, 0),
+                  padding: const EdgeInsets.only(bottom: 40),
                   child: TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Theme.of(context).primaryColor,
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
-                      elevation: 3,
-                      side: const BorderSide(
-                        color: Colors.transparent,
-                        width: 1,
+                      style: TextButton.styleFrom(
+                        primary: Theme.of(context).primaryColorLight,
+                        backgroundColor: Theme.of(context).primaryColorDark,
+                        elevation: 3,
                       ),
-                    ),
-                    child: SizedBox(
-                      width: 150,
-                      height: 50,
-                      child: Center(
-                        child: Text(
-                          "Get Started!",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(color: Colors.white),
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            "Get Started →",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: ApdiColors.lightText,
+                                decoration: TextDecoration.underline),
+                          ),
                         ),
                       ),
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/', (route) => false);
-                    },
-                  ),
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/', (route) => false);
+                      }),
                 ),
               ],
             ),

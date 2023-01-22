@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
             primaryColorDark: ApdiColors.darkerBackground,
             backgroundColor: ApdiColors.darkBackground,
             colorScheme: ColorScheme.fromSwatch(
-              primarySwatch: Colors.green,
+              primarySwatch: Colors.blue,
               primaryColorDark: ApdiColors.darkerBackground, //darker
               accentColor: ApdiColors.themeGreen,
               cardColor: hexStringToColor("##3E3E3E"),
