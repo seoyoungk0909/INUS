@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../models/comment_model.dart';
-import '../utils/color_utils.dart';
+import '../../models/comment_model.dart';
+import '../../utils/color_utils.dart';
 
 Widget CommentUI(Comment comment) {
   return Padding(

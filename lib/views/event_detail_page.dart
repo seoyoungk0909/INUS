@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import '../controllers/event_controller.dart';
 import '../models/event_model.dart';
 import 'package:aus/utils/color_utils.dart';
-import '../views/event_ui.dart';
+import 'components/event_ui.dart';
 import 'package:intl/intl.dart';
 
 class EventDetailPage extends StatefulWidget {

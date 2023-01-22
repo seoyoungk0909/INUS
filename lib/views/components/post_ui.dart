@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../controllers/post_controller.dart';
+import '../../controllers/post_controller.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ViewCommentSave extends StatefulWidget {

@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart' as fbauth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'post_ui.dart';
+import 'components/post_ui.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
 import '../models/user_model.dart';

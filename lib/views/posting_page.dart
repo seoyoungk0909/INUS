@@ -1,11 +1,9 @@
-import 'package:aus/models/comment_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:flutter/material.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
-import '../models/user_model.dart';
-import 'post_ui.dart';
+import 'components/post_ui.dart';
 
 class PostListPage extends StatefulWidget {
   const PostListPage({Key? key, required this.title}) : super(key: key);

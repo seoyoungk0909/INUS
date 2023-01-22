@@ -1,6 +1,6 @@
 import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
-import '../controllers/event_controller.dart';
+import '../../controllers/event_controller.dart';
 import 'package:intl/intl.dart';
 
 //determine color of category button, default color is blue

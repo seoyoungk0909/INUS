@@ -1,11 +1,11 @@
-import 'package:aus/views/comment_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
-import 'post_ui.dart';
-import 'comment_ui.dart';
+import 'components/post_ui.dart';
+import 'components/comment_ui.dart';
+import 'components/comment_box.dart';
 
 class PostDetailPage extends StatefulWidget {
   const PostDetailPage({Key? key, required this.title}) : super(key: key);

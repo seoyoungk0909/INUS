@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../controllers/event_controller.dart';
 import '../models/event_model.dart';
-import 'event_ui.dart';
+import 'components/event_ui.dart';
 
 class EventPage extends StatefulWidget {
   const EventPage({Key? key, required this.title}) : super(key: key);
