@@ -134,9 +134,13 @@ class ProfilePageState extends State<ProfilePage> {
                                 child: CircularProgressIndicator());
                           }
                           try {
-                            List postRefs = snap.data!.get('myPosts');
+                            Map<String, dynamic> data = snap.data!.data()!;
+                            List postRefs = data['myPosts'];
                             postRefs = postRefs.reversed.toList();
-                            List savedPostRefs = snap.data!.get('savedPosts');
+                            List savedPostRefs = [];
+                            if (data.containsKey('savedPosts')) {
+                              savedPostRefs = data['savedPosts'];
+                            }
                             if (postRefs.isEmpty) {
                               return const Center(child: Text("No Posts"));
                             }
@@ -144,7 +148,7 @@ class ProfilePageState extends State<ProfilePage> {
                               // physics: const AlwaysScrollableScrollPhysics(),
                               itemCount: postRefs.length,
                               itemBuilder: (BuildContext context, int idx) {
-                                bool saved =
+                                bool saved = savedPostRefs.isNotEmpty &&
                                     savedPostRefs.contains(postRefs[idx]);
                                 return FutureBuilder<Post>(
                                   future: Post.fromDocRef(
