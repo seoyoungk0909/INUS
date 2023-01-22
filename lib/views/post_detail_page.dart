@@ -34,7 +34,9 @@ class PostDetailPageState extends State<PostDetailPage> {
     }
 
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).backgroundColor,
         actions: [
           IconButton(
               onPressed: () {},

@@ -34,13 +34,14 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(
         child: Center(
           child: pageBuilder(_selectedIndex),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).primaryColorDark,
         selectedFontSize: 12.0,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(

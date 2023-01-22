@@ -105,7 +105,7 @@ class ProfilePageState extends State<ProfilePage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Consumer<LoginState>(
           builder: (context, state, _) => Column(
             children: [
@@ -130,7 +130,8 @@ class ProfilePageState extends State<ProfilePage> {
                                     DocumentSnapshot<Map<String, dynamic>>>
                                 snap) {
                           if (snap.data == null) {
-                            return const CircularProgressIndicator();
+                            return const Center(
+                                child: CircularProgressIndicator());
                           }
                           try {
                             List postRefs = snap.data!.get('myPosts');
@@ -174,7 +175,8 @@ class ProfilePageState extends State<ProfilePage> {
                                     DocumentSnapshot<Map<String, dynamic>>>
                                 snap) {
                           if (snap.data == null) {
-                            return const CircularProgressIndicator();
+                            return const Center(
+                                child: CircularProgressIndicator());
                           }
                           try {
                             List postRefs = snap.data!.get('savedPosts');

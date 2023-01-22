@@ -52,56 +52,56 @@ class EventPageState extends State<EventPage> {
         body: DefaultTabController(
       length: 2,
       child: Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
           body: Column(
-        children: [
-          Container(
-            color: Theme.of(context).primaryColor,
-            child: const TabBar(
-              indicatorColor: Colors.white,
-              tabs: [
-                Tab(text: "Formal"),
-                Tab(text: "Casual"),
-              ],
-            ),
-          ),
-          Expanded(
-            child: TabBarView(children: [
-              RefreshIndicator(
-                onRefresh: () async {
-                  refreshEvents(formal: true);
-                },
-                color: Theme.of(context).colorScheme.secondary,
-                child: GridView.builder(
-                  itemCount: formalEventsControllers.length,
-                  itemBuilder: (context, index) => eventUI(
-                      context, formalEventsControllers[index],
-                      setState: setState),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.73,
-                  ),
-                ),
+            children: [
+              const TabBar(
+                indicatorColor: Colors.white,
+                tabs: [
+                  Tab(text: "Formal"),
+                  Tab(text: "Casual"),
+                ],
               ),
-              RefreshIndicator(
-                onRefresh: () async {
-                  refreshEvents(formal: false);
-                },
-                color: Theme.of(context).colorScheme.secondary,
-                child: GridView.builder(
-                  itemCount: casualEventsControllers.length,
-                  itemBuilder: (context, index) => eventUI(
-                      context, casualEventsControllers[index],
-                      setState: setState),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.73,
+              Expanded(
+                child: TabBarView(children: [
+                  RefreshIndicator(
+                    onRefresh: () async {
+                      refreshEvents(formal: true);
+                    },
+                    color: Theme.of(context).colorScheme.secondary,
+                    child: GridView.builder(
+                      itemCount: formalEventsControllers.length,
+                      itemBuilder: (context, index) => eventUI(
+                          context, formalEventsControllers[index],
+                          setState: setState),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.73,
+                      ),
+                    ),
                   ),
-                ),
-              )
-            ]),
-          ),
-        ],
-      )),
+                  RefreshIndicator(
+                    onRefresh: () async {
+                      refreshEvents(formal: false);
+                    },
+                    color: Theme.of(context).colorScheme.secondary,
+                    child: GridView.builder(
+                      itemCount: casualEventsControllers.length,
+                      itemBuilder: (context, index) => eventUI(
+                          context, casualEventsControllers[index],
+                          setState: setState),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.73,
+                      ),
+                    ),
+                  )
+                ]),
+              ),
+            ],
+          )),
     ));
   }
 }

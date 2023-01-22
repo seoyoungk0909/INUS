@@ -44,13 +44,13 @@ class _PostListPageState extends State<PostListPage> {
       onRefresh: () async {
         refreshPosts(popular: popular);
       },
-      color: Theme.of(context).colorScheme.secondary,
+      color: Theme.of(context).backgroundColor,
       child: StreamBuilder(
         stream: Post.getPostsQuery(popular: popular).snapshots(),
         builder:
             (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snap) {
           if (snap.data == null) {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           }
           return ListView.builder(
             // physics: const AlwaysScrollableScrollPhysics(),
@@ -84,19 +84,17 @@ class _PostListPageState extends State<PostListPage> {
     Future<DocumentSnapshot> snapshots = userRef.get();
 
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body: DefaultTabController(
         length: 2,
         child: Column(
           children: [
-            Container(
-              color: Theme.of(context).primaryColor,
-              child: const TabBar(
-                indicatorColor: Colors.white,
-                tabs: [
-                  Tab(text: "Recent"),
-                  Tab(text: "Popular"),
-                ],
-              ),
+            const TabBar(
+              indicatorColor: Colors.white,
+              tabs: [
+                Tab(text: "Recent"),
+                Tab(text: "Popular"),
+              ],
             ),
             Expanded(
               child: TabBarView(
@@ -106,7 +104,8 @@ class _PostListPageState extends State<PostListPage> {
                       builder:
                           (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                         if (snapshot.data == null) {
-                          return const CircularProgressIndicator();
+                          return const Center(
+                              child: CircularProgressIndicator());
                         }
                         return postsStreamView(
                             popular: false,
@@ -117,7 +116,8 @@ class _PostListPageState extends State<PostListPage> {
                       builder:
                           (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                         if (snapshot.data == null) {
-                          return const CircularProgressIndicator();
+                          return const Center(
+                              child: CircularProgressIndicator());
                         }
                         return postsStreamView(
                             popular: true,

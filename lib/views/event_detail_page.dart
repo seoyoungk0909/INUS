@@ -29,7 +29,9 @@ class EventDetailPageState extends State<EventDetailPage> {
         <String, dynamic>{}) as Map;
     EventController controller = EventController(arguments['event'] ?? Event());
     return Scaffold(
+      backgroundColor: Theme.of(context).primaryColorDark,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).backgroundColor,
         // title: Text(widget.title),
         // centerTitle: false,
         actions: [
@@ -144,7 +146,7 @@ Widget categoryHashtag(
     child: Container(
       height: 22,
       decoration: BoxDecoration(
-        color: hexStringToColor("#3E3E3E"),
+        color: Theme.of(context).backgroundColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Container(
@@ -173,7 +175,7 @@ Widget quickView(BuildContext context, EventController controller) {
     child: Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: hexStringToColor("#3E3E3E"),
+        color: Theme.of(context).backgroundColor,
         borderRadius: BorderRadius.circular(6),
       ),
       child: Container(
@@ -253,7 +255,7 @@ Widget detailedView(BuildContext context, EventController controller) {
     child: Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: hexStringToColor("#3E3E3E"),
+        color: Theme.of(context).backgroundColor,
         borderRadius: BorderRadius.circular(6),
       ),
       child: Container(
