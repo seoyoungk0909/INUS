@@ -344,7 +344,9 @@ Widget contentUI(BuildContext context, PostController controller,
           children: [
             Expanded(
               child: Text(
-                controller.post.title,
+                controller.post.title.isEmpty
+                    ? "No Title"
+                    : controller.post.title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontFamily: 'Outfit',
                       color: Colors.white,
@@ -363,7 +365,9 @@ Widget contentUI(BuildContext context, PostController controller,
           children: [
             Expanded(
               child: Text(
-                controller.post.text,
+                controller.post.text.isEmpty
+                    ? "No Content"
+                    : controller.post.text,
                 maxLines: isDetail ? 1000 : 2,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText2?.copyWith(
