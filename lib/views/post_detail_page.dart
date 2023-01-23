@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../controllers/post_controller.dart';
+import '../models/comment_model.dart';
 import '../models/post_model.dart';
 import 'components/post_ui.dart';
 import 'components/comment_ui.dart';
@@ -29,10 +31,6 @@ class PostDetailPageState extends State<PostDetailPage> {
     PostController controller = PostController(arguments['post'] ?? Post());
     bool saved = arguments['saved'] ?? false;
 
-    if (controller.post.comments.length != controller.post.commentRefs.length) {
-      controller.post.loadComments();
-    }
-
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -45,28 +43,39 @@ class PostDetailPageState extends State<PostDetailPage> {
       ),
       body: Column(
         children: [
+          // post detail
           postUI(context, controller, isDetail: true, saved: saved),
+          // comment list
           Expanded(
-            child: FutureBuilder(
-              future: controller.post.loadComments(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const SizedBox.shrink();
+            child: StreamBuilder(
+              stream: controller.post.firebaseDocRef?.snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snap) {
+                if (snap.data == null) {
+                  return const Center(child: CircularProgressIndicator());
                 }
-                return controller.post.comments.isNotEmpty
-                    ? Expanded(
-                        child: ListView.builder(
-                            itemCount: controller.post.comments.length,
-                            itemBuilder: (context, idx) {
-                              return CommentUI(controller.post.comments[idx]);
-                            }))
-                    : const Padding(
-                        padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                        child: Center(child: Text("No Comments")));
+                List commentRefs = snap.data!.get('comments');
+                if (commentRefs.isEmpty) {
+                  return const Center(child: Text("No Comments"));
+                }
+                return ListView.builder(
+                    itemCount: commentRefs.length,
+                    itemBuilder: (context, idx) {
+                      return FutureBuilder(
+                        future: Comment.fromCommentRef(commentRefs[idx]),
+                        builder: (context, AsyncSnapshot<Comment> snapshot) {
+                          if (snapshot.data == null) {
+                            return const SizedBox.shrink(); // empty widget
+                          }
+                          return CommentUI(snapshot.data!);
+                        },
+                      );
+                    });
               },
             ),
           ),
-          CommentBox(),
+          // comment write
+          CommentBox(controller: controller),
         ],
       ),
     );
