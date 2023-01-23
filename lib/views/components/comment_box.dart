@@ -1,4 +1,5 @@
 import 'package:aus/utils/color_utils.dart';
+import 'package:aus/views/components/popup_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,9 @@ class CommentBox extends StatefulWidget {
 }
 
 class CommentBoxState extends State<CommentBox> {
-  String userEnterMessage = '';
+  // String userEnterMessage = '';
+  bool typed = false;
+  TextEditingController commentController = TextEditingController();
 
   bool isWriter() {
     return widget.controller.post.writer.uid ==
@@ -38,6 +41,7 @@ class CommentBoxState extends State<CommentBox> {
             children: [
               Expanded(
                 child: TextField(
+                  controller: commentController,
                   decoration: const InputDecoration(
                     // labelText: 'Write your comment',
                     hintText: 'Write your comment',
@@ -45,24 +49,28 @@ class CommentBoxState extends State<CommentBox> {
                   ),
                   onChanged: (value) {
                     setState(() {
-                      userEnterMessage = value;
+                      typed = value.trim().isNotEmpty;
                     });
                   },
                 ),
               ),
               TextButton(
                 style: TextButton.styleFrom(primary: Colors.blue),
-                onPressed: userEnterMessage.trim().isEmpty
+                onPressed: !typed
                     ? null
                     : () {
                         FirebaseFirestore.instance
                             .collection('post_comment')
                             .add({
-                          'body': userEnterMessage,
+                          'body': commentController.text,
                           'writerFlag': isWriter(),
                           'time': DateTime.now(),
                         }).then((DocumentReference newComment) {
                           widget.controller.addComment(newComment);
+                          commentController.clear();
+                          setState(() {
+                            typed = false;
+                          });
                         });
                       },
                 child: const Text("Post"),
