@@ -229,8 +229,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
   }
 }
 
-Widget writerInfoUI(BuildContext context, PostController controller,
-    {bool anonymous = false}) {
+Widget writerInfoUI(BuildContext context, PostController controller) {
   Widget profileImage;
   switch (controller.post.category) {
     case "Academic":
@@ -292,41 +291,40 @@ Widget writerInfoUI(BuildContext context, PostController controller,
                   ),
                 ],
               ),
-              !anonymous
-                  ? Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                          child: Text(
-                            controller.post.writer.name,
-                            style:
-                                Theme.of(context).textTheme.bodyText2?.copyWith(
-                                      color: hexStringToColor("#AAAAAA"),
-                                      fontFamily: 'Outfit',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                    ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                    child: Text(
+                      !controller.post.anonymous
+                          ? controller.post.writer.name
+                          : "Anonymous",
+                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                            color: hexStringToColor("#AAAAAA"),
+                            fontFamily: 'Outfit',
+                            fontSize: 12,
+                            fontWeight: FontWeight.normal,
                           ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
-                          child: Text(
-                            "• ${controller.getPostWriterSchool()}",
-                            style:
-                                Theme.of(context).textTheme.bodyText2?.copyWith(
-                                      fontFamily: 'Outfit',
-                                      color: hexStringToColor("#AAAAAA"),
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                    ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
+                    child: Text(
+                      // !controller.post.anonymous
+                      //     ? "• ${controller.getPostWriterSchool()}"
+                      //     : "• (Not Specified)",
+                      "• ${controller.getPostWriterSchool()}",
+                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                            fontFamily: 'Outfit',
+                            color: hexStringToColor("#AAAAAA"),
+                            fontSize: 12,
+                            fontWeight: FontWeight.normal,
                           ),
-                        ),
-                      ],
-                    )
-                  : const SizedBox(height: 14),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ],
@@ -384,10 +382,7 @@ Widget contentUI(BuildContext context, PostController controller,
 }
 
 Widget postUI(BuildContext context, PostController controller,
-    {Function? setState,
-    bool isDetail = false,
-    bool saved = false,
-    bool anonymous = false}) {
+    {Function? setState, bool isDetail = false, bool saved = false}) {
   return Padding(
     padding: const EdgeInsetsDirectional.fromSTEB(16, 14, 16, 0),
     child: Container(
@@ -408,7 +403,7 @@ Widget postUI(BuildContext context, PostController controller,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            writerInfoUI(context, controller, anonymous: anonymous),
+            writerInfoUI(context, controller),
             GestureDetector(
               onTap: () {
                 if (isDetail) return;

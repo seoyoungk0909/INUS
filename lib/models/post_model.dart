@@ -18,6 +18,7 @@ class Post {
   DocumentReference<Map<String, dynamic>>? firebaseDocRef;
   List<Comment> comments = [];
   List commentRefs = [];
+  bool anonymous = false;
 
   Post(
       {User? postWriter,
@@ -29,7 +30,8 @@ class Post {
       int? postSaves,
       List<Comment>? commentList,
       List? commentRefList,
-      DocumentReference<Map<String, dynamic>>? docRef}) {
+      DocumentReference<Map<String, dynamic>>? docRef,
+      bool? isAnonymous}) {
     writer = postWriter ?? writer;
     title = postTitle ?? title;
     category = postCategory ?? category;
@@ -38,6 +40,7 @@ class Post {
     views = postViews ?? views;
     saveCount = postSaves ?? saveCount;
     commentRefs = commentRefList ?? commentRefs;
+    anonymous = isAnonymous ?? anonymous;
     // comments = commentList ?? comments;
 
     if (commentList != null && commentList.isNotEmpty) {
@@ -75,6 +78,9 @@ class Post {
     }
 
     User postWriter = await User.fromUserRef(postData.get('user'));
+    Map<String, dynamic> postDataMap = postData.data()!;
+    bool isAnonymous =
+        postDataMap.containsKey('isAnonymous') && postDataMap['isAnonymous'];
 
     return Post(
         postWriter: postWriter,
@@ -86,7 +92,8 @@ class Post {
         postSaves: postData.get('saveCount'),
         commentList: comments,
         commentRefList: commentRefList,
-        docRef: firebaseDoc);
+        docRef: firebaseDoc,
+        isAnonymous: isAnonymous);
   }
 
   Future<bool> loadComments() async {

@@ -18,6 +18,8 @@ class PostWritePage extends StatefulWidget {
 }
 
 class PostWritePageState extends State<PostWritePage> {
+  bool isAnonymous = false;
+
   Future<void> uploadPost(String currentUserId) async {
     DocumentReference userRef =
         FirebaseFirestore.instance.doc('user_info/$currentUserId');
@@ -32,6 +34,7 @@ class PostWritePageState extends State<PostWritePage> {
       'saveCount': 0,
       'comments': [],
       'user': userRef,
+      'isAnonymous': isAnonymous,
     });
     userRef.update({
       'myPosts': FieldValue.arrayUnion([newPost])
@@ -130,6 +133,24 @@ class PostWritePageState extends State<PostWritePage> {
                     ]),
                 ],
               ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20, left: 10),
+            child: Row(
+              children: [
+                Checkbox(
+                    checkColor: Colors.white,
+                    fillColor: MaterialStateProperty.all(
+                        Theme.of(context).colorScheme.secondary),
+                    value: isAnonymous,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isAnonymous = value!;
+                      });
+                    }),
+                Text("Anonymous Post")
+              ],
             ),
           ),
           Padding(
