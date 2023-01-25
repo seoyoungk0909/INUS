@@ -77,10 +77,17 @@ class Post {
           await Comment.getCommentsFromFirebase(commentRefList, postData);
     }
 
-    User postWriter = await User.fromUserRef(postData.get('user'));
-    Map<String, dynamic> postDataMap = postData.data()!;
-    bool isAnonymous =
-        postDataMap.containsKey('isAnonymous') && postDataMap['isAnonymous'];
+    User postWriter;
+    bool isAnonymous;
+    try {
+      postWriter = await User.fromUserRef(postData.get('user'));
+      Map<String, dynamic> postDataMap = postData.data()!;
+      isAnonymous =
+          postDataMap.containsKey('isAnonymous') && postDataMap['isAnonymous'];
+    } catch (e) {
+      postWriter = User(userName: "Anonymous");
+      isAnonymous = true;
+    }
 
     return Post(
         postWriter: postWriter,
