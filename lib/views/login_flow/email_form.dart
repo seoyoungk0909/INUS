@@ -14,6 +14,8 @@ class EmailFormPage extends StatefulWidget {
 class EmailFormPageState extends State<EmailFormPage> {
   final TextEditingController emailController = TextEditingController();
 
+  bool buttonEnabled = false;
+
   @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
@@ -73,14 +75,24 @@ class EmailFormPageState extends State<EmailFormPage> {
                       autocorrect: false,
                       enableSuggestions: false,
                       decoration: InputDecoration(
-                        labelText: '@connect.ust.hk',
-                        labelStyle: Theme.of(context).textTheme.labelMedium,
+                        hintText: 'School email',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
-                        contentPadding: const EdgeInsetsDirectional.fromSTEB(
-                            20, 24, 20, 24),
+                        contentPadding: const EdgeInsetsDirectional.only(
+                            start: 20, bottom: 10),
                       ),
                       style: Theme.of(context).textTheme.bodyText1,
                       maxLines: 1,
+                      onChanged: (value) {
+                        if (value.trim().isNotEmpty) {
+                          setState(() {
+                            buttonEnabled = true;
+                          });
+                        } else {
+                          setState(() {
+                            buttonEnabled = false;
+                          });
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -102,7 +114,9 @@ class EmailFormPageState extends State<EmailFormPage> {
               TextButton(
                   style: TextButton.styleFrom(
                     primary: Theme.of(context).primaryColor,
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    backgroundColor: buttonEnabled
+                        ? Theme.of(context).colorScheme.secondary
+                        : Colors.grey,
                     elevation: 3,
                     // side: const BorderSide(
                     //   color: Colors.transparent,

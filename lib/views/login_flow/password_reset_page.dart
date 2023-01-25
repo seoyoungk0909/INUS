@@ -14,6 +14,7 @@ class PasswordResetPage extends StatefulWidget {
 class _PasswordResetPageState extends State<PasswordResetPage> {
   final TextEditingController emailController = TextEditingController();
   bool emailSent = false;
+  bool buttonEnabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,14 +70,24 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                       autocorrect: false,
                       enableSuggestions: false,
                       decoration: InputDecoration(
-                        labelText: 'Your email address',
-                        labelStyle: Theme.of(context).textTheme.labelMedium,
+                        hintText: 'Your email address',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
-                        contentPadding: const EdgeInsetsDirectional.fromSTEB(
-                            20, 24, 20, 24),
+                        contentPadding: const EdgeInsetsDirectional.only(
+                            start: 20, bottom: 10),
                       ),
                       style: Theme.of(context).textTheme.bodyText1,
                       maxLines: 1,
+                      onChanged: (value) {
+                        if (value.trim().isNotEmpty) {
+                          setState(() {
+                            buttonEnabled = true;
+                          });
+                        } else {
+                          setState(() {
+                            buttonEnabled = false;
+                          });
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -85,7 +96,9 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
               TextButton(
                   style: TextButton.styleFrom(
                     primary: Theme.of(context).primaryColor,
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    backgroundColor: buttonEnabled
+                        ? Theme.of(context).colorScheme.secondary
+                        : Colors.grey,
                     elevation: 3,
                     // side: const BorderSide(
                     //   color: Colors.transparent,
@@ -107,23 +120,27 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    if (emailSent) {
-                      Navigator.pop(context);
-                    } else {
-                      FirebaseAuth.instance
-                          .sendPasswordResetEmail(email: emailController.text)
-                          .then((_) {
-                        popUpDialog(context, "Reset Email Sent!",
-                            "We have sent a password reset link to your email.");
-                        setState(() {
-                          emailSent = true;
-                        });
-                      }).catchError((error) {
-                        popUpDialog(context, "Invalid Email", error.message);
-                      });
-                    }
-                  }),
+                  onPressed: !buttonEnabled
+                      ? null
+                      : () {
+                          if (emailSent) {
+                            Navigator.pop(context);
+                          } else {
+                            FirebaseAuth.instance
+                                .sendPasswordResetEmail(
+                                    email: emailController.text)
+                                .then((_) {
+                              popUpDialog(context, "Reset Email Sent!",
+                                  "We have sent a password reset link to your email.");
+                              setState(() {
+                                emailSent = true;
+                              });
+                            }).catchError((error) {
+                              popUpDialog(
+                                  context, "Invalid Email", error.message);
+                            });
+                          }
+                        }),
             ],
           ),
         ),

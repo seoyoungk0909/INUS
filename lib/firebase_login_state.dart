@@ -18,7 +18,7 @@ const String APDI_TEST_ACCOUNT = "apdi-dev@connect.ust.hk";
 
 String verifyEmail(String email) {
   if (email.isEmpty) {
-    throw Exception("Please enter your ITSC (@connect.ust.hk) email address.");
+    throw Exception("Please enter your School email address.");
   }
   String domain = email.split('@')[1];
   String school;
@@ -40,8 +40,7 @@ String verifyEmail(String email) {
       break;
 
     default:
-      throw Exception(
-          "You can only use ITSC (@connect.ust.hk) email address for this app.");
+      throw Exception("You can only use School email address for this app.");
   }
   return school;
 }

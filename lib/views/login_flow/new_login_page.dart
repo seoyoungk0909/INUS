@@ -18,6 +18,7 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   bool passwordVisibility = false;
+  bool loginButtonEnabled = false;
 
   void login(LoginState appState) {
     // do login
@@ -82,14 +83,25 @@ class LoginPageState extends State<LoginPage> {
                       autocorrect: false,
                       enableSuggestions: false,
                       decoration: InputDecoration(
-                        labelText: 'School email',
-                        labelStyle: Theme.of(context).textTheme.labelMedium,
+                        hintText: 'School email',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
-                        contentPadding: const EdgeInsetsDirectional.fromSTEB(
-                            20, 24, 20, 24),
+                        contentPadding: const EdgeInsetsDirectional.only(
+                            start: 20, bottom: 10),
                       ),
                       style: Theme.of(context).textTheme.bodyText1,
                       maxLines: 1,
+                      onChanged: (value) {
+                        if (passwordController.text.trim().isNotEmpty &&
+                            value.trim().isNotEmpty) {
+                          setState(() {
+                            loginButtonEnabled = true;
+                          });
+                        } else {
+                          setState(() {
+                            loginButtonEnabled = false;
+                          });
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -114,11 +126,10 @@ class LoginPageState extends State<LoginPage> {
                       autocorrect: false,
                       enableSuggestions: false,
                       decoration: InputDecoration(
-                        labelText: 'password',
-                        labelStyle: Theme.of(context).textTheme.labelMedium,
+                        hintText: 'password',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
-                        contentPadding: const EdgeInsetsDirectional.fromSTEB(
-                            20, 24, 20, 24),
+                        contentPadding:
+                            const EdgeInsetsDirectional.only(start: 20, top: 5),
                         suffixIcon: InkWell(
                           onTap: () => setState(
                             () => passwordVisibility = !passwordVisibility,
@@ -135,6 +146,18 @@ class LoginPageState extends State<LoginPage> {
                       ),
                       style: Theme.of(context).textTheme.bodyText1,
                       maxLines: 1,
+                      onChanged: (value) {
+                        if (emailController.text.trim().isNotEmpty &&
+                            value.trim().isNotEmpty) {
+                          setState(() {
+                            loginButtonEnabled = true;
+                          });
+                        } else {
+                          setState(() {
+                            loginButtonEnabled = false;
+                          });
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -200,7 +223,9 @@ class LoginPageState extends State<LoginPage> {
                 return TextButton(
                     style: TextButton.styleFrom(
                       primary: Theme.of(context).primaryColor,
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      backgroundColor: loginButtonEnabled
+                          ? Theme.of(context).colorScheme.secondary
+                          : Colors.grey,
                       elevation: 3,
                       // side: const BorderSide(
                       //   color: Colors.transparent,
@@ -222,7 +247,8 @@ class LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    onPressed: () => login(appState));
+                    onPressed: () =>
+                        loginButtonEnabled ? login(appState) : null);
               }),
             ],
           ),

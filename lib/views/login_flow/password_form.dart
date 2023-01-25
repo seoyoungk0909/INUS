@@ -19,6 +19,8 @@ class PasswordFormPageState extends State<PasswordFormPage> {
   bool passwordVisibility1 = false;
   bool passwordVisibility2 = false;
 
+  bool buttonEnabled = false;
+
   @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
@@ -79,11 +81,10 @@ class PasswordFormPageState extends State<PasswordFormPage> {
                       autocorrect: false,
                       enableSuggestions: false,
                       decoration: InputDecoration(
-                        labelText: 'Enter your password',
-                        labelStyle: Theme.of(context).textTheme.labelMedium,
+                        hintText: 'Enter your password',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
-                        contentPadding: const EdgeInsetsDirectional.fromSTEB(
-                            20, 24, 20, 24),
+                        contentPadding:
+                            const EdgeInsetsDirectional.only(start: 20, top: 5),
                         suffixIcon: InkWell(
                           onTap: () => setState(
                             () => passwordVisibility1 = !passwordVisibility1,
@@ -100,6 +101,18 @@ class PasswordFormPageState extends State<PasswordFormPage> {
                       ),
                       style: Theme.of(context).textTheme.bodyText1,
                       maxLines: 1,
+                      onChanged: (value) {
+                        if (passwordController2.text.trim().isNotEmpty &&
+                            value.trim().isNotEmpty) {
+                          setState(() {
+                            buttonEnabled = true;
+                          });
+                        } else {
+                          setState(() {
+                            buttonEnabled = false;
+                          });
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -124,11 +137,10 @@ class PasswordFormPageState extends State<PasswordFormPage> {
                       autocorrect: false,
                       enableSuggestions: false,
                       decoration: InputDecoration(
-                        labelText: 'confirm your password',
-                        labelStyle: Theme.of(context).textTheme.labelMedium,
+                        hintText: 'confirm your password',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
-                        contentPadding: const EdgeInsetsDirectional.fromSTEB(
-                            20, 24, 20, 24),
+                        contentPadding:
+                            const EdgeInsetsDirectional.only(start: 20, top: 5),
                         suffixIcon: InkWell(
                           onTap: () => setState(
                             () => passwordVisibility2 = !passwordVisibility2,
@@ -145,6 +157,18 @@ class PasswordFormPageState extends State<PasswordFormPage> {
                       ),
                       style: Theme.of(context).textTheme.bodyText1,
                       maxLines: 1,
+                      onChanged: (value) {
+                        if (passwordController1.text.trim().isNotEmpty &&
+                            value.trim().isNotEmpty) {
+                          setState(() {
+                            buttonEnabled = true;
+                          });
+                        } else {
+                          setState(() {
+                            buttonEnabled = false;
+                          });
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -167,8 +191,9 @@ class PasswordFormPageState extends State<PasswordFormPage> {
                   builder: (context, appState, _) => TextButton(
                       style: TextButton.styleFrom(
                         primary: Theme.of(context).primaryColor,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.secondary,
+                        backgroundColor: buttonEnabled
+                            ? Theme.of(context).colorScheme.secondary
+                            : Colors.grey,
                         elevation: 3,
                         // side: const BorderSide(
                         //   color: Colors.transparent,

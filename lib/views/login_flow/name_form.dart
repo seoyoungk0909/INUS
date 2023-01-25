@@ -14,6 +14,8 @@ class NameFormPageState extends State<NameFormPage> {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
 
+  bool buttonEnabled = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,14 +70,25 @@ class NameFormPageState extends State<NameFormPage> {
                       autocorrect: false,
                       enableSuggestions: false,
                       decoration: InputDecoration(
-                        labelText: 'First Name',
-                        labelStyle: Theme.of(context).textTheme.labelMedium,
+                        hintText: 'First Name',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
-                        contentPadding: const EdgeInsetsDirectional.fromSTEB(
-                            20, 24, 20, 24),
+                        contentPadding: const EdgeInsetsDirectional.only(
+                            start: 20, bottom: 10),
                       ),
                       style: Theme.of(context).textTheme.bodyText1,
                       maxLines: 1,
+                      onChanged: (value) {
+                        if (lastNameController.text.trim().isNotEmpty &&
+                            value.trim().isNotEmpty) {
+                          setState(() {
+                            buttonEnabled = true;
+                          });
+                        } else {
+                          setState(() {
+                            buttonEnabled = false;
+                          });
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -100,14 +113,25 @@ class NameFormPageState extends State<NameFormPage> {
                       autocorrect: false,
                       enableSuggestions: false,
                       decoration: InputDecoration(
-                        labelText: 'Last Name',
-                        labelStyle: Theme.of(context).textTheme.labelMedium,
+                        hintText: 'Last Name',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
-                        contentPadding: const EdgeInsetsDirectional.fromSTEB(
-                            20, 24, 20, 24),
+                        contentPadding: const EdgeInsetsDirectional.only(
+                            start: 20, bottom: 10),
                       ),
                       style: Theme.of(context).textTheme.bodyText1,
                       maxLines: 1,
+                      onChanged: (value) {
+                        if (firstNameController.text.trim().isNotEmpty &&
+                            value.trim().isNotEmpty) {
+                          setState(() {
+                            buttonEnabled = true;
+                          });
+                        } else {
+                          setState(() {
+                            buttonEnabled = false;
+                          });
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -129,7 +153,9 @@ class NameFormPageState extends State<NameFormPage> {
               TextButton(
                   style: TextButton.styleFrom(
                     primary: Theme.of(context).primaryColor,
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    backgroundColor: buttonEnabled
+                        ? Theme.of(context).colorScheme.secondary
+                        : Colors.grey,
                     elevation: 3,
                     // side: const BorderSide(
                     //   color: Colors.transparent,

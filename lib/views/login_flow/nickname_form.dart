@@ -17,6 +17,8 @@ class NickNameFormPage extends StatefulWidget {
 class NickNameFormPageState extends State<NickNameFormPage> {
   final TextEditingController nickNameController = TextEditingController();
 
+  bool buttonEnabled = false;
+
   @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
@@ -77,14 +79,25 @@ class NickNameFormPageState extends State<NickNameFormPage> {
                       autocorrect: false,
                       enableSuggestions: false,
                       decoration: InputDecoration(
-                        labelText: 'Enter your username',
+                        hintText: 'Enter your username',
                         labelStyle: Theme.of(context).textTheme.labelMedium,
                         hintStyle: Theme.of(context).textTheme.labelMedium,
-                        contentPadding: const EdgeInsetsDirectional.fromSTEB(
-                            20, 24, 20, 24),
+                        contentPadding: const EdgeInsetsDirectional.only(
+                            start: 20, bottom: 10),
                       ),
                       style: Theme.of(context).textTheme.bodyText1,
                       maxLines: 1,
+                      onChanged: (value) {
+                        if (value.trim().isNotEmpty) {
+                          setState(() {
+                            buttonEnabled = true;
+                          });
+                        } else {
+                          setState(() {
+                            buttonEnabled = false;
+                          });
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -107,7 +120,9 @@ class NickNameFormPageState extends State<NickNameFormPage> {
                 builder: (context, appState, child) => TextButton(
                     style: TextButton.styleFrom(
                       primary: Theme.of(context).primaryColor,
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      backgroundColor: buttonEnabled
+                          ? Theme.of(context).colorScheme.secondary
+                          : Colors.grey,
                       elevation: 3,
                       // side: const BorderSide(
                       //   color: Colors.transparent,
