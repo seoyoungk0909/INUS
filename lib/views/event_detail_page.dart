@@ -1,10 +1,11 @@
 // import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import '../controllers/event_controller.dart';
 import '../models/event_model.dart';
 import 'package:aus/utils/color_utils.dart';
-import '../views/event_ui.dart';
+import 'components/event_ui.dart';
 import 'package:intl/intl.dart';
 
 class EventDetailPage extends StatefulWidget {
@@ -28,9 +29,16 @@ class EventDetailPageState extends State<EventDetailPage> {
         <String, dynamic>{}) as Map;
     EventController controller = EventController(arguments['event'] ?? Event());
     return Scaffold(
+      backgroundColor: Theme.of(context).primaryColorDark,
       appBar: AppBar(
-        title: Text(widget.title),
-        centerTitle: false,
+        backgroundColor: Theme.of(context).backgroundColor,
+        // title: Text(widget.title),
+        // centerTitle: false,
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset('assets/icons/Report.svg'))
+        ],
       ),
       body: ListView(
         children: [
@@ -54,7 +62,7 @@ class EventDetailPageState extends State<EventDetailPage> {
                         onPressed: () {},
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
-                                hexStringToColor("#8d65f2")),
+                                Theme.of(context).colorScheme.secondary),
                             padding: MaterialStateProperty.all(
                                 const EdgeInsetsDirectional.fromSTEB(
                                     120, 13, 120, 13)),
@@ -138,7 +146,7 @@ Widget categoryHashtag(
     child: Container(
       height: 22,
       decoration: BoxDecoration(
-        color: hexStringToColor("#3E3E3E"),
+        color: Theme.of(context).backgroundColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Container(
@@ -167,7 +175,7 @@ Widget quickView(BuildContext context, EventController controller) {
     child: Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: hexStringToColor("#3E3E3E"),
+        color: Theme.of(context).backgroundColor,
         borderRadius: BorderRadius.circular(6),
       ),
       child: Container(
@@ -247,7 +255,7 @@ Widget detailedView(BuildContext context, EventController controller) {
     child: Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: hexStringToColor("#3E3E3E"),
+        color: Theme.of(context).backgroundColor,
         borderRadius: BorderRadius.circular(6),
       ),
       child: Container(

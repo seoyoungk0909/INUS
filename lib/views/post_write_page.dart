@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class PostWritePage extends StatefulWidget {
   const PostWritePage({Key? key, required this.title}) : super(key: key);
@@ -19,7 +18,11 @@ class PostWritePage extends StatefulWidget {
 }
 
 class PostWritePageState extends State<PostWritePage> {
+  bool isAnonymous = false;
+
   Future<void> uploadPost(String currentUserId) async {
+    DocumentReference userRef =
+        FirebaseFirestore.instance.doc('user_info/$currentUserId');
     DocumentReference newPost =
         await FirebaseFirestore.instance.collection("post").add({
       'title': postTitle.text.trim(),
@@ -30,7 +33,11 @@ class PostWritePageState extends State<PostWritePage> {
       'commentCount': 0,
       'saveCount': 0,
       'comments': [],
-      'user': FirebaseFirestore.instance.doc('user_info/$currentUserId'),
+      'user': userRef,
+      'isAnonymous': isAnonymous,
+    });
+    userRef.update({
+      'myPosts': FieldValue.arrayUnion([newPost])
     });
   }
 
@@ -47,7 +54,9 @@ class PostWritePageState extends State<PostWritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).backgroundColor,
         title: Text(
           widget.title,
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -124,6 +133,24 @@ class PostWritePageState extends State<PostWritePage> {
                     ]),
                 ],
               ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20, left: 10),
+            child: Row(
+              children: [
+                Checkbox(
+                    checkColor: Colors.white,
+                    fillColor: MaterialStateProperty.all(
+                        Theme.of(context).colorScheme.secondary),
+                    value: isAnonymous,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isAnonymous = value!;
+                      });
+                    }),
+                Text("Anonymous Post")
+              ],
             ),
           ),
           Padding(

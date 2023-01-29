@@ -9,6 +9,23 @@ class PostController {
     post.firebaseDocRef?.update({"viewCount": FieldValue.increment(1)});
   }
 
+  void postSave() {
+    post.saveCount++;
+    post.firebaseDocRef?.update({"saveCount": FieldValue.increment(1)});
+  }
+
+  void postSaveCancel() {
+    post.saveCount--;
+    post.firebaseDocRef?.update({"saveCount": FieldValue.increment(-1)});
+  }
+
+  void addComment(DocumentReference newComment) {
+    post.firebaseDocRef?.update({
+      'comments': FieldValue.arrayUnion([newComment])
+    });
+    post.commentRefs.add(newComment);
+  }
+
   PostController(this.post);
 
   String getPostWriterSchool() => post.getWriterSchool();

@@ -14,9 +14,11 @@ class Post {
       "Earth is the third planet from the Sun and the only astronomical object known to harbor life. Earth is the third planet from the Sun and the only astronomical object known to harbor life. Earth is the third planet from the Sun and the only astronomical object known to harbor life. Earth is the third planet from the Sun and the only astronomical object known to harbor life.";
   late DateTime timestamp;
   int views = 0;
+  int saveCount = 0;
   DocumentReference<Map<String, dynamic>>? firebaseDocRef;
   List<Comment> comments = [];
   List commentRefs = [];
+  bool anonymous = false;
 
   Post(
       {User? postWriter,
@@ -25,16 +27,20 @@ class Post {
       String? content,
       DateTime? time,
       int? postViews,
+      int? postSaves,
       List<Comment>? commentList,
       List? commentRefList,
-      DocumentReference<Map<String, dynamic>>? docRef}) {
+      DocumentReference<Map<String, dynamic>>? docRef,
+      bool? isAnonymous}) {
     writer = postWriter ?? writer;
     title = postTitle ?? title;
     category = postCategory ?? category;
     text = content ?? text;
     timestamp = time ?? DateTime.now();
     views = postViews ?? views;
+    saveCount = postSaves ?? saveCount;
     commentRefs = commentRefList ?? commentRefs;
+    anonymous = isAnonymous ?? anonymous;
     // comments = commentList ?? comments;
 
     if (commentList != null && commentList.isNotEmpty) {
@@ -71,7 +77,17 @@ class Post {
           await Comment.getCommentsFromFirebase(commentRefList, postData);
     }
 
-    User postWriter = await User.fromUserRef(postData.get('user'));
+    User postWriter;
+    bool isAnonymous;
+    try {
+      postWriter = await User.fromUserRef(postData.get('user'));
+      Map<String, dynamic> postDataMap = postData.data()!;
+      isAnonymous =
+          postDataMap.containsKey('isAnonymous') && postDataMap['isAnonymous'];
+    } catch (e) {
+      postWriter = User(userName: "Anonymous");
+      isAnonymous = true;
+    }
 
     return Post(
         postWriter: postWriter,
@@ -80,9 +96,11 @@ class Post {
         content: postData.get('content'),
         time: (postData.get('time') as Timestamp).toDate(),
         postViews: postData.get('viewCount'),
+        postSaves: postData.get('saveCount'),
         commentList: comments,
         commentRefList: commentRefList,
-        docRef: firebaseDoc);
+        docRef: firebaseDoc,
+        isAnonymous: isAnonymous);
   }
 
   Future<bool> loadComments() async {
@@ -113,15 +131,10 @@ class Post {
   static Query<Map<String, dynamic>> getPostsQuery({bool popular = false}) {
     CollectionReference<Map<String, dynamic>> postCollection =
         FirebaseFirestore.instance.collection('post');
-    Query<Map<String, dynamic>> firebaseQuery;
+    Query<Map<String, dynamic>> firebaseQuery =
+        postCollection.orderBy('time', descending: true).limit(20);
     if (popular) {
-      firebaseQuery = postCollection
-          .orderBy('time', descending: true)
-          .orderBy('viewCount', descending: true)
-          .limit(20);
-    } else {
-      firebaseQuery =
-          postCollection.orderBy('time', descending: true).limit(20);
+      firebaseQuery = firebaseQuery.orderBy('viewCount', descending: true);
     }
     return firebaseQuery;
   }

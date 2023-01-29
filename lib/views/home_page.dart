@@ -21,9 +21,9 @@ class HomePageState extends State<HomePage> {
   Widget pageBuilder(int index) {
     switch (index) {
       case 0:
-        return const PostListPage(title: 'Posts');
-      case 1:
         return const EventPage(title: "events");
+      case 1:
+        return const PostListPage(title: 'Posts');
       case 2:
         return const ProfilePage(title: "Profile");
       default:
@@ -34,29 +34,16 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text(widget.title),
-        centerTitle: false,
-      ),
-      body: Center(
-        child: pageBuilder(_selectedIndex),
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: SafeArea(
+        child: Center(
+          child: pageBuilder(_selectedIndex),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).primaryColorDark,
         selectedFontSize: 12.0,
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            activeIcon: SvgPicture.asset(
-              'assets/icons/users-profiles-02.svg',
-              color: Colors.white,
-            ),
-            icon: SvgPicture.asset(
-              'assets/icons/users-profiles-02.svg',
-              color: Colors.grey,
-            ),
-            // icon: Icon(Icons.calendar_today),
-            label: 'Posting',
-          ),
           BottomNavigationBarItem(
             activeIcon: SvgPicture.asset(
               'assets/icons/calendar-01.svg',
@@ -71,6 +58,18 @@ class HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             activeIcon: SvgPicture.asset(
+              'assets/icons/users-profiles-02.svg',
+              color: Colors.white,
+            ),
+            icon: SvgPicture.asset(
+              'assets/icons/users-profiles-02.svg',
+              color: Colors.grey,
+            ),
+            // icon: Icon(Icons.calendar_today),
+            label: 'Community',
+          ),
+          BottomNavigationBarItem(
+            activeIcon: SvgPicture.asset(
               'assets/icons/user-profile-circle.svg',
               color: Colors.white,
             ),
@@ -79,7 +78,7 @@ class HomePageState extends State<HomePage> {
               color: Colors.grey,
             ),
             // icon: Icon(Icons.stars_sharp),
-            label: 'Profile',
+            label: 'My',
           ),
         ],
         currentIndex: _selectedIndex,

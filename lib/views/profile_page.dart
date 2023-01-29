@@ -1,11 +1,11 @@
 import 'package:aus/firebase_login_state.dart';
 import 'package:aus/utils/color_utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fbauth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/comment_model.dart';
-import 'post_ui.dart';
+import 'components/post_ui.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
 import '../models/user_model.dart';
@@ -25,25 +25,6 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   User defaultUser = User(userName: "", userSchool: School.PolyU);
-
-  List<PostController> myPostsController = [
-    PostController(Post(
-      postWriter: User(userName: "John Doe", userSchool: School.HKUST),
-      commentList: [
-        Comment(content: "Good", isPostWriter: false),
-        Comment(content: "Thank you", isPostWriter: true),
-      ],
-    )),
-    PostController(Post(
-      postWriter: User(userName: "Apple Seed", userSchool: School.CUHK),
-      commentList: [Comment(content: "Good", isPostWriter: false)],
-    )),
-  ];
-
-  List<PostController> savedPostsController = [
-    PostController(
-        Post(postWriter: User(userName: "Claire Eve", userSchool: School.HKU))),
-  ];
 
   Widget userGreetings(User currentUser) {
     return Column(
@@ -124,42 +105,118 @@ class ProfilePageState extends State<ProfilePage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
-        body: Column(
-          children: [
-            Consumer<LoginState>(
-                builder: (context, state, _) =>
-                    userGreetings(state.currentUser ?? defaultUser)),
-            const TabBar(
-              indicatorColor: Colors.white,
-              tabs: [
-                Tab(text: "My Post"),
-                Tab(text: "Saved"),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  ListView.builder(
-                    // physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: myPostsController.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return postUI(context, myPostsController[index],
-                          setState: setState);
-                    },
-                  ),
-                  ListView.builder(
-                    // physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: savedPostsController.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return postUI(context, savedPostsController[index],
-                          setState: setState);
-                    },
-                  ),
+        backgroundColor: Theme.of(context).backgroundColor,
+        body: Consumer<LoginState>(
+          builder: (context, state, _) => Column(
+            children: [
+              userGreetings(state.currentUser ?? defaultUser),
+              const TabBar(
+                indicatorColor: Colors.white,
+                tabs: [
+                  Tab(text: "My Post"),
+                  Tab(text: "Saved"),
                 ],
               ),
-            ),
-          ],
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('user_info')
+                            .doc(state.currentUser?.uid)
+                            .snapshots(),
+                        builder: (context,
+                            AsyncSnapshot<
+                                    DocumentSnapshot<Map<String, dynamic>>>
+                                snap) {
+                          if (snap.data == null) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          try {
+                            Map<String, dynamic> data = snap.data!.data()!;
+                            List postRefs = data['myPosts'];
+                            postRefs = postRefs.reversed.toList();
+                            List savedPostRefs = [];
+                            if (data.containsKey('savedPosts')) {
+                              savedPostRefs = data['savedPosts'];
+                            }
+                            if (postRefs.isEmpty) {
+                              return const Center(child: Text("No Posts"));
+                            }
+                            return ListView.builder(
+                              // physics: const AlwaysScrollableScrollPhysics(),
+                              itemCount: postRefs.length,
+                              itemBuilder: (BuildContext context, int idx) {
+                                bool saved = savedPostRefs.isNotEmpty &&
+                                    savedPostRefs.contains(postRefs[idx]);
+                                return FutureBuilder<Post>(
+                                  future: Post.fromDocRef(
+                                      firebaseDoc: postRefs[idx]),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.data == null) {
+                                      return const SizedBox.shrink();
+                                    }
+                                    return postUI(
+                                        context, PostController(snapshot.data!),
+                                        setState: setState, saved: saved);
+                                  },
+                                );
+                              },
+                            );
+                          } catch (e) {
+                            print(e);
+                            return const Center(child: Text("No Posts"));
+                          }
+                        }),
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('user_info')
+                            .doc(state.currentUser?.uid)
+                            .snapshots(),
+                        builder: (context,
+                            AsyncSnapshot<
+                                    DocumentSnapshot<Map<String, dynamic>>>
+                                snap) {
+                          if (snap.data == null) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          try {
+                            List postRefs = snap.data!.get('savedPosts');
+                            postRefs = postRefs.reversed.toList();
+                            if (postRefs.isEmpty) {
+                              return const Center(
+                                  child: Text("No Saved Posts"));
+                            }
+                            return ListView.builder(
+                              // physics: const AlwaysScrollableScrollPhysics(),
+                              itemCount: postRefs.length,
+                              itemBuilder: (BuildContext context, int idx) {
+                                return FutureBuilder<Post>(
+                                  future: Post.fromDocRef(
+                                      firebaseDoc: postRefs[idx]),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.data == null) {
+                                      return const SizedBox.shrink();
+                                    }
+                                    return postUI(
+                                        context, PostController(snapshot.data!),
+                                        setState: setState, saved: true);
+                                  },
+                                );
+                              },
+                            );
+                          } catch (e) {
+                            print(e);
+                            return const Center(child: Text("No Saved Posts"));
+                          }
+                        }),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

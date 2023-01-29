@@ -1,10 +1,13 @@
-import 'package:aus/views/comment_box.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../controllers/post_controller.dart';
+import '../models/comment_model.dart';
 import '../models/post_model.dart';
-import 'post_ui.dart';
-import 'comment_ui.dart';
+import 'components/post_ui.dart';
+import 'components/comment_ui.dart';
+import 'components/comment_box.dart';
 
 class PostDetailPage extends StatefulWidget {
   const PostDetailPage({Key? key, required this.title}) : super(key: key);
@@ -26,35 +29,53 @@ class PostDetailPageState extends State<PostDetailPage> {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
     PostController controller = PostController(arguments['post'] ?? Post());
-    if (controller.post.comments.length != controller.post.commentRefs.length) {
-      controller.post.loadComments();
-    }
+    bool saved = arguments['saved'] ?? false;
+
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Theme.of(context).backgroundColor,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).backgroundColor,
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset('assets/icons/Report.svg'))
+        ],
+      ),
       body: Column(
         children: [
-          postUI(context, controller, isDetail: true),
+          // post detail
+          postUI(context, controller, isDetail: true, saved: saved),
+          // comment list
           Expanded(
-            child: FutureBuilder(
-              future: controller.post.loadComments(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const SizedBox.shrink();
+            child: StreamBuilder(
+              stream: controller.post.firebaseDocRef?.snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snap) {
+                if (snap.data == null) {
+                  return const Center(child: CircularProgressIndicator());
                 }
-                return controller.post.comments.isNotEmpty
-                    ? Expanded(
-                        child: ListView.builder(
-                            itemCount: controller.post.comments.length,
-                            itemBuilder: (context, idx) {
-                              return CommentUI(controller.post.comments[idx]);
-                            }))
-                    : const Padding(
-                        padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                        child: Center(child: Text("No Comments")));
+                List commentRefs = snap.data!.get('comments');
+                if (commentRefs.isEmpty) {
+                  return const Center(child: Text("No Comments"));
+                }
+                return ListView.builder(
+                    itemCount: commentRefs.length,
+                    itemBuilder: (context, idx) {
+                      return FutureBuilder(
+                        future: Comment.fromCommentRef(commentRefs[idx]),
+                        builder: (context, AsyncSnapshot<Comment> snapshot) {
+                          if (snapshot.data == null) {
+                            return const SizedBox.shrink(); // empty widget
+                          }
+                          return CommentUI(snapshot.data!);
+                        },
+                      );
+                    });
               },
             ),
           ),
-          CommentBox(),
+          // comment write
+          CommentBox(controller: controller),
         ],
       ),
     );

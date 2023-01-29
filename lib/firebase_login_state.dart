@@ -16,6 +16,35 @@ enum RegisterState {
 
 const String APDI_TEST_ACCOUNT = "apdi-dev@connect.ust.hk";
 
+String verifyEmail(String email) {
+  if (email.isEmpty) {
+    throw Exception("Please enter your School email address.");
+  }
+  String domain = email.split('@')[1];
+  String school;
+  switch (domain) {
+    case 'connect.ust.hk':
+      school = 'HKUST';
+      break;
+    case 'polyu.edu.hk':
+      school = 'PolyU';
+      break;
+    case 'connect.hku.hk':
+      school = 'HKU';
+      break;
+    case 'my.cityu.edu.hk':
+      school = 'CityU';
+      break;
+    case 'link.cuhk.edu.hk':
+      school = 'CUHK';
+      break;
+
+    default:
+      throw Exception("You can only use School email address for this app.");
+  }
+  return school;
+}
+
 class LoginState extends ChangeNotifier {
   LoginState() {
     init();
@@ -27,13 +56,24 @@ class LoginState extends ChangeNotifier {
         _loginState = ApplicationLoginState.loggedIn;
         _displayName = user.displayName;
         _email = user.email;
-        _currentUser = await um.User.fromUserRef(
-            FirebaseFirestore.instance.doc('user_info/${user.uid}'));
+        DocumentReference<Map<String, dynamic>> ref =
+            FirebaseFirestore.instance.doc('user_info/${user.uid}');
+        var doc = await ref.get();
+        if (doc.exists) {
+          _currentUser = await um.User.fromUserRef(ref);
+        }
       } else {
         _loginState = ApplicationLoginState.loggedOut;
       }
       notifyListeners();
     });
+  }
+
+  Future<void> updateCurrentUser() async {
+    _currentUser = await um.User.fromUserRef(FirebaseFirestore.instance
+        .collection('user_info')
+        .doc('${FirebaseAuth.instance.currentUser?.uid}'));
+    notifyListeners();
   }
 
   ApplicationLoginState _loginState = ApplicationLoginState.loggedOut;
@@ -47,19 +87,6 @@ class LoginState extends ChangeNotifier {
 
   um.User? _currentUser;
   um.User? get currentUser => _currentUser;
-
-  void verifyEmail(
-    String email,
-  ) {
-    if (email.isEmpty) {
-      throw Exception(
-          "Please enter your ITSC (@connect.ust.hk) email address.");
-    }
-    if (email.split('@')[1] != 'connect.ust.hk') {
-      throw Exception(
-          "You can only use ITSC (@connect.ust.hk) email address for this app.");
-    }
-  }
 
   Future<bool> isUserSetupComplete(User? user) async {
     bool setupComplete = false;

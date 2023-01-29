@@ -46,6 +46,7 @@ dependencies:
   flutter_speed_dial:
   date_format:
   flutter_svg:
+  flutter_keyboard_visibility:
 
 
   # The following adds the Cupertino Icons font to your application.
