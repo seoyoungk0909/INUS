@@ -107,9 +107,13 @@ class _PostListPageState extends State<PostListPage> {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
+                        Map documentdata = snapshot.data!.data as Map;
+                        List? savedPosts =
+                            documentdata.containsKey('savedPosts')
+                                ? documentdata['savedPosts']
+                                : null;
                         return postsStreamView(
-                            popular: false,
-                            savedPosts: snapshot.data!.get('savedPosts'));
+                            popular: false, savedPosts: savedPosts);
                       }),
                   FutureBuilder(
                       future: snapshots,
@@ -119,9 +123,13 @@ class _PostListPageState extends State<PostListPage> {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
+                        Map documentdata = snapshot.data!.data as Map;
+                        List? savedPosts =
+                            documentdata.containsKey('savedPosts')
+                                ? documentdata['savedPosts']
+                                : null;
                         return postsStreamView(
-                            popular: true,
-                            savedPosts: snapshot.data!.get('savedPosts'));
+                            popular: true, savedPosts: savedPosts);
                       }),
                 ],
               ),
