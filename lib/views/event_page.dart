@@ -31,20 +31,13 @@ class EventPageState extends State<EventPage> {
     EventController(Event(eventCategory: "Seminar")),
   ];
 
-  bool didDispose = false;
-  @override
-  void dispose() {
-    didDispose = true;
-    super.dispose();
-  }
-
   Future<void> refreshEvents({bool formal = false}) async {
     List<Event> events = await Event.getEventsFromFirebase(formal: formal);
     List<EventController> _controllers = [];
     for (Event event in events) {
       _controllers.add(EventController(event));
     }
-    if (!didDispose) {
+    if (mounted) {
       setState(() {
         if (formal) {
           formalEventsControllers = _controllers;
@@ -53,6 +46,43 @@ class EventPageState extends State<EventPage> {
         }
       });
     }
+  }
+
+  Widget eventsGridView({bool formal = false}) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        refreshEvents(formal: formal);
+      },
+      color: Theme.of(context).backgroundColor,
+      child: StreamBuilder(
+        stream: Event.getEventsQuery(formal: formal).snapshots(),
+        builder:
+            (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snap) {
+          if (snap.data == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return GridView.builder(
+            itemCount: snap.data!.size,
+            itemBuilder: (BuildContext context, int i) {
+              return FutureBuilder<Event>(
+                future: Event.fromDocRef(firebaseSnap: snap.data!.docs[i]),
+                builder: (context, snapshot) {
+                  if (snapshot.data == null) {
+                    return const SizedBox.shrink(); //NOTE: empty widget
+                  }
+                  return eventUI(context, EventController(snapshot.data!),
+                      setState: setState);
+                },
+              );
+            },
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.73,
+            ),
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -78,45 +108,19 @@ class EventPageState extends State<EventPage> {
                 child: TabBarView(children: [
                   RefreshIndicator(
                     onRefresh: () async {
-                      refreshEvents(formal: false);
+                      refreshEvents(formal: true);
                     },
                     color: Theme.of(context).colorScheme.secondary,
                     child: StreamBuilder(
-                      stream: Event.getEventsQuery(formal: false).snapshots(),
+                      stream: Event.getEventsQuery(formal: true).snapshots(),
                       builder: (context,
                           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
                               snap) {
                         if (snap.data == null) {
-                          return const CircularProgressIndicator();
+                          return const Center(
+                              child: CircularProgressIndicator());
                         }
-                        return GridView.builder(
-                          itemCount: snap.data!.size,
-                          itemBuilder: (BuildContext context, int i) {
-                            return FutureBuilder<Event>(
-                              future: Event.fromDocRef(
-                                  firebaseSnap: snap.data!.docs[i]),
-                              builder: (context, snapshot) {
-                                if (snapshot.data == null) {
-                                  return const SizedBox
-                                      .shrink(); //NOTE: empty widget
-                                }
-                                return eventUI(
-                                    context, EventController(snapshot.data!),
-                                    setState: setState);
-                              },
-                            );
-                          },
-                          //     GridView.builder(
-                          //   itemCount: formalEventsControllers.length,
-                          //   itemBuilder: (context, index) => eventUI(
-                          //       context, formalEventsControllers[index],
-                          //       setState: setState),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.73,
-                          ),
-                        );
+                        return eventsGridView(formal: true);
                       },
                     ),
                     // ),

@@ -54,42 +54,45 @@ class EventDetailPageState extends State<EventDetailPage> {
                 quickView(context, controller),
                 eventDescription(context, controller),
                 detailedView(context, controller),
-                Padding(
-                  padding: const EdgeInsets.only(top: 40),
-                  child: Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Theme.of(context).colorScheme.secondary),
-                            padding: MaterialStateProperty.all(
-                                const EdgeInsetsDirectional.fromSTEB(
-                                    120, 13, 120, 13)),
-                            textStyle:
-                                MaterialStateProperty.all(const TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'Outfit',
-                              fontWeight: FontWeight.w600,
-                            ))),
-                        child: const Text('Register'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 9),
-                        child: IconButton(
-                          onPressed: () => {
-                            setState(() {
-                              controller.changeSave();
-                            })
-                          },
-                          icon: (controller.event.save == false)
-                              ? const Icon(Icons.bookmark_border)
-                              : const Icon(Icons.bookmark),
-                          color: hexStringToColor("#AAAAAA"),
-                          iconSize: 37.0,
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.secondary),
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsetsDirectional.fromSTEB(
+                                      120, 13, 120, 13)),
+                              textStyle:
+                                  MaterialStateProperty.all(const TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'Outfit',
+                                fontWeight: FontWeight.w600,
+                              ))),
+                          child: const Text('Register'),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 9),
+                          child: IconButton(
+                            onPressed: () => {
+                              setState(() {
+                                controller.changeSave();
+                              })
+                            },
+                            icon: (controller.event.save == false)
+                                ? const Icon(Icons.bookmark_border)
+                                : const Icon(Icons.bookmark),
+                            color: hexStringToColor("#AAAAAA"),
+                            iconSize: 37.0,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
