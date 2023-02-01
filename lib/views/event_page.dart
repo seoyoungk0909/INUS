@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../controllers/event_controller.dart';
 import '../models/event_model.dart';
 import 'components/event_ui.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fba;
 
 class EventPage extends StatefulWidget {
   const EventPage({Key? key, required this.title}) : super(key: key);
@@ -87,6 +88,10 @@ class EventPageState extends State<EventPage> {
 
   @override
   Widget build(BuildContext context) {
+    DocumentReference userRef = FirebaseFirestore.instance
+        .collection('user_info')
+        .doc(fba.FirebaseAuth.instance.currentUser?.uid);
+    Future<DocumentSnapshot> snapshots = userRef.get();
     return Scaffold(
         body: DefaultTabController(
       length: 2,
@@ -106,42 +111,64 @@ class EventPageState extends State<EventPage> {
               ),
               Expanded(
                 child: TabBarView(children: [
-                  RefreshIndicator(
-                    onRefresh: () async {
-                      refreshEvents(formal: true);
-                    },
-                    color: Theme.of(context).colorScheme.secondary,
-                    child: StreamBuilder(
-                      stream: Event.getEventsQuery(formal: true).snapshots(),
-                      builder: (context,
-                          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                              snap) {
-                        if (snap.data == null) {
+                  FutureBuilder(
+                      future: snapshots,
+                      builder:
+                          (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.data == null) {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
+                        Map documentdata = snapshot.data!.data as Map;
                         return eventsGridView(formal: true);
-                      },
-                    ),
-                    // ),
-                  ),
-                  RefreshIndicator(
-                    onRefresh: () async {
-                      refreshEvents(formal: false);
-                    },
-                    color: Theme.of(context).colorScheme.secondary,
-                    child: GridView.builder(
-                      itemCount: casualEventsControllers.length,
-                      itemBuilder: (context, index) => eventUI(
-                          context, casualEventsControllers[index],
-                          setState: setState),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.73,
-                      ),
-                    ),
-                  )
+                      }),
+                  FutureBuilder(
+                      future: snapshots,
+                      builder:
+                          (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.data == null) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                        Map documentdata = snapshot.data!.data as Map;
+                        return eventsGridView(formal: false);
+                      }),
+                  // RefreshIndicator(
+                  //   onRefresh: () async {
+                  //     refreshEvents(formal: true);
+                  //   },
+                  //   color: Theme.of(context).colorScheme.secondary,
+                  //   child: StreamBuilder(
+                  //     stream: Event.getEventsQuery(formal: true).snapshots(),
+                  //     builder: (context,
+                  //         AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                  //             snap) {
+                  //       if (snap.data == null) {
+                  //         return const Center(
+                  //             child: CircularProgressIndicator());
+                  //       }
+                  //       return eventsGridView(formal: true);
+                  //     },
+                  //   ),
+                  //   // ),
+                  // ),
+                  // RefreshIndicator(
+                  //   onRefresh: () async {
+                  //     refreshEvents(formal: false);
+                  //   },
+                  //   color: Theme.of(context).colorScheme.secondary,
+                  //   child: GridView.builder(
+                  //     itemCount: casualEventsControllers.length,
+                  //     itemBuilder: (context, index) => eventUI(
+                  //         context, casualEventsControllers[index],
+                  //         setState: setState),
+                  //     gridDelegate:
+                  //         const SliverGridDelegateWithFixedCrossAxisCount(
+                  //       crossAxisCount: 2,
+                  //       childAspectRatio: 0.73,
+                  //     ),
+                  //   ),
+                  // ),
                 ]),
               ),
             ],
