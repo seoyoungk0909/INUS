@@ -107,7 +107,7 @@ class _PostListPageState extends State<PostListPage> {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
-                        Map documentdata = snapshot.data!.data as Map;
+                        Map documentdata = snapshot.data!.data() as Map;
                         List? savedPosts =
                             documentdata.containsKey('savedPosts')
                                 ? documentdata['savedPosts']
@@ -123,7 +123,7 @@ class _PostListPageState extends State<PostListPage> {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
-                        Map documentdata = snapshot.data!.data as Map;
+                        Map documentdata = snapshot.data!.data() as Map;
                         List? savedPosts =
                             documentdata.containsKey('savedPosts')
                                 ? documentdata['savedPosts']

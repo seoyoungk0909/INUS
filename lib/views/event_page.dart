@@ -21,32 +21,32 @@ class EventPage extends StatefulWidget {
 }
 
 class EventPageState extends State<EventPage> {
-  List<EventController> formalEventsControllers = [
-    EventController(Event(eventCategory: "Webinar")),
-    EventController(Event(eventCategory: "Workshop")),
-    EventController(Event(eventCategory: "Seminar")),
-  ];
+  // List<EventController> formalEventsControllers = [
+  //   EventController(Event(eventCategory: "Webinar")),
+  //   EventController(Event(eventCategory: "Workshop")),
+  //   EventController(Event(eventCategory: "Seminar")),
+  // ];
 
-  List<EventController> casualEventsControllers = [
-    EventController(Event(eventCategory: "Party")),
-    EventController(Event(eventCategory: "Seminar")),
-  ];
+  // List<EventController> casualEventsControllers = [
+  //   EventController(Event(eventCategory: "Party")),
+  //   EventController(Event(eventCategory: "Seminar")),
+  // ];
 
   Future<void> refreshEvents({bool formal = false}) async {
-    List<Event> events = await Event.getEventsFromFirebase(formal: formal);
-    List<EventController> _controllers = [];
-    for (Event event in events) {
-      _controllers.add(EventController(event));
-    }
-    if (mounted) {
-      setState(() {
-        if (formal) {
-          formalEventsControllers = _controllers;
-        } else {
-          casualEventsControllers = _controllers;
-        }
-      });
-    }
+    // List<Event> events = await Event.getEventsFromFirebase(formal: formal);
+    // List<EventController> _controllers = [];
+    // for (Event event in events) {
+    //   _controllers.add(EventController(event));
+    // }
+    // if (mounted) {
+    //   setState(() {
+    //     if (formal) {
+    //       formalEventsControllers = _controllers;
+    //     } else {
+    //       casualEventsControllers = _controllers;
+    //     }
+    //   });
+    // }
   }
 
   Widget eventsGridView({bool formal = false}) {
@@ -119,7 +119,7 @@ class EventPageState extends State<EventPage> {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
-                        Map documentdata = snapshot.data!.data as Map;
+                        // Map documentdata = snapshot.data!.data() as Map;
                         return eventsGridView(formal: true);
                       }),
                   FutureBuilder(
@@ -130,7 +130,7 @@ class EventPageState extends State<EventPage> {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
-                        Map documentdata = snapshot.data!.data as Map;
+                        // Map documentdata = snapshot.data!.data() as Map;
                         return eventsGridView(formal: false);
                       }),
                   // RefreshIndicator(
