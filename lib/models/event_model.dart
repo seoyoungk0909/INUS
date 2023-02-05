@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'user_model.dart';
 
 const List EVENT_CATEGORY = [
   "Event",
@@ -10,6 +11,7 @@ const List EVENT_CATEGORY = [
 ];
 
 class Event {
+  User writer = User();
   String title = "Tissue-engineering Integrated";
   String category = "Event";
   String tag = "#environment #education";
@@ -25,6 +27,7 @@ class Event {
   DocumentReference<Map<String, dynamic>>? firebaseDocRef;
 
   Event({
+    User? eventWriter,
     String? eventTitle,
     String? eventCategory,
     String? eventTag,
@@ -37,6 +40,8 @@ class Event {
     bool? savedEvent,
     DocumentReference<Map<String, dynamic>>? docRef,
   }) {
+    writer = eventWriter ?? writer;
+
     title = eventTitle ?? title;
     category = eventCategory ?? category;
     tag = eventTag ?? tag;
@@ -63,8 +68,15 @@ class Event {
       eventData = firebaseSnap;
       firebaseDoc ??= eventData.reference;
     }
+    User eventWriter;
+    try {
+      eventWriter = await User.fromUserRef(eventData.get('user'));
+    } catch (e) {
+      eventWriter = User(userName: "Anonymous");
+    }
 
     return Event(
+        eventWriter: eventWriter,
         eventTitle: eventData.get('title'),
         eventCategory: eventData.get('category'),
         eventTag: eventData.get('tag'),
@@ -98,17 +110,12 @@ class Event {
     CollectionReference<Map<String, dynamic>> eventCollection =
         FirebaseFirestore.instance.collection('event');
 
-    Query<Map<String, dynamic>> firebaseQuery;
+    Query<Map<String, dynamic>> firebaseQuery =
+        eventCollection.orderBy('timestamp', descending: true).limit(20);
     if (formal) {
-      firebaseQuery = eventCollection
-          .where('formal', isEqualTo: true)
-          .orderBy('timestamp', descending: true)
-          .limit(20);
+      firebaseQuery = firebaseQuery.where('formal', isEqualTo: true);
     } else {
-      firebaseQuery = eventCollection
-          .where('formal', isEqualTo: false)
-          .orderBy('timestamp', descending: true)
-          .limit(20);
+      firebaseQuery = firebaseQuery.where('formal', isEqualTo: false);
     }
 
     return firebaseQuery;

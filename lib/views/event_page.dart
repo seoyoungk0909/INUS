@@ -21,17 +21,6 @@ class EventPage extends StatefulWidget {
 }
 
 class EventPageState extends State<EventPage> {
-  // List<EventController> formalEventsControllers = [
-  //   EventController(Event(eventCategory: "Webinar")),
-  //   EventController(Event(eventCategory: "Workshop")),
-  //   EventController(Event(eventCategory: "Seminar")),
-  // ];
-
-  // List<EventController> casualEventsControllers = [
-  //   EventController(Event(eventCategory: "Party")),
-  //   EventController(Event(eventCategory: "Seminar")),
-  // ];
-
   Future<void> refreshEvents({bool formal = false}) async {
     // List<Event> events = await Event.getEventsFromFirebase(formal: formal);
     // List<EventController> _controllers = [];
@@ -93,21 +82,16 @@ class EventPageState extends State<EventPage> {
         .doc(fba.FirebaseAuth.instance.currentUser?.uid);
     Future<DocumentSnapshot> snapshots = userRef.get();
     return Scaffold(
-        body: DefaultTabController(
-      length: 2,
-      child: Scaffold(
-          backgroundColor: Theme.of(context).backgroundColor,
-          body: Column(
+      body: DefaultTabController(
+          length: 2,
+          child: Column(
             children: [
-              Container(
-                color: Theme.of(context).primaryColor,
-                child: const TabBar(
-                  indicatorColor: Colors.white,
-                  tabs: [
-                    Tab(text: "Formal"),
-                    Tab(text: "Casual"),
-                  ],
-                ),
+              const TabBar(
+                indicatorColor: Colors.white,
+                tabs: [
+                  Tab(text: "Recent"),
+                  Tab(text: "Popular"),
+                ],
               ),
               Expanded(
                 child: TabBarView(children: [
@@ -133,46 +117,10 @@ class EventPageState extends State<EventPage> {
                         // Map documentdata = snapshot.data!.data() as Map;
                         return eventsGridView(formal: false);
                       }),
-                  // RefreshIndicator(
-                  //   onRefresh: () async {
-                  //     refreshEvents(formal: true);
-                  //   },
-                  //   color: Theme.of(context).colorScheme.secondary,
-                  //   child: StreamBuilder(
-                  //     stream: Event.getEventsQuery(formal: true).snapshots(),
-                  //     builder: (context,
-                  //         AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                  //             snap) {
-                  //       if (snap.data == null) {
-                  //         return const Center(
-                  //             child: CircularProgressIndicator());
-                  //       }
-                  //       return eventsGridView(formal: true);
-                  //     },
-                  //   ),
-                  //   // ),
-                  // ),
-                  // RefreshIndicator(
-                  //   onRefresh: () async {
-                  //     refreshEvents(formal: false);
-                  //   },
-                  //   color: Theme.of(context).colorScheme.secondary,
-                  //   child: GridView.builder(
-                  //     itemCount: casualEventsControllers.length,
-                  //     itemBuilder: (context, index) => eventUI(
-                  //         context, casualEventsControllers[index],
-                  //         setState: setState),
-                  //     gridDelegate:
-                  //         const SliverGridDelegateWithFixedCrossAxisCount(
-                  //       crossAxisCount: 2,
-                  //       childAspectRatio: 0.73,
-                  //     ),
-                  //   ),
-                  // ),
                 ]),
               ),
             ],
           )),
-    ));
+    );
   }
 }
