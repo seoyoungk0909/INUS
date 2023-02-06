@@ -51,6 +51,24 @@ class PostWritePageState extends State<PostWritePage> {
   };
   String trueCategories = "";
 
+  bool isButtonEnabled = false;
+
+  Map<String, bool> textChecker = {
+    'Title': false,
+    'Contents': false,
+  };
+  Future textChecking() async {
+    if (textChecker['Title']! && textChecker['Contents']!) {
+      setState(() {
+        isButtonEnabled = true;
+      });
+    } else {
+      setState(() {
+        isButtonEnabled = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,18 +80,55 @@ class PostWritePageState extends State<PostWritePage> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        leading: GestureDetector(
+          child: Icon(
+            Icons.arrow_back_ios,
+          ),
+          onTap: () {
+            showDialog<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Discard Writings'),
+                    content: Text(
+                        "Are you sure you want to go back to the main page? (All you have written will be lost!) "),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("No"),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/', (route) => false);
+                          },
+                          child: Text("yes"))
+                    ],
+                  );
+                });
+          },
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-            child: Text(
-              " Category",
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white70,
-                  fontWeight: FontWeight.bold),
+            child: RichText(
+              text: TextSpan(
+                  text: "Category",
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold),
+                  children: [
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16))
+                  ]),
             ),
           ),
           Container(
@@ -165,6 +220,15 @@ class PostWritePageState extends State<PostWritePage> {
               height: 48,
               child: TextField(
                   controller: postTitle,
+                  onChanged: (content) {
+                    if (content != "") {
+                      textChecker['Title'] = true;
+                      textChecking();
+                    } else {
+                      textChecker['Title'] = false;
+                      textChecking();
+                    }
+                  },
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: "Write your title here.",
@@ -188,6 +252,15 @@ class PostWritePageState extends State<PostWritePage> {
               height: 247,
               child: TextField(
                 controller: postContent,
+                onChanged: (content) {
+                  if (content != "") {
+                    textChecker['Contents'] = true;
+                    textChecking();
+                  } else {
+                    textChecker['Contents'] = false;
+                    textChecking();
+                  }
+                },
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: "Write your contents here.",
@@ -198,51 +271,80 @@ class PostWritePageState extends State<PostWritePage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 80),
           ),
           Center(
             child: SizedBox(
                 width: 350,
                 height: 55,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.white60),
-                  ),
-                  onPressed: () {
-                    showDialog<void>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Create Post'),
-                            content: Text(
-                                "Are you sure you want to create this post?"),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text("No"),
-                              ),
-                              TextButton(
-                                  onPressed: () {
-                                    for (var category in categories.keys) {
-                                      categories[category] == true
-                                          ? trueCategories = category
-                                          : {};
-                                    }
-                                    uploadPost(currentUser.uid);
-                                    setState(() {});
-                                    Navigator.pushNamedAndRemoveUntil(
-                                        context, '/', (route) => false);
-                                  },
-                                  child: Text("yes"))
-                            ],
-                          );
-                        });
-                  },
-                  child: const Text(
-                    'Post',
-                    style: TextStyle(color: Colors.white, fontSize: 20.0),
-                  ),
-                )),
+                child: isButtonEnabled
+                    ? ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.green),
+                        ),
+                        onPressed: () {
+                          showDialog<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Create Post'),
+                                  content: Text(
+                                      "Are you sure you want to create this post?"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("No"),
+                                    ),
+                                    TextButton(
+                                        onPressed: () {
+                                          for (var category
+                                              in categories.keys) {
+                                            categories[category] == true
+                                                ? trueCategories = category
+                                                : {};
+                                          }
+                                          uploadPost(currentUser.uid);
+                                          setState(() {});
+                                          Navigator.pushNamedAndRemoveUntil(
+                                              context, '/', (route) => false);
+                                        },
+                                        child: Text("yes"))
+                                  ],
+                                );
+                              });
+                        },
+                        child: const Text(
+                          'Post',
+                          style: TextStyle(color: Colors.white, fontSize: 20.0),
+                        ),
+                      )
+                    : ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.white60),
+                        ),
+                        onPressed: () {
+                          showDialog<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Warning'),
+                                  content: Text(
+                                      "You have not filled certain parts. Please check again"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("yes"))
+                                  ],
+                                );
+                              });
+                        },
+                        child: const Text(
+                          'Post',
+                          style: TextStyle(color: Colors.white, fontSize: 20.0),
+                        ),
+                      )),
           ),
         ],
       ),
