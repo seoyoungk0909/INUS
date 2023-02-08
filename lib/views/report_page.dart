@@ -133,11 +133,11 @@ class ListTileWidgetState extends State<ListTileWidget> {
     return ListTile(
       leading: isSelected
           ? Icon(
-              Icons.check_circle,
-              color: Colors.green[700],
+              Icons.radio_button_checked_outlined,
+              color: Colors.red,
             )
           : Icon(
-              Icons.check_circle_outline,
+              Icons.radio_button_unchecked_outlined,
               color: Colors.grey,
             ),
       title: Text(
