@@ -50,7 +50,7 @@ class EventDetailPageState extends State<EventDetailPage> {
               children: [
                 categoryButton(context, controller),
                 eventTitle(context, controller),
-                categoryHashtagRow(context, controller),
+                categoryHashtag(context, controller),
                 quickView(context, controller),
                 eventDescription(context, controller),
                 detailedView(context, controller),
@@ -81,12 +81,13 @@ class EventDetailPageState extends State<EventDetailPage> {
                           child: IconButton(
                             onPressed: () => {
                               setState(() {
-                                controller.changeSave();
+                                // controller.changeSave();
                               })
                             },
-                            icon: (controller.event.save == false)
-                                ? const Icon(Icons.bookmark_border)
-                                : const Icon(Icons.bookmark),
+                            icon: const Icon(Icons.bookmark_border),
+                            // icon: (controller.event.save == false)
+                            //     ? const Icon(Icons.bookmark_border)
+                            //     : const Icon(Icons.bookmark),
                             color: hexStringToColor("#AAAAAA"),
                             iconSize: 37.0,
                           ),
@@ -142,8 +143,7 @@ Widget eventDetailPhoto(BuildContext context, EventController controller) {
 }
 
 //category hashtag each element
-Widget categoryHashtag(
-    BuildContext context, EventController controller, hashtag) {
+Widget categoryHashtag(BuildContext context, EventController controller) {
   return Padding(
     padding: const EdgeInsets.only(top: 14, right: 10),
     child: Container(
@@ -154,22 +154,23 @@ Widget categoryHashtag(
       ),
       child: Container(
         padding: const EdgeInsetsDirectional.fromSTEB(9, 5, 9, 0),
-        child: text(context, controller, hashtag, 12),
+        child: text(context, controller, "#${controller.event.tag}", 12),
       ),
     ),
   );
 }
 
 //all of category hashtags in a row
-Widget categoryHashtagRow(BuildContext context, EventController controller) {
-  final hashtagArr = (controller.event.tag).split(' ');
-  return Row(
-    children: [
-      categoryHashtag(context, controller, hashtagArr[0]),
-      categoryHashtag(context, controller, hashtagArr[1]),
-    ],
-  );
-}
+// Widget categoryHashtagRow(BuildContext context, EventController controller) {
+//   final hashtagArr = (controller.event.tag).split(' ');
+//   // const hashtagArr = "#Environment, #Education";
+//   return Row(
+//     children: [
+//       categoryHashtag(context, controller, hashtagArr[0]),
+//       categoryHashtag(context, controller, hashtagArr[1]),
+//     ],
+//   );
+// }
 
 //Quick view
 Widget quickView(BuildContext context, EventController controller) {
@@ -203,7 +204,7 @@ Widget quickView(BuildContext context, EventController controller) {
                             context,
                             controller,
                             DateFormat('dd MMM y')
-                                .format(controller.event.uploadTime),
+                                .format(controller.event.eventTime),
                             15,
                             bold: true),
                       ],
@@ -222,7 +223,7 @@ Widget quickView(BuildContext context, EventController controller) {
                               context,
                               controller,
                               DateFormat('Hm')
-                                  .format(controller.event.uploadTime),
+                                  .format(controller.event.eventTime),
                               15,
                               bold: true),
                         ],
@@ -280,8 +281,7 @@ Widget detailedView(BuildContext context, EventController controller) {
                   text(
                       context,
                       controller,
-                      DateFormat('dd MMM y')
-                          .format(controller.event.uploadTime),
+                      DateFormat('dd MMM y').format(controller.event.eventTime),
                       15,
                       bold: true),
                 ],
@@ -298,7 +298,7 @@ Widget detailedView(BuildContext context, EventController controller) {
                         textColor: '#AAAAAA'),
                   ),
                   text(context, controller,
-                      DateFormat('Hm').format(controller.event.uploadTime), 15,
+                      DateFormat('Hm').format(controller.event.eventTime), 15,
                       bold: true),
                 ],
               ),

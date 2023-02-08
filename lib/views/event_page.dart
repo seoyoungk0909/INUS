@@ -67,7 +67,7 @@ class EventPageState extends State<EventPage> {
             },
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 0.73,
+              childAspectRatio: 0.93,
             ),
           );
         },
@@ -89,8 +89,8 @@ class EventPageState extends State<EventPage> {
               const TabBar(
                 indicatorColor: Colors.white,
                 tabs: [
-                  Tab(text: "Recent"),
-                  Tab(text: "Popular"),
+                  Tab(text: "Formal"),
+                  Tab(text: "Casual"),
                 ],
               ),
               Expanded(

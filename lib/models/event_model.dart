@@ -23,7 +23,7 @@ class Event {
   late DateTime eventTime;
   late DateTime uploadTime;
   bool formal = false;
-  bool save = false;
+  // bool save = false;
   DocumentReference<Map<String, dynamic>>? firebaseDocRef;
 
   Event({
@@ -37,7 +37,7 @@ class Event {
     DateTime? eventHeldTime,
     DateTime? eventUploadTime,
     bool? eventFormality,
-    bool? savedEvent,
+    // bool? savedEvent,
     DocumentReference<Map<String, dynamic>>? docRef,
   }) {
     writer = eventWriter ?? writer;
@@ -51,7 +51,7 @@ class Event {
     uploadTime = eventUploadTime ?? DateTime.now();
     eventTime = eventHeldTime ?? DateTime.now();
     formal = eventFormality ?? formal;
-    save = savedEvent ?? save;
+    // save = savedEvent ?? save;
     firebaseDocRef = docRef;
   }
 
@@ -80,13 +80,13 @@ class Event {
         eventTitle: eventData.get('title'),
         eventCategory: eventData.get('category'),
         eventTag: eventData.get('tag'),
-        eventDescription: eventData.get('body'),
+        eventDescription: eventData.get('event detail'),
         eventLanguage: eventData.get('language'),
         eventLocation: eventData.get('location'),
         eventUploadTime: (eventData.get('uploadTime') as Timestamp).toDate(),
         eventHeldTime: (eventData.get('eventTime') as Timestamp).toDate(),
         eventFormality: (eventData.get('formal')),
-        savedEvent: (eventData.get('save')),
+        // savedEvent: (eventData.get('save')),
         docRef: firebaseDoc);
   }
 
@@ -111,7 +111,7 @@ class Event {
         FirebaseFirestore.instance.collection('event');
 
     Query<Map<String, dynamic>> firebaseQuery =
-        eventCollection.orderBy('timestamp', descending: true).limit(20);
+        eventCollection.orderBy('uploadTime', descending: true).limit(20);
     if (formal) {
       firebaseQuery = firebaseQuery.where('formal', isEqualTo: true);
     } else {
