@@ -54,20 +54,19 @@ class EventDetailPageState extends State<EventDetailPage> {
                 quickView(context, controller),
                 eventDescription(context, controller),
                 detailedView(context, controller),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
+                Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.81,
+                        height: 26,
+                        child: ElevatedButton(
                           onPressed: () {},
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
                                   Theme.of(context).colorScheme.secondary),
-                              padding: MaterialStateProperty.all(
-                                  const EdgeInsetsDirectional.fromSTEB(
-                                      120, 13, 120, 13)),
                               textStyle:
                                   MaterialStateProperty.all(const TextStyle(
                                 fontSize: 14,
@@ -76,24 +75,24 @@ class EventDetailPageState extends State<EventDetailPage> {
                               ))),
                           child: const Text('Register'),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 9),
-                          child: IconButton(
-                            onPressed: () => {
-                              setState(() {
-                                // controller.changeSave();
-                              })
-                            },
-                            icon: const Icon(Icons.bookmark_border),
-                            // icon: (controller.event.save == false)
-                            //     ? const Icon(Icons.bookmark_border)
-                            //     : const Icon(Icons.bookmark),
-                            color: hexStringToColor("#AAAAAA"),
-                            iconSize: 37.0,
-                          ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 9),
+                        child: IconButton(
+                          onPressed: () => {
+                            setState(() {
+                              // controller.changeSave();
+                            })
+                          },
+                          icon: const Icon(Icons.bookmark_border),
+                          // icon: (controller.event.save == false)
+                          //     ? const Icon(Icons.bookmark_border)
+                          //     : const Icon(Icons.bookmark),
+                          color: hexStringToColor("#AAAAAA"),
+                          iconSize: 37.0,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ],
