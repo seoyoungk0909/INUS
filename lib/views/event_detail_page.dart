@@ -7,6 +7,7 @@ import '../models/event_model.dart';
 import 'package:aus/utils/color_utils.dart';
 import 'components/event_ui.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EventDetailPage extends StatefulWidget {
   const EventDetailPage({Key? key, required this.title}) : super(key: key);
@@ -23,6 +24,13 @@ class EventDetailPage extends StatefulWidget {
 }
 
 class EventDetailPageState extends State<EventDetailPage> {
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri(scheme: "https", host: url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw "Can not launch $url";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
@@ -61,9 +69,11 @@ class EventDetailPageState extends State<EventDetailPage> {
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width * 0.81,
-                        height: 26,
+                        height: 28,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            _launchURL(controller.event.registerLink);
+                          },
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
                                   Theme.of(context).colorScheme.secondary),

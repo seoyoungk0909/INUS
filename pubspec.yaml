@@ -39,7 +39,7 @@ dependencies:
   json_path: 0.4.1
   page_transition: 2.0.4
   timeago: 3.2.2
-  url_launcher: 6.1.5
+  url_launcher: ^6.1.5
   firebase_core:
   firebase_auth:
   cloud_firestore:

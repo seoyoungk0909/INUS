@@ -23,6 +23,7 @@ class Event {
   late DateTime eventTime;
   late DateTime uploadTime;
   bool formal = false;
+  String registerLink = "www.google.com";
   // bool save = false;
   DocumentReference<Map<String, dynamic>>? firebaseDocRef;
 
@@ -37,6 +38,7 @@ class Event {
     DateTime? eventHeldTime,
     DateTime? eventUploadTime,
     bool? eventFormality,
+    String? eventRegisterLink,
     // bool? savedEvent,
     DocumentReference<Map<String, dynamic>>? docRef,
   }) {
@@ -51,6 +53,7 @@ class Event {
     uploadTime = eventUploadTime ?? DateTime.now();
     eventTime = eventHeldTime ?? DateTime.now();
     formal = eventFormality ?? formal;
+    registerLink = eventRegisterLink ?? registerLink;
     // save = savedEvent ?? save;
     firebaseDocRef = docRef;
   }
@@ -86,6 +89,7 @@ class Event {
         eventUploadTime: (eventData.get('uploadTime') as Timestamp).toDate(),
         eventHeldTime: (eventData.get('eventTime') as Timestamp).toDate(),
         eventFormality: (eventData.get('formal')),
+        eventRegisterLink: eventData.get('registration link'),
         // savedEvent: (eventData.get('save')),
         docRef: firebaseDoc);
   }
