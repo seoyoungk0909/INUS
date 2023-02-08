@@ -7,6 +7,7 @@ import '../models/event_model.dart';
 import 'package:aus/utils/color_utils.dart';
 import 'components/event_ui.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EventDetailPage extends StatefulWidget {
   const EventDetailPage({Key? key, required this.title}) : super(key: key);
@@ -23,6 +24,13 @@ class EventDetailPage extends StatefulWidget {
 }
 
 class EventDetailPageState extends State<EventDetailPage> {
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri(scheme: "https", host: url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw "Can not launch $url";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
@@ -50,41 +58,46 @@ class EventDetailPageState extends State<EventDetailPage> {
               children: [
                 categoryButton(context, controller),
                 eventTitle(context, controller),
-                categoryHashtagRow(context, controller),
+                categoryHashtag(context, controller),
                 quickView(context, controller),
                 eventDescription(context, controller),
                 detailedView(context, controller),
                 Padding(
                   padding: const EdgeInsets.only(top: 40),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Theme.of(context).colorScheme.secondary),
-                            padding: MaterialStateProperty.all(
-                                const EdgeInsetsDirectional.fromSTEB(
-                                    120, 13, 120, 13)),
-                            textStyle:
-                                MaterialStateProperty.all(const TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'Outfit',
-                              fontWeight: FontWeight.w600,
-                            ))),
-                        child: const Text('Register'),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.81,
+                        height: 28,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            _launchURL(controller.event.registerLink);
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.secondary),
+                              textStyle:
+                                  MaterialStateProperty.all(const TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'Outfit',
+                                fontWeight: FontWeight.w600,
+                              ))),
+                          child: const Text('Register'),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 9),
                         child: IconButton(
                           onPressed: () => {
                             setState(() {
-                              controller.changeSave();
+                              // controller.changeSave();
                             })
                           },
-                          icon: (controller.event.save == false)
-                              ? const Icon(Icons.bookmark_border)
-                              : const Icon(Icons.bookmark),
+                          icon: const Icon(Icons.bookmark_border),
+                          // icon: (controller.event.save == false)
+                          //     ? const Icon(Icons.bookmark_border)
+                          //     : const Icon(Icons.bookmark),
                           color: hexStringToColor("#AAAAAA"),
                           iconSize: 37.0,
                         ),
@@ -139,8 +152,7 @@ Widget eventDetailPhoto(BuildContext context, EventController controller) {
 }
 
 //category hashtag each element
-Widget categoryHashtag(
-    BuildContext context, EventController controller, hashtag) {
+Widget categoryHashtag(BuildContext context, EventController controller) {
   return Padding(
     padding: const EdgeInsets.only(top: 14, right: 10),
     child: Container(
@@ -151,22 +163,23 @@ Widget categoryHashtag(
       ),
       child: Container(
         padding: const EdgeInsetsDirectional.fromSTEB(9, 5, 9, 0),
-        child: text(context, controller, hashtag, 12),
+        child: text(context, controller, "#${controller.event.tag}", 12),
       ),
     ),
   );
 }
 
 //all of category hashtags in a row
-Widget categoryHashtagRow(BuildContext context, EventController controller) {
-  final hashtagArr = (controller.event.tag).split(' ');
-  return Row(
-    children: [
-      categoryHashtag(context, controller, hashtagArr[0]),
-      categoryHashtag(context, controller, hashtagArr[1]),
-    ],
-  );
-}
+// Widget categoryHashtagRow(BuildContext context, EventController controller) {
+//   final hashtagArr = (controller.event.tag).split(' ');
+//   // const hashtagArr = "#Environment, #Education";
+//   return Row(
+//     children: [
+//       categoryHashtag(context, controller, hashtagArr[0]),
+//       categoryHashtag(context, controller, hashtagArr[1]),
+//     ],
+//   );
+// }
 
 //Quick view
 Widget quickView(BuildContext context, EventController controller) {
@@ -200,7 +213,7 @@ Widget quickView(BuildContext context, EventController controller) {
                             context,
                             controller,
                             DateFormat('dd MMM y')
-                                .format(controller.event.uploadTime),
+                                .format(controller.event.eventTime),
                             15,
                             bold: true),
                       ],
@@ -219,7 +232,7 @@ Widget quickView(BuildContext context, EventController controller) {
                               context,
                               controller,
                               DateFormat('Hm')
-                                  .format(controller.event.uploadTime),
+                                  .format(controller.event.eventTime),
                               15,
                               bold: true),
                         ],
@@ -277,8 +290,7 @@ Widget detailedView(BuildContext context, EventController controller) {
                   text(
                       context,
                       controller,
-                      DateFormat('dd MMM y')
-                          .format(controller.event.uploadTime),
+                      DateFormat('dd MMM y').format(controller.event.eventTime),
                       15,
                       bold: true),
                 ],
@@ -295,7 +307,7 @@ Widget detailedView(BuildContext context, EventController controller) {
                         textColor: '#AAAAAA'),
                   ),
                   text(context, controller,
-                      DateFormat('Hm').format(controller.event.uploadTime), 15,
+                      DateFormat('Hm').format(controller.event.eventTime), 15,
                       bold: true),
                 ],
               ),

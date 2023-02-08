@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'user_model.dart';
 
 const List EVENT_CATEGORY = [
   "Event",
@@ -10,6 +11,7 @@ const List EVENT_CATEGORY = [
 ];
 
 class Event {
+  User writer = User();
   String title = "Tissue-engineering Integrated";
   String category = "Event";
   String tag = "#environment #education";
@@ -21,10 +23,12 @@ class Event {
   late DateTime eventTime;
   late DateTime uploadTime;
   bool formal = false;
-  bool save = false;
+  String registerLink = "www.google.com";
+  // bool save = false;
   DocumentReference<Map<String, dynamic>>? firebaseDocRef;
 
   Event({
+    User? eventWriter,
     String? eventTitle,
     String? eventCategory,
     String? eventTag,
@@ -34,9 +38,12 @@ class Event {
     DateTime? eventHeldTime,
     DateTime? eventUploadTime,
     bool? eventFormality,
-    bool? savedEvent,
+    String? eventRegisterLink,
+    // bool? savedEvent,
     DocumentReference<Map<String, dynamic>>? docRef,
   }) {
+    writer = eventWriter ?? writer;
+
     title = eventTitle ?? title;
     category = eventCategory ?? category;
     tag = eventTag ?? tag;
@@ -46,26 +53,44 @@ class Event {
     uploadTime = eventUploadTime ?? DateTime.now();
     eventTime = eventHeldTime ?? DateTime.now();
     formal = eventFormality ?? formal;
-    save = savedEvent ?? save;
+    registerLink = eventRegisterLink ?? registerLink;
+    // save = savedEvent ?? save;
     firebaseDocRef = docRef;
   }
 
   // factory for events
   static Future<Event> fromDocRef(
-      DocumentReference<Map<String, dynamic>> firebaseDoc) async {
-    DocumentSnapshot<Map<String, dynamic>> eventData = await firebaseDoc.get();
+      {DocumentReference<Map<String, dynamic>>? firebaseDoc,
+      QueryDocumentSnapshot<Map<String, dynamic>>? firebaseSnap}) async {
+    DocumentSnapshot<Map<String, dynamic>> eventData;
+
+    if (firebaseSnap == null) {
+      assert(firebaseDoc != null);
+      eventData = await firebaseDoc!.get();
+    } else {
+      eventData = firebaseSnap;
+      firebaseDoc ??= eventData.reference;
+    }
+    User eventWriter;
+    try {
+      eventWriter = await User.fromUserRef(eventData.get('user'));
+    } catch (e) {
+      eventWriter = User(userName: "Anonymous");
+    }
 
     return Event(
+        eventWriter: eventWriter,
         eventTitle: eventData.get('title'),
         eventCategory: eventData.get('category'),
         eventTag: eventData.get('tag'),
-        eventDescription: eventData.get('body'),
+        eventDescription: eventData.get('event detail'),
         eventLanguage: eventData.get('language'),
         eventLocation: eventData.get('location'),
-        eventUploadTime: (eventData.get('timestamp') as Timestamp).toDate(),
-        eventHeldTime: (eventData.get('timestamp') as Timestamp).toDate(),
+        eventUploadTime: (eventData.get('uploadTime') as Timestamp).toDate(),
+        eventHeldTime: (eventData.get('eventTime') as Timestamp).toDate(),
         eventFormality: (eventData.get('formal')),
-        savedEvent: (eventData.get('save')),
+        eventRegisterLink: eventData.get('registration link'),
+        // savedEvent: (eventData.get('save')),
         docRef: firebaseDoc);
   }
 
@@ -73,27 +98,30 @@ class Event {
   static Future<List<Event>> getEventsFromFirebase(
       {bool formal = false}) async {
     List<Event> events = [];
-    CollectionReference<Map<String, dynamic>> eventCollection =
-        FirebaseFirestore.instance.collection('events');
-
-    Query<Map<String, dynamic>> firebaseQuery;
-    if (formal) {
-      firebaseQuery = eventCollection
-          .where('formal', isEqualTo: true)
-          .orderBy('timestamp', descending: true)
-          .limit(20);
-    } else {
-      firebaseQuery =
-          eventCollection.orderBy('timestamp', descending: true).limit(20);
-    }
+    Query<Map<String, dynamic>> firebaseQuery = getEventsQuery(formal: formal);
 
     QuerySnapshot<Map<String, dynamic>> firebaseEvents =
-        await firebaseQuery.get();
+        await firebaseQuery.get(const GetOptions(source: Source.cache));
 
     for (QueryDocumentSnapshot<Map<String, dynamic>> fbEvent
         in firebaseEvents.docs) {
-      events.add(await Event.fromDocRef(fbEvent.reference));
+      events.add(await Event.fromDocRef(firebaseDoc: fbEvent.reference));
     }
     return events;
+  }
+
+  static Query<Map<String, dynamic>> getEventsQuery({bool formal = false}) {
+    CollectionReference<Map<String, dynamic>> eventCollection =
+        FirebaseFirestore.instance.collection('event');
+
+    Query<Map<String, dynamic>> firebaseQuery =
+        eventCollection.orderBy('uploadTime', descending: true).limit(20);
+    if (formal) {
+      firebaseQuery = firebaseQuery.where('formal', isEqualTo: true);
+    } else {
+      firebaseQuery = firebaseQuery.where('formal', isEqualTo: false);
+    }
+
+    return firebaseQuery;
   }
 }
