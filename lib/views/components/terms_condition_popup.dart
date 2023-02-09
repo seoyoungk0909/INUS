@@ -18,7 +18,7 @@ class TCPopupState extends State<TCPopup> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 500,
+      height: 800,
       decoration: BoxDecoration(
           color: ApdiColors.darkBackground,
           borderRadius: BorderRadius.only(
@@ -46,9 +46,12 @@ class TCPopupState extends State<TCPopup> {
               ),
             ),
           ),
-          // SOME IMAGE
           Padding(
-            padding: EdgeInsets.only(top: 200),
+            padding: EdgeInsets.only(top: 16),
+            child: Image.asset('assets/imgs/t&c.png'),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
