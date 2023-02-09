@@ -67,7 +67,7 @@ class EventPageState extends State<EventPage> {
             },
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 0.93,
+              childAspectRatio: 0.73,
             ),
           );
         },
