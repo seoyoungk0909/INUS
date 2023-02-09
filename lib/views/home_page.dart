@@ -46,7 +46,7 @@ class HomePageState extends State<HomePage> {
       if (!confirmed) {
         Future.delayed(Duration(seconds: 2), () {
           showModalBottomSheet(
-              isDismissible: false,
+              isDismissible: true,
               backgroundColor: Colors.transparent,
               context: context,
               builder: (context) {
