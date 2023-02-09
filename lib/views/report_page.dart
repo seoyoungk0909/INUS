@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import '../controllers/post_controller.dart';
 import '../models/event_model.dart';
 import '../controllers/event_controller.dart';
+import '../models/post_model.dart';
 import '../views/components/popup_dialog.dart';
 
 class ReportPage extends StatefulWidget {
@@ -15,10 +17,19 @@ class ReportPage extends StatefulWidget {
 }
 
 class ReportPageState extends State<ReportPage> {
-  Future<void> sendReport(EventController controller) async {
+  Future<void> eventSendReport(EventController controller) async {
     DocumentReference newReport =
         await FirebaseFirestore.instance.collection("report").add({
       'postId': controller.event.firebaseDocRef,
+      'time': Timestamp.now(),
+      'reason': selectedReportType,
+    });
+  }
+
+  Future<void> postSendReport(PostController controller) async {
+    DocumentReference newReport =
+        await FirebaseFirestore.instance.collection("report").add({
+      'postId': controller.post.firebaseDocRef,
       'time': Timestamp.now(),
       'reason': selectedReportType,
     });
@@ -59,7 +70,10 @@ class ReportPageState extends State<ReportPage> {
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
-    EventController controller = EventController(arguments['event'] ?? Event());
+
+    EventController eventController =
+        EventController(arguments['event'] ?? Event());
+    PostController postController = PostController(arguments['post'] ?? Post());
 
     return Scaffold(
         appBar: AppBar(
@@ -96,7 +110,11 @@ class ReportPageState extends State<ReportPage> {
                     ),
                     // onPressed: selectedRadio.trim().isEmpty ? null : () {},
                     onPressed: () {
-                      sendReport(controller);
+                      if (arguments.keys.first == 'event') {
+                        eventSendReport(eventController);
+                      } else if (arguments.keys.first == 'post') {
+                        postSendReport(postController);
+                      }
                       popUpDialog(context, "Report Completed",
                           "This report will be reviewed promptly by the administrator.");
                     },

@@ -41,7 +41,7 @@ class PostDetailPageState extends State<PostDetailPage> {
           IconButton(
               onPressed: () {
                 Navigator.pushNamed(context, 'report',
-                    arguments: {'event': controller.post});
+                    arguments: {'post': controller.post});
               },
               icon: SvgPicture.asset('assets/icons/Report.svg'))
         ],
