@@ -36,6 +36,9 @@ class LoginPageState extends State<LoginPage> {
         case RegisterState.setupComplete:
           Navigator.pushNamed(context, 'welcome');
           break;
+        case RegisterState.TandCConfirmed:
+          Navigator.pushNamed(context, 'welcome');
+          break;
         default:
           throw Exception("This should not happen: "
               "the signInWithEmailAndPassword function "
