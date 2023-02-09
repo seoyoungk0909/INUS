@@ -24,55 +24,57 @@ class PostListPage extends StatefulWidget {
 }
 
 class _PostListPageState extends State<PostListPage> {
-  Future<void> refreshPosts({bool popular = false}) async {
-    // List<Post> posts = await Post.getPostsFromFirebase(popular: popular);
-    // List<PostController> _controllers = [];
-    // for (Post post in posts) {
-    //   _controllers.add(PostController(post));
-    // }
-    // setState(() {
-    //   if (popular) {
-    //     popularPostsControllers = _controllers;
-    //   } else {
-    //     recentPostsControllers = _controllers;
-    //   }
-    // });
-  }
+  // Future<void> refreshPosts({bool popular = false}) async {
+  // List<Post> posts = await Post.getPostsFromFirebase(popular: popular);
+  // List<PostController> _controllers = [];
+  // for (Post post in posts) {
+  //   _controllers.add(PostController(post));
+  // }
+  // setState(() {
+  //   if (popular) {
+  //     popularPostsControllers = _controllers;
+  //   } else {
+  //     recentPostsControllers = _controllers;
+  //   }
+  // });
+  // }
 
   Widget postsStreamView({bool popular = false, List? savedPosts}) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        refreshPosts(popular: popular);
+    return
+        // RefreshIndicator(
+        //   onRefresh: () async {
+        //     refreshPosts(popular: popular);
+        //   },
+        //   color: Theme.of(context).backgroundColor,
+        //   child:
+        StreamBuilder(
+      stream: Post.getPostsQuery(popular: popular).snapshots(),
+      builder:
+          (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snap) {
+        if (snap.data == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return ListView.builder(
+          // physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: snap.data!.size,
+          itemBuilder: (BuildContext context, int i) {
+            return FutureBuilder<Post>(
+              future: Post.fromDocRef(firebaseSnap: snap.data!.docs[i]),
+              builder: (context, snapshot) {
+                if (snapshot.data == null) {
+                  return const SizedBox.shrink(); //NOTE: empty widget
+                }
+                bool saved =
+                    savedPosts?.contains(snapshot.data!.firebaseDocRef) ??
+                        false;
+                return postUI(context, PostController(snapshot.data!),
+                    setState: setState, saved: saved);
+              },
+            );
+          },
+        );
       },
-      color: Theme.of(context).backgroundColor,
-      child: StreamBuilder(
-        stream: Post.getPostsQuery(popular: popular).snapshots(),
-        builder:
-            (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snap) {
-          if (snap.data == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return ListView.builder(
-            // physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: snap.data!.size,
-            itemBuilder: (BuildContext context, int i) {
-              return FutureBuilder<Post>(
-                future: Post.fromDocRef(firebaseSnap: snap.data!.docs[i]),
-                builder: (context, snapshot) {
-                  if (snapshot.data == null) {
-                    return const SizedBox.shrink(); //NOTE: empty widget
-                  }
-                  bool saved =
-                      savedPosts?.contains(snapshot.data!.firebaseDocRef) ??
-                          false;
-                  return postUI(context, PostController(snapshot.data!),
-                      setState: setState, saved: saved);
-                },
-              );
-            },
-          );
-        },
-      ),
+      // ),
     );
   }
 

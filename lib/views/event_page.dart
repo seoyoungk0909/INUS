@@ -21,57 +21,59 @@ class EventPage extends StatefulWidget {
 }
 
 class EventPageState extends State<EventPage> {
-  Future<void> refreshEvents({bool formal = false}) async {
-    // List<Event> events = await Event.getEventsFromFirebase(formal: formal);
-    // List<EventController> _controllers = [];
-    // for (Event event in events) {
-    //   _controllers.add(EventController(event));
-    // }
-    // if (mounted) {
-    //   setState(() {
-    //     if (formal) {
-    //       formalEventsControllers = _controllers;
-    //     } else {
-    //       casualEventsControllers = _controllers;
-    //     }
-    //   });
-    // }
-  }
+  // Future<void> refreshEvents({bool formal = false}) async {
+  // List<Event> events = await Event.getEventsFromFirebase(formal: formal);
+  // List<EventController> _controllers = [];
+  // for (Event event in events) {
+  //   _controllers.add(EventController(event));
+  // }
+  // if (mounted) {
+  //   setState(() {
+  //     if (formal) {
+  //       formalEventsControllers = _controllers;
+  //     } else {
+  //       casualEventsControllers = _controllers;
+  //     }
+  //   });
+  // }
+  // }
 
   Widget eventsGridView({bool formal = false}) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        refreshEvents(formal: formal);
+    return
+        // RefreshIndicator(
+        //   onRefresh: () async {
+        //     refreshEvents(formal: formal);
+        //   },
+        //   color: Theme.of(context).backgroundColor,
+        //   child:
+        StreamBuilder(
+      stream: Event.getEventsQuery(formal: formal).snapshots(),
+      builder:
+          (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snap) {
+        if (snap.data == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return GridView.builder(
+          itemCount: snap.data!.size,
+          itemBuilder: (BuildContext context, int i) {
+            return FutureBuilder<Event>(
+              future: Event.fromDocRef(firebaseSnap: snap.data!.docs[i]),
+              builder: (context, snapshot) {
+                if (snapshot.data == null) {
+                  return const SizedBox.shrink(); //NOTE: empty widget
+                }
+                return eventUI(context, EventController(snapshot.data!),
+                    setState: setState);
+              },
+            );
+          },
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.93,
+          ),
+        );
       },
-      color: Theme.of(context).backgroundColor,
-      child: StreamBuilder(
-        stream: Event.getEventsQuery(formal: formal).snapshots(),
-        builder:
-            (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snap) {
-          if (snap.data == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return GridView.builder(
-            itemCount: snap.data!.size,
-            itemBuilder: (BuildContext context, int i) {
-              return FutureBuilder<Event>(
-                future: Event.fromDocRef(firebaseSnap: snap.data!.docs[i]),
-                builder: (context, snapshot) {
-                  if (snapshot.data == null) {
-                    return const SizedBox.shrink(); //NOTE: empty widget
-                  }
-                  return eventUI(context, EventController(snapshot.data!),
-                      setState: setState);
-                },
-              );
-            },
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.93,
-            ),
-          );
-        },
-      ),
+      // ),
     );
   }
 
