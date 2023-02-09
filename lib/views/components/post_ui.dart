@@ -402,32 +402,32 @@ Widget postUI(BuildContext context, PostController controller,
         // ],
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            writerInfoUI(context, controller),
-            GestureDetector(
-              onTap: () {
-                if (isDetail) return;
-                Navigator.pushNamed(context, 'post_detail',
-                    arguments: {'post': controller.post, 'saved': saved});
-                setState!(controller.incrementView);
-              },
-              child: contentUI(context, controller, isDetail: isDetail),
-            ),
-            ViewCommentSave(
-                hexButtonColor: "#AAAAAA",
-                controller: controller,
-                showText: !isDetail,
-                saved: saved),
-            const Divider(
-              height: 8,
-              thickness: 1,
-              color: Color.fromARGB(255, 74, 74, 74),
-            ),
-          ],
+      child: GestureDetector(
+        onTap: () {
+          if (isDetail) return;
+          Navigator.pushNamed(context, 'post_detail',
+              arguments: {'post': controller.post, 'saved': saved});
+          setState!(controller.incrementView);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              writerInfoUI(context, controller),
+              contentUI(context, controller, isDetail: isDetail),
+              ViewCommentSave(
+                  hexButtonColor: "#AAAAAA",
+                  controller: controller,
+                  showText: !isDetail,
+                  saved: saved),
+              const Divider(
+                height: 8,
+                thickness: 1,
+                color: Color.fromARGB(255, 74, 74, 74),
+              ),
+            ],
+          ),
         ),
       ),
     ),
