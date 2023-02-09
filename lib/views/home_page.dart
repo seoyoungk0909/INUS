@@ -44,12 +44,15 @@ class HomePageState extends State<HomePage> {
       bool confirmed = dataMap.data()!.containsKey('tc_confirmed') &&
           dataMap['tc_confirmed'];
       if (!confirmed) {
-        showModalBottomSheet(
-            backgroundColor: Colors.transparent,
-            context: context,
-            builder: (context) {
-              return const TCPopup();
-            });
+        Future.delayed(Duration(seconds: 2), () {
+          showModalBottomSheet(
+              isDismissible: false,
+              backgroundColor: Colors.transparent,
+              context: context,
+              builder: (context) {
+                return const TCPopup();
+              });
+        });
       }
     });
     return Scaffold(
