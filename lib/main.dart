@@ -29,7 +29,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   User? user = await FirebaseAuth.instance.userChanges().first;
-  String initialRoute = (user == null) ? "login" : "/";
+  bool complete = user != null && await isUserSetupComplete(user, null);
+  String initialRoute = (complete) ? "/" : "login";
   runApp(MyApp(initialRoute: initialRoute));
 }
 
