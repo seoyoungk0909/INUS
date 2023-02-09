@@ -402,8 +402,10 @@ Widget postUI(BuildContext context, PostController controller,
         // ],
         borderRadius: BorderRadius.circular(8),
       ),
-      child: GestureDetector(
-        onTap: () {
+      child: TextButton(
+        style: ButtonStyle(
+            overlayColor: MaterialStateProperty.all(Colors.transparent)),
+        onPressed: () {
           if (isDetail) return;
           Navigator.pushNamed(context, 'post_detail',
               arguments: {'post': controller.post, 'saved': saved});
