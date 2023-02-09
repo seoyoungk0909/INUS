@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import '../controllers/post_controller.dart';
 import '../models/event_model.dart';
@@ -76,9 +75,11 @@ class ReportPageState extends State<ReportPage> {
     PostController postController = PostController(arguments['post'] ?? Post());
 
     return Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           title: Text(widget.title),
           centerTitle: true,
+          backgroundColor: Theme.of(context).backgroundColor,
         ),
         body: Column(children: <Widget>[
           Container(

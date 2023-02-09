@@ -21,7 +21,6 @@ import 'views/event_detail_page.dart';
 import 'views/event_write_page.dart';
 import 'views/report_page.dart';
 import 'views/more_page.dart';
-import 'views/terms_and_conditions.dart';
 
 import 'utils/color_utils.dart';
 
@@ -79,7 +78,6 @@ class MyApp extends StatelessWidget {
           'event_detail': (context) => const EventDetailPage(title: 'Events'),
           'report': (context) => const ReportPage(title: 'Report'),
           'more': (context) => const MorePage(),
-          't&c': (context) => const TandCPage(),
         },
       ),
     );

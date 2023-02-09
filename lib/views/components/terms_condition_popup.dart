@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/color_utils.dart';
+import '../terms_and_conditions.dart';
 
 class TCPopup extends StatefulWidget {
   const TCPopup({super.key});
@@ -73,7 +74,15 @@ class TCPopupState extends State<TCPopup> {
                 ),
                 TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, 't&c');
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) {
+                            return TandCPage();
+                          },
+                        ),
+                      );
+                      // Navigator.pushNamed(context, 't&c');
                     },
                     child: Text(
                       "INUS Terms",
