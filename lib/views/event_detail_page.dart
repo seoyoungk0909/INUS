@@ -44,7 +44,10 @@ class EventDetailPageState extends State<EventDetailPage> {
         // centerTitle: false,
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, 'report',
+                    arguments: {'event': controller.event});
+              },
               icon: SvgPicture.asset('assets/icons/Report.svg'))
         ],
       ),
