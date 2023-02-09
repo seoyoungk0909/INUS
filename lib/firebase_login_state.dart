@@ -12,6 +12,7 @@ enum RegisterState {
   unRegistered,
   emailVerified,
   setupComplete,
+  TandCConfirmed,
 }
 
 const String APDI_TEST_ACCOUNT = "apdi-dev@connect.ust.hk";
@@ -38,11 +39,39 @@ String verifyEmail(String email) {
     case 'link.cuhk.edu.hk':
       school = 'CUHK';
       break;
+    // case 'gmail.com':  // for debugging
+    //   school = 'HKU';
+    //   break;
 
     default:
       throw Exception("You can only use School email address for this app.");
   }
   return school;
+}
+
+Future<bool> isUserSetupComplete(User? user, String? email) async {
+  bool setupComplete = false;
+  DocumentReference ref =
+      FirebaseFirestore.instance.collection("user_info").doc(user?.uid);
+  var doc = await ref.get();
+  // if user do not exist in firestore, create
+  if (!doc.exists) {
+    ref.set({
+      "email": email,
+    });
+  } else {
+    // if displayName does not exist, register incomplete.
+    try {
+      doc.get("firstName");
+      doc.get("lastName");
+      doc.get("name");
+      doc.get("school");
+      setupComplete = true;
+    } catch (e) {
+      setupComplete = false;
+    }
+  }
+  return setupComplete;
 }
 
 class LoginState extends ChangeNotifier {
@@ -88,8 +117,8 @@ class LoginState extends ChangeNotifier {
   um.User? _currentUser;
   um.User? get currentUser => _currentUser;
 
-  Future<bool> isUserSetupComplete(User? user) async {
-    bool setupComplete = false;
+  Future<bool> isUserTandCConfirmed(User? user) async {
+    bool tc_confirmed = false;
     DocumentReference ref =
         FirebaseFirestore.instance.collection("user_info").doc(user?.uid);
     var doc = await ref.get();
@@ -101,13 +130,13 @@ class LoginState extends ChangeNotifier {
     } else {
       // if displayName does not exist, register incomplete.
       try {
-        doc.get("displayName");
-        setupComplete = true;
+        bool confirmed = doc.get("tc_confirmed");
+        tc_confirmed = confirmed;
       } catch (e) {
-        setupComplete = false;
+        tc_confirmed = false;
       }
     }
-    return setupComplete;
+    return tc_confirmed;
   }
 
   Future<RegisterState> signInWithEmailAndPassword(
@@ -134,8 +163,12 @@ class LoginState extends ChangeNotifier {
     });
 
     // user_info collection
-    if (await isUserSetupComplete(userCred.user)) {
+    if (await isUserSetupComplete(userCred.user, email)) {
       registerState = RegisterState.setupComplete;
+    }
+
+    if (await isUserTandCConfirmed(userCred.user)) {
+      registerState = RegisterState.TandCConfirmed;
     }
 
     return registerState;

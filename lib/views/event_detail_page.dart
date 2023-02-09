@@ -44,7 +44,10 @@ class EventDetailPageState extends State<EventDetailPage> {
         // centerTitle: false,
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, 'report',
+                    arguments: {'event': controller.event});
+              },
               icon: SvgPicture.asset('assets/icons/Report.svg'))
         ],
       ),
@@ -68,7 +71,7 @@ class EventDetailPageState extends State<EventDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.81,
+                        width: MediaQuery.of(context).size.width * 0.76,
                         height: 28,
                         child: ElevatedButton(
                           onPressed: () async {

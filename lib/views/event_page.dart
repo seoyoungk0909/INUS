@@ -69,7 +69,7 @@ class EventPageState extends State<EventPage> {
           },
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            childAspectRatio: 0.93,
+            childAspectRatio: 0.73,
           ),
         );
       },
@@ -84,6 +84,7 @@ class EventPageState extends State<EventPage> {
         .doc(fba.FirebaseAuth.instance.currentUser?.uid);
     Future<DocumentSnapshot> snapshots = userRef.get();
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body: DefaultTabController(
           length: 2,
           child: Column(

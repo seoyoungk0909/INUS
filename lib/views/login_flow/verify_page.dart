@@ -1,8 +1,10 @@
 import 'package:aus/utils/color_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../firebase_login_state.dart';
+import '../components/popup_dialog.dart';
 
 class VerifyPage extends StatefulWidget {
   const VerifyPage({Key? key}) : super(key: key);
@@ -20,6 +22,9 @@ class VerifyPageState extends State<VerifyPage> {
     String lastName = arguments['last'];
     String email = arguments['email'];
     String school = arguments['school'];
+
+    bool emailVerified = false;
+
     return Scaffold(
       backgroundColor: hexStringToColor("##121212"),
       appBar: AppBar(
@@ -66,47 +71,97 @@ class VerifyPageState extends State<VerifyPage> {
                       Text(" / 5"),
                     ],
                   )),
-              Consumer<LoginState>(
-                builder: (context, appState, child) => TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Theme.of(context).primaryColor,
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
-                      elevation: 3,
-                      // side: const BorderSide(
-                      //   color: Colors.transparent,
-                      //   width: 1,
-                      // ),
-                    ),
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: Text(
-                          "Next",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(color: Colors.white),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                Expanded(
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Theme.of(context).primaryColor,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
+                        elevation: 3,
+                        // side: const BorderSide(
+                        //   color: Colors.transparent,
+                        //   width: 1,
+                        // ),
+                      ),
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            "Check Status",
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(color: Colors.white),
+                          ),
                         ),
                       ),
-                    ),
-                    onPressed: () {
-                      // if (FirebaseAuth.instance.currentUser!.emailVerified) {
-                      Navigator.pushNamed(context, 'nickname_form', arguments: {
-                        'first': firstName,
-                        'last': lastName,
-                        'email': email,
-                        'school': school,
-                      });
-                      // } else {
-                      //   print(FirebaseAuth.instance.currentUser);
-                      //   popUpDialog(context, 'Field Required',
-                      //       "Please verify your email first.");
-                      // }
-                    }),
-              ),
+                      onPressed: () {
+                        FirebaseAuth.instance.currentUser?.reload().then((_) {
+                          var user = FirebaseAuth.instance.currentUser;
+                          print(user);
+                          setState(() {
+                            emailVerified = user != null && user.emailVerified;
+                          });
+                          if (emailVerified) {
+                            popUpDialog(context, 'Email verified',
+                                "You can now move on to the next step.");
+                          } else {
+                            popUpDialog(context, 'Email not verified',
+                                "Please verify your email first.");
+                          }
+                        });
+                      }),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  flex: 2,
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary: emailVerified
+                            ? Theme.of(context).primaryColor
+                            : Theme.of(context).colorScheme.secondary,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
+                        elevation: 3,
+                        // side: const BorderSide(
+                        //   color: Colors.transparent,
+                        //   width: 1,
+                        // ),
+                      ),
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            "Next",
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      onPressed: !emailVerified
+                          ? null
+                          : () {
+                              Navigator.pushNamed(context, 'nickname_form',
+                                  arguments: {
+                                    'first': firstName,
+                                    'last': lastName,
+                                    'email': email,
+                                    'school': school,
+                                  });
+                            }),
+                ),
+              ]),
             ],
           ),
         ),

@@ -37,7 +37,10 @@ class PostDetailPageState extends State<PostDetailPage> {
         backgroundColor: Theme.of(context).backgroundColor,
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, 'report',
+                    arguments: {'post': controller.post});
+              },
               icon: SvgPicture.asset('assets/icons/Report.svg'))
         ],
       ),

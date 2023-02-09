@@ -25,8 +25,8 @@ class NickNameFormPageState extends State<NickNameFormPage> {
         <String, dynamic>{}) as Map;
     String firstName = arguments['first'];
     String lastName = arguments['last'];
-    String email = arguments['email'];
-    String school = arguments['school'];
+    String? email = arguments['email'];
+    String? school = arguments['school'];
     return Scaffold(
       backgroundColor: hexStringToColor("##121212"),
       appBar: AppBar(
@@ -152,6 +152,17 @@ class NickNameFormPageState extends State<NickNameFormPage> {
                         DocumentReference ref = FirebaseFirestore.instance
                             .collection("user_info")
                             .doc(FirebaseAuth.instance.currentUser?.uid);
+
+                        bool fromSignup = true;
+                        if (email == null) {
+                          // this means that the user's email is verified, but
+                          // some of the information was not registered, so
+                          // they are re-registering here. Therefore, it is not
+                          // from sign up stage.
+                          email = FirebaseAuth.instance.currentUser?.email;
+                          school = verifyEmail(email!);
+                          fromSignup = false;
+                        }
                         ref.set({
                           "email": email,
                           "firstName": firstName,
@@ -160,7 +171,8 @@ class NickNameFormPageState extends State<NickNameFormPage> {
                           "school": school,
                         });
                         appState.updateCurrentUser();
-                        Navigator.pushNamed(context, 'welcome');
+                        Navigator.pushNamed(context, 'welcome',
+                            arguments: {'signup': fromSignup});
                       }
                     }),
               ),
