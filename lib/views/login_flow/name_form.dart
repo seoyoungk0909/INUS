@@ -18,6 +18,9 @@ class NameFormPageState extends State<NameFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    bool skip_email = arguments['skip_email'] ?? false;
     return Scaffold(
       backgroundColor: hexStringToColor("##121212"),
       appBar: AppBar(
@@ -182,6 +185,11 @@ class NameFormPageState extends State<NameFormPage> {
                         lastNameController.text.isEmpty) {
                       popUpDialog(
                           context, 'Field Required', "Please input your name.");
+                    } else if (skip_email) {
+                      Navigator.pushNamed(context, 'nickname_form', arguments: {
+                        'first': firstNameController.text,
+                        'last': lastNameController.text
+                      });
                     } else {
                       Navigator.pushNamed(context, 'email_form', arguments: {
                         'first': firstNameController.text,

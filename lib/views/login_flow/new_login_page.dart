@@ -28,7 +28,10 @@ class LoginPageState extends State<LoginPage> {
         .then((registerState) {
       switch (registerState) {
         case RegisterState.emailVerified:
-          Navigator.pushNamed(context, 'welcome');
+          // email verfied, but some of the information are missing.
+          // start again from name form.
+          Navigator.pushNamed(context, 'name_form',
+              arguments: {'skip_email': true});
           break;
         case RegisterState.setupComplete:
           Navigator.pushNamed(context, 'welcome');

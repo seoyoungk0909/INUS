@@ -105,6 +105,16 @@ class ProfilePageState extends State<ProfilePage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).backgroundColor,
+          automaticallyImplyLeading: false,
+          shadowColor: Colors.transparent,
+          actions: [
+            IconButton(
+                onPressed: () => Navigator.pushNamed(context, 'more'),
+                icon: Icon(Icons.more_horiz_rounded))
+          ],
+        ),
         backgroundColor: Theme.of(context).backgroundColor,
         body: Consumer<LoginState>(
           builder: (context, state, _) => Column(

@@ -12,6 +12,7 @@ enum RegisterState {
   unRegistered,
   emailVerified,
   setupComplete,
+  TandCConfirmed,
 }
 
 const String APDI_TEST_ACCOUNT = "apdi-dev@connect.ust.hk";
@@ -101,13 +102,38 @@ class LoginState extends ChangeNotifier {
     } else {
       // if displayName does not exist, register incomplete.
       try {
-        doc.get("displayName");
+        doc.get("firstName");
+        doc.get("lastName");
+        doc.get("name");
+        doc.get("school");
         setupComplete = true;
       } catch (e) {
         setupComplete = false;
       }
     }
     return setupComplete;
+  }
+
+  Future<bool> isUserTandCConfirmed(User? user) async {
+    bool tc_confirmed = false;
+    DocumentReference ref =
+        FirebaseFirestore.instance.collection("user_info").doc(user?.uid);
+    var doc = await ref.get();
+    // if user do not exist in firestore, create
+    if (!doc.exists) {
+      ref.set({
+        "email": email,
+      });
+    } else {
+      // if displayName does not exist, register incomplete.
+      try {
+        bool confirmed = doc.get("tc_confirmed");
+        tc_confirmed = confirmed;
+      } catch (e) {
+        tc_confirmed = false;
+      }
+    }
+    return tc_confirmed;
   }
 
   Future<RegisterState> signInWithEmailAndPassword(
@@ -136,6 +162,10 @@ class LoginState extends ChangeNotifier {
     // user_info collection
     if (await isUserSetupComplete(userCred.user)) {
       registerState = RegisterState.setupComplete;
+    }
+
+    if (await isUserTandCConfirmed(userCred.user)) {
+      registerState = RegisterState.TandCConfirmed;
     }
 
     return registerState;

@@ -11,6 +11,9 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    bool from_signup = arguments['signup'] ?? false;
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColorDark,
       body: SafeArea(
@@ -43,7 +46,7 @@ class _WelcomePageState extends State<WelcomePage> {
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Text(
-                            "Get Started →",
+                            from_signup ? "Go to Login" : "Get Started →",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 14,
@@ -53,8 +56,13 @@ class _WelcomePageState extends State<WelcomePage> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, '/', (route) => false);
+                        if (from_signup) {
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, 'login', (route) => false);
+                        } else {
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/', (route) => false);
+                        }
                       }),
                 ),
               ],
