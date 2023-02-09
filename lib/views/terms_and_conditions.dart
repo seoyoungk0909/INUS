@@ -10,11 +10,6 @@ class TandCPage extends StatefulWidget {
 }
 
 class TandCPageState extends State<TandCPage> {
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
-
-  bool buttonEnabled = false;
-
   Future<String> loadAsset(String fname) async {
     return await rootBundle.loadString(fname);
   }

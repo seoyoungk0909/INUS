@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 // import views
+import 'components/terms_condition_popup.dart';
 import 'posting_page.dart';
 import 'event_page.dart';
 import 'profile_page.dart';
@@ -33,6 +36,22 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    DocumentReference<Map<String, dynamic>> userRef = FirebaseFirestore.instance
+        .collection('user_info')
+        .doc(FirebaseAuth.instance.currentUser?.uid);
+
+    userRef.get().then((DocumentSnapshot<Map<String, dynamic>> dataMap) {
+      bool confirmed = dataMap.data()!.containsKey('tc_confirmed') &&
+          dataMap['tc_confirmed'];
+      if (!confirmed) {
+        showModalBottomSheet(
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (context) {
+              return const TCPopup();
+            });
+      }
+    });
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(
