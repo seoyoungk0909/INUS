@@ -71,7 +71,7 @@ class EventDetailPageState extends State<EventDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.81,
+                        width: MediaQuery.of(context).size.width * 0.76,
                         height: 28,
                         child: ElevatedButton(
                           onPressed: () async {
