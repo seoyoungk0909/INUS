@@ -6,6 +6,8 @@ import '../models/event_model.dart';
 import 'components/event_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 
+import 'components/keep_alive_builder.dart';
+
 class EventPage extends StatefulWidget {
   const EventPage({Key? key, required this.title}) : super(key: key);
 
@@ -21,6 +23,10 @@ class EventPage extends StatefulWidget {
 }
 
 class EventPageState extends State<EventPage> {
+  Stream<QuerySnapshot<Map<String, dynamic>>> casualStream =
+      Event.getEventsQuery(formal: false).snapshots();
+  Stream<QuerySnapshot<Map<String, dynamic>>> formalStream =
+      Event.getEventsQuery(formal: true).snapshots();
   // Future<void> refreshEvents({bool formal = false}) async {
   // List<Event> events = await Event.getEventsFromFirebase(formal: formal);
   // List<EventController> _controllers = [];
@@ -38,7 +44,8 @@ class EventPageState extends State<EventPage> {
   // }
   // }
 
-  Widget eventsGridView({bool formal = false}) {
+  Widget eventsGridView(
+      Stream<QuerySnapshot<Map<String, dynamic>>> eventStream) {
     return
         // RefreshIndicator(
         //   onRefresh: () async {
@@ -47,7 +54,7 @@ class EventPageState extends State<EventPage> {
         //   color: Theme.of(context).backgroundColor,
         //   child:
         StreamBuilder(
-      stream: Event.getEventsQuery(formal: formal).snapshots(),
+      stream: eventStream,
       builder:
           (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snap) {
         if (snap.data == null) {
@@ -98,27 +105,25 @@ class EventPageState extends State<EventPage> {
               ),
               Expanded(
                 child: TabBarView(children: [
-                  FutureBuilder(
+                  KeepAliveFutureBuilder(
                       future: snapshots,
-                      builder:
-                          (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
                         if (snapshot.data == null) {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
                         // Map documentdata = snapshot.data!.data() as Map;
-                        return eventsGridView(formal: true);
+                        return eventsGridView(formalStream);
                       }),
-                  FutureBuilder(
+                  KeepAliveFutureBuilder(
                       future: snapshots,
-                      builder:
-                          (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
                         if (snapshot.data == null) {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
                         // Map documentdata = snapshot.data!.data() as Map;
-                        return eventsGridView(formal: false);
+                        return eventsGridView(casualStream);
                       }),
                 ]),
               ),

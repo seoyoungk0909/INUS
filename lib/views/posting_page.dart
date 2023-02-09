@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
 import 'components/post_ui.dart';
+import 'components/keep_alive_builder.dart';
 
 class PostListPage extends StatefulWidget {
   const PostListPage({Key? key, required this.title}) : super(key: key);
@@ -24,6 +25,15 @@ class PostListPage extends StatefulWidget {
 }
 
 class _PostListPageState extends State<PostListPage> {
+  Stream<QuerySnapshot<Map<String, dynamic>>> recentStream =
+      Post.getPostsQuery(popular: false).snapshots();
+  Stream<QuerySnapshot<Map<String, dynamic>>> popularStream =
+      Post.getPostsQuery(popular: true).snapshots();
+
+  Future<DocumentSnapshot> snapshots = FirebaseFirestore.instance
+      .collection('user_info')
+      .doc(fba.FirebaseAuth.instance.currentUser?.uid)
+      .get();
   // Future<void> refreshPosts({bool popular = false}) async {
   // List<Post> posts = await Post.getPostsFromFirebase(popular: popular);
   // List<PostController> _controllers = [];
@@ -39,7 +49,8 @@ class _PostListPageState extends State<PostListPage> {
   // });
   // }
 
-  Widget postsStreamView({bool popular = false, List? savedPosts}) {
+  Widget postsStreamView(Stream<QuerySnapshot<Map<String, dynamic>>> postStream,
+      {List? savedPosts}) {
     return
         // RefreshIndicator(
         //   onRefresh: () async {
@@ -48,7 +59,7 @@ class _PostListPageState extends State<PostListPage> {
         //   color: Theme.of(context).backgroundColor,
         //   child:
         StreamBuilder(
-      stream: Post.getPostsQuery(popular: popular).snapshots(),
+      stream: postStream,
       builder:
           (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snap) {
         if (snap.data == null) {
@@ -80,11 +91,6 @@ class _PostListPageState extends State<PostListPage> {
 
   @override
   Widget build(BuildContext context) {
-    DocumentReference userRef = FirebaseFirestore.instance
-        .collection('user_info')
-        .doc(fba.FirebaseAuth.instance.currentUser?.uid);
-    Future<DocumentSnapshot> snapshots = userRef.get();
-
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: DefaultTabController(
@@ -101,10 +107,9 @@ class _PostListPageState extends State<PostListPage> {
             Expanded(
               child: TabBarView(
                 children: [
-                  FutureBuilder(
+                  KeepAliveFutureBuilder(
                       future: snapshots,
-                      builder:
-                          (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
                         if (snapshot.data == null) {
                           return const Center(
                               child: CircularProgressIndicator());
@@ -114,13 +119,12 @@ class _PostListPageState extends State<PostListPage> {
                             documentdata.containsKey('savedPosts')
                                 ? documentdata['savedPosts']
                                 : null;
-                        return postsStreamView(
-                            popular: false, savedPosts: savedPosts);
+                        return postsStreamView(recentStream,
+                            savedPosts: savedPosts);
                       }),
-                  FutureBuilder(
+                  KeepAliveFutureBuilder(
                       future: snapshots,
-                      builder:
-                          (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
                         if (snapshot.data == null) {
                           return const Center(
                               child: CircularProgressIndicator());
@@ -130,8 +134,8 @@ class _PostListPageState extends State<PostListPage> {
                             documentdata.containsKey('savedPosts')
                                 ? documentdata['savedPosts']
                                 : null;
-                        return postsStreamView(
-                            popular: true, savedPosts: savedPosts);
+                        return postsStreamView(popularStream,
+                            savedPosts: savedPosts);
                       }),
                 ],
               ),

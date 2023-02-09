@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart' as fbauth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'components/keep_alive_builder.dart';
 import 'components/post_ui.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
@@ -25,6 +26,12 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   User defaultUser = User(userName: "", userSchool: School.PolyU);
+
+  // Stream<DocumentSnapshot<Map<String, dynamic>>> userInfoStream =
+  //     FirebaseFirestore.instance
+  //         .collection('user_info')
+  //         .doc(fbauth.FirebaseAuth.instance.currentUser?.uid)
+  //         .snapshots();
 
   Widget userGreetings(User currentUser) {
     return Column(
@@ -130,16 +137,15 @@ class ProfilePageState extends State<ProfilePage> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    StreamBuilder(
+                    KeepAliveStreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection('user_info')
                             .doc(state.currentUser?.uid)
                             .snapshots(),
-                        builder: (context,
-                            AsyncSnapshot<
-                                    DocumentSnapshot<Map<String, dynamic>>>
-                                snap) {
+                        builder: (context, AsyncSnapshot<dynamic> snap) {
                           if (snap.data == null) {
+                            print(snap);
+                            print(snap.data);
                             return const Center(
                                 child: CircularProgressIndicator());
                           }
@@ -179,15 +185,12 @@ class ProfilePageState extends State<ProfilePage> {
                             return const Center(child: Text("No Posts"));
                           }
                         }),
-                    StreamBuilder(
+                    KeepAliveStreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection('user_info')
                             .doc(state.currentUser?.uid)
                             .snapshots(),
-                        builder: (context,
-                            AsyncSnapshot<
-                                    DocumentSnapshot<Map<String, dynamic>>>
-                                snap) {
+                        builder: (context, AsyncSnapshot<dynamic> snap) {
                           if (snap.data == null) {
                             return const Center(
                                 child: CircularProgressIndicator());
