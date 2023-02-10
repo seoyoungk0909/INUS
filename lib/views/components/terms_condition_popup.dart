@@ -36,7 +36,7 @@ class TCPopupState extends State<TCPopup> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 16),
+            padding: EdgeInsets.only(top: 16, left: 20, right: 20),
             child: Text(
               "When communicating online, remember the other person is a human with feelings.",
               textAlign: TextAlign.center,
