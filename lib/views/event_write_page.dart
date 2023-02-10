@@ -24,7 +24,9 @@ class EventWritePageState extends State<EventWritePage> {
         await FirebaseFirestore.instance.collection("event").add({
       'title': eventTitle.text.trim(),
       'tag': tags.text.trim(),
-      'time': [getDate(), getTime()],
+      'time': Timestamp.fromDate(
+        DateTime(date.year, date.month, date.day, time.hour, time.minute),
+      ),
       'language': trueLanguages,
       'category': trueCategories,
       'location': eventLocation.text.trim(),
@@ -39,6 +41,9 @@ class EventWritePageState extends State<EventWritePage> {
 
   DateTime? _selectedDate;
   String? _selectedTime;
+
+  late TimeOfDay time;
+  late DateTime date;
 
   String getDate() {
     if (_selectedDate == null) {
@@ -65,6 +70,7 @@ class EventWritePageState extends State<EventWritePage> {
       lastDate: DateTime(DateTime.now().year + 3),
     );
     if (pickedDate == null) return;
+    date = pickedDate;
     setState(() => _selectedDate = pickedDate);
   }
 
@@ -74,6 +80,7 @@ class EventWritePageState extends State<EventWritePage> {
       initialTime: TimeOfDay.now(),
     );
     if (pickedTime == null) return;
+    time = pickedTime;
     setState(() => _selectedTime = pickedTime.format(context));
   }
 
@@ -99,6 +106,28 @@ class EventWritePageState extends State<EventWritePage> {
 
   String trueCategories = "";
   var trueLanguages = [];
+  Map<String, bool> textChecker = {
+    'Title': false,
+    'Tags': false,
+    'Date': false,
+    'Time': false,
+  };
+  bool isButtonEnabled = false;
+
+  Future textChecking() async {
+    if (textChecker['Title']! &&
+        textChecker['Tags']! &&
+        textChecker['Date']! &&
+        textChecker['Time']!) {
+      setState(() {
+        isButtonEnabled = true;
+      });
+    } else {
+      setState(() {
+        isButtonEnabled = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +140,34 @@ class EventWritePageState extends State<EventWritePage> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        leading: GestureDetector(
+          child: Icon(
+            Icons.arrow_back_ios,
+          ),
+          onTap: () {
+            showDialog<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Discard Writings'),
+                    content: Text(
+                        "Are you sure you want to go back to the main page? (All you have written will be lost!) "),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("No"),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/', (route) => false);
+                          },
+                          child: Text("yes"))
+                    ],
+                  );
+                });
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -119,12 +176,21 @@ class EventWritePageState extends State<EventWritePage> {
             children: [
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                child: Text(
-                  " Category",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.bold),
+                child: RichText(
+                  text: const TextSpan(
+                      text: "Category",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.bold),
+                      children: [
+                        TextSpan(
+                            text: ' *',
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16))
+                      ]),
                 ),
               ),
               Container(
@@ -188,13 +254,22 @@ class EventWritePageState extends State<EventWritePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-                child: Text(
-                  " Title",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.bold),
+                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
+                child: RichText(
+                  text: TextSpan(
+                      text: "Title",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.bold),
+                      children: [
+                        TextSpan(
+                            text: ' *',
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16))
+                      ]),
                 ),
               ),
               Center(
@@ -203,6 +278,15 @@ class EventWritePageState extends State<EventWritePage> {
                   height: 50,
                   child: TextField(
                       controller: eventTitle,
+                      onChanged: (content) {
+                        if (content != "") {
+                          textChecker['Title'] = true;
+                          textChecking();
+                        } else {
+                          textChecker['Title'] = false;
+                          textChecking();
+                        }
+                      },
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -217,19 +301,28 @@ class EventWritePageState extends State<EventWritePage> {
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-                child: Row(children: [
-                  Text(
-                    " Tags",
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white70,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    " (max. 1-2)",
-                    style: TextStyle(fontSize: 16, color: Colors.white10),
-                  ),
-                ]),
+                child: RichText(
+                  text: TextSpan(
+                      text: "Tags",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.bold),
+                      children: [
+                        TextSpan(
+                            text: ' (max. 1-2)',
+                            style: TextStyle(
+                                color: Colors.white10,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16)),
+                        TextSpan(
+                            text: ' *',
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16))
+                      ]),
+                ),
               ),
               Center(
                 child: SizedBox(
@@ -237,6 +330,15 @@ class EventWritePageState extends State<EventWritePage> {
                   height: 50,
                   child: TextField(
                       controller: tags,
+                      onChanged: (content) {
+                        if (content != "") {
+                          textChecker['Tags'] = true;
+                          textChecking();
+                        } else {
+                          textChecker['Tags'] = false;
+                          textChecking();
+                        }
+                      },
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -251,12 +353,21 @@ class EventWritePageState extends State<EventWritePage> {
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                child: Text(
-                  " Date and Time",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.bold),
+                child: RichText(
+                  text: TextSpan(
+                      text: "Date and Time",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.bold),
+                      children: [
+                        TextSpan(
+                            text: ' *',
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16))
+                      ]),
                 ),
               ),
               Padding(
@@ -277,6 +388,8 @@ class EventWritePageState extends State<EventWritePage> {
                             ),
                             onPressed: () {
                               _pickDateDialog(context);
+                              textChecker['Date'] = true;
+                              textChecking();
                             })),
                     SizedBox(
                       width: 10,
@@ -296,16 +409,27 @@ class EventWritePageState extends State<EventWritePage> {
                             ),
                             onPressed: () {
                               _pickTimeDialog(context);
+                              textChecker['Time'] = true;
+                              textChecking();
                             }))
                   ])),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-                child: Text(
-                  "Language(s)",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.bold),
+                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
+                child: RichText(
+                  text: TextSpan(
+                      text: "Language(s)",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.bold),
+                      children: [
+                        TextSpan(
+                            text: ' *',
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16))
+                      ]),
                 ),
               ),
               Container(
@@ -338,13 +462,17 @@ class EventWritePageState extends State<EventWritePage> {
                                     fontSize: 15, color: Colors.white),
                               ),
                               onPressed: () {
-                                for (var reset in categories.keys) {
-                                  categories[reset] = false;
-                                }
                                 setState(() {
                                   languages[language] == true
                                       ? languages[language] = false
                                       : languages[language] = true;
+                                  if (languages.values
+                                          .toList()
+                                          .where((item) => item == false)
+                                          .length ==
+                                      3) {
+                                    languages[language] = true;
+                                  }
                                 });
                               },
                               child: Text(
@@ -458,52 +586,90 @@ class EventWritePageState extends State<EventWritePage> {
                   child: SizedBox(
                       width: 350,
                       height: 46,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.white60),
-                        ),
-                        onPressed: () {
-                          showDialog<void>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Create Post'),
-                                  content: Text(
-                                      "Are you sure you want to create this post?"),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: Text("No"),
-                                    ),
-                                    TextButton(
-                                        onPressed: () {
-                                          for (var language in languages.keys) {
-                                            languages[language] == true
-                                                ? trueLanguages.add(language)
-                                                : {};
-                                          }
-                                          for (var category
-                                              in categories.keys) {
-                                            categories[category] == true
-                                                ? trueCategories = category
-                                                : {};
-                                          }
-                                          uploadEvent(currentUser.uid);
-                                          setState(() {});
-                                          Navigator.pushNamedAndRemoveUntil(
-                                              context, '/', (route) => false);
-                                        },
-                                        child: Text("yes"))
-                                  ],
-                                );
-                              });
-                        },
-                        child: const Text(
-                          'Request to Post',
-                          style: TextStyle(color: Colors.white, fontSize: 20.0),
-                        ),
-                      )),
+                      child: isButtonEnabled
+                          ? ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.green),
+                              ),
+                              onPressed: () {
+                                showDialog<void>(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Create Post'),
+                                        content: Text(
+                                            "Are you sure you want to create this post?"),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Text("No"),
+                                          ),
+                                          TextButton(
+                                              onPressed: () {
+                                                for (var language
+                                                    in languages.keys) {
+                                                  languages[language] == true
+                                                      ? trueLanguages
+                                                          .add(language)
+                                                      : {};
+                                                }
+                                                for (var category
+                                                    in categories.keys) {
+                                                  categories[category] == true
+                                                      ? trueCategories =
+                                                          category
+                                                      : {};
+                                                }
+                                                uploadEvent(currentUser.uid);
+                                                setState(() {});
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                        context,
+                                                        '/',
+                                                        (route) => false);
+                                              },
+                                              child: Text("yes"))
+                                        ],
+                                      );
+                                    });
+                              },
+                              child: const Text(
+                                'Request to Post',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20.0),
+                              ),
+                            )
+                          : ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.white60),
+                              ),
+                              onPressed: () {
+                                showDialog<void>(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Warning'),
+                                        content: Text(
+                                            "You have not filled certain parts. Please check again"),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Text("OK"),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              },
+                              child: const Text(
+                                'Request to Post',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20.0),
+                              ),
+                            )),
                 ),
               ),
             ],
