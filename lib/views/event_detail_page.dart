@@ -9,6 +9,9 @@ import 'components/event_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 class EventDetailPage extends StatefulWidget {
   const EventDetailPage({Key? key, required this.title}) : super(key: key);
 
@@ -31,10 +34,43 @@ class EventDetailPageState extends State<EventDetailPage> {
     }
   }
 
+  Future<void> saveEvent(
+      String currentUserId, EventController controller) async {
+    FirebaseFirestore.instance.doc('user_info/$currentUserId').update({
+      'savedEvents': FieldValue.arrayUnion([controller.event.firebaseDocRef])
+    });
+  }
+
+  Future<void> deleteEvent(
+      String currentUserId, EventController controller) async {
+    FirebaseFirestore.instance.doc('user_info/$currentUserId').update({
+      'savedEvents': FieldValue.arrayRemove([controller.event.firebaseDocRef])
+    });
+  }
+
+  // Future<void> checkIfSaved(
+  //     String currentUserId, EventController controller) async {
+  //   FirebaseFirestore.instance
+  //       .doc('user_info/$currentUserId')
+  //       .snapshots()
+  //       .listen((docSnapshot) {
+  //     if (docSnapshot.exists) {
+  //       Map<String, dynamic> data = docSnapshot.data()!;
+  //       if (data['name'] == controller.event.firebaseDocRef) {
+  //         saved = true;
+  //       }
+  //     }
+  //   });
+  // }
+
+  final User currentUser = FirebaseAuth.instance.currentUser!;
+  bool saved = false;
+
   @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
+
     EventController controller = EventController(arguments['event'] ?? Event());
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColorDark,
@@ -91,19 +127,71 @@ class EventDetailPageState extends State<EventDetailPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 9),
-                        child: IconButton(
-                          onPressed: () => {
-                            setState(() {
-                              // controller.changeSave();
-                            })
-                          },
-                          icon: const Icon(Icons.bookmark_border),
-                          // icon: (controller.event.save == false)
-                          //     ? const Icon(Icons.bookmark_border)
-                          //     : const Icon(Icons.bookmark),
-                          color: hexStringToColor("#AAAAAA"),
-                          iconSize: 37.0,
-                        ),
+                        child: StreamBuilder<DocumentSnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('user_info')
+                                .doc(currentUser.uid)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<DocumentSnapshot> snapshot) {
+                              print(snapshot.data);
+                              Map documentdata = snapshot.data!.data() as Map;
+                              List? savedEvents =
+                                  documentdata.containsKey('savedEvents')
+                                      ? snapshot.data!['savedEvents']
+                                      : null;
+                              if (savedEvents!.isNotEmpty) {
+                                saved = true;
+                              }
+                              if (saved) {
+                                return IconButton(
+                                    onPressed: () => {
+                                          setState(() {
+                                            deleteEvent(
+                                                currentUser.uid, controller);
+                                            controller.event.firebaseDocRef
+                                                ?.update({
+                                              "saveCount":
+                                                  FieldValue.increment(-1)
+                                            });
+                                            saved = false;
+                                          })
+                                        },
+                                    icon: const Icon(Icons.bookmark));
+                              } else {
+                                return IconButton(
+                                    onPressed: () => {
+                                          setState(() {
+                                            saveEvent(
+                                                currentUser.uid, controller);
+                                            controller.event.firebaseDocRef
+                                                ?.update({
+                                              "saveCount":
+                                                  FieldValue.increment(1)
+                                            });
+                                            saved = true;
+                                          })
+                                        },
+                                    icon: const Icon(Icons.bookmark_border));
+                              }
+                            }),
+
+                        //IconButton(
+                        //   onPressed: () => {
+                        //     setState(() {
+                        //       saveEvent(currentUser.uid, controller);
+                        //       // controller.changeSave();
+                        //     })
+                        //   },
+                        //   icon: saved
+                        //       ? const Icon(Icons.bookmark)
+                        //       : const Icon(Icons.bookmark),
+                        //   // icon: (controller.event.save == false)
+                        //   //     ? const Icon(Icons.bookmark_border)
+                        //   //     : const Icon(Icons.bookmark),
+                        //   color: hexStringToColor("#AAAAAA"),
+                        //   iconSize: 37.0,
+                        // ),
                       ),
                     ],
                   ),

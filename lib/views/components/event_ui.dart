@@ -2,6 +2,7 @@ import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import '../../controllers/event_controller.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 //determine color of category button, default color is blue
 String buttonColor(String eventCategory) {
@@ -166,6 +167,8 @@ Widget eventUI(BuildContext context, EventController controller,
           onTap: () {
             Navigator.pushNamed(context, 'event_detail',
                 arguments: {'event': controller.event});
+            controller.event.firebaseDocRef
+                ?.update({"viewCount": FieldValue.increment(1)});
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
