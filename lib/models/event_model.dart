@@ -101,7 +101,7 @@ class Event {
     Query<Map<String, dynamic>> firebaseQuery = getEventsQuery(formal: formal);
 
     QuerySnapshot<Map<String, dynamic>> firebaseEvents =
-        await firebaseQuery.get(const GetOptions(source: Source.cache));
+        await firebaseQuery.get();
 
     for (QueryDocumentSnapshot<Map<String, dynamic>> fbEvent
         in firebaseEvents.docs) {

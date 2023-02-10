@@ -123,11 +123,8 @@ class VerifyPageState extends State<VerifyPage> {
                   flex: 2,
                   child: TextButton(
                       style: TextButton.styleFrom(
-                        primary: emailVerified
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).colorScheme.secondary,
                         backgroundColor:
-                            Theme.of(context).colorScheme.secondary,
+                            emailVerified ? ApdiColors.themeGreen : Colors.grey,
                         elevation: 3,
                         // side: const BorderSide(
                         //   color: Colors.transparent,

@@ -74,6 +74,7 @@ class EmailFormPageState extends State<EmailFormPage> {
                       obscureText: false,
                       autocorrect: false,
                       enableSuggestions: false,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: 'School email',
                         hintStyle: Theme.of(context).textTheme.labelMedium,

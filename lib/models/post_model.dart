@@ -119,7 +119,7 @@ class Post {
     Query<Map<String, dynamic>> firebaseQuery = getPostsQuery(popular: popular);
 
     QuerySnapshot<Map<String, dynamic>> firebasePosts =
-        await firebaseQuery.get(const GetOptions(source: Source.cache));
+        await firebaseQuery.get();
 
     for (QueryDocumentSnapshot<Map<String, dynamic>> fbPost
         in firebasePosts.docs) {
@@ -138,6 +138,7 @@ class Post {
     if (popular) {
       firebaseQuery = postCollection
           // .where('time', isLessThanOrEqualTo: DateTime.now())
+          .where('viewCount', isGreaterThan: 20)
           .limit(20)
           .orderBy('viewCount', descending: true);
     }

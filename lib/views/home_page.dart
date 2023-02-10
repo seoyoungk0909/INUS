@@ -46,6 +46,7 @@ class HomePageState extends State<HomePage> {
       if (!confirmed) {
         Future.delayed(Duration(seconds: 2), () {
           showModalBottomSheet(
+              isScrollControlled: true,
               isDismissible: false,
               backgroundColor: Colors.transparent,
               context: context,

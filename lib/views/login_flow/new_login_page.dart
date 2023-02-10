@@ -88,6 +88,7 @@ class LoginPageState extends State<LoginPage> {
                       obscureText: false,
                       autocorrect: false,
                       enableSuggestions: false,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: 'School email',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
@@ -131,6 +132,7 @@ class LoginPageState extends State<LoginPage> {
                       obscureText: !passwordVisibility,
                       autocorrect: false,
                       enableSuggestions: false,
+                      keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
                         hintText: 'password',
                         hintStyle: Theme.of(context).textTheme.labelMedium,

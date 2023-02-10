@@ -104,7 +104,8 @@ class EventPageState extends State<EventPage> {
                   KeepAliveFutureBuilder(
                       future: snapshots,
                       builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                        if (snapshot.data == null) {
+                        if (formalEventsControllers.isEmpty ||
+                            snapshot.data == null) {
                           return Center(
                               child: CircularProgressIndicator(
                                   color: ApdiColors.themeGreen));
@@ -115,7 +116,8 @@ class EventPageState extends State<EventPage> {
                   KeepAliveFutureBuilder(
                       future: snapshots,
                       builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                        if (snapshot.data == null) {
+                        if (casualEventsControllers.isEmpty ||
+                            snapshot.data == null) {
                           return Center(
                               child: CircularProgressIndicator(
                                   color: ApdiColors.themeGreen));

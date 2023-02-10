@@ -69,6 +69,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                       obscureText: false,
                       autocorrect: false,
                       enableSuggestions: false,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: 'Your email address',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
@@ -126,9 +127,10 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                           if (emailSent) {
                             Navigator.pop(context);
                           } else {
+                            print(emailController.text.trim());
                             FirebaseAuth.instance
                                 .sendPasswordResetEmail(
-                                    email: emailController.text)
+                                    email: emailController.text.trim())
                                 .then((_) {
                               popUpDialog(context, "Reset Email Sent!",
                                   "We have sent a password reset link to your email.");
