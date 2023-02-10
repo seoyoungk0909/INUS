@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-void popUpDialog(BuildContext context, String title, String body) {
+void popUpDialog(BuildContext context, String title, String body,
+    {Widget? action}) {
   showDialog<void>(
     context: context,
     builder: (context) {
@@ -24,6 +25,7 @@ void popUpDialog(BuildContext context, String title, String body) {
             onPressed: () => Navigator.pop(context),
             child: const Text('Close'),
           ),
+          action ?? SizedBox.shrink(),
         ],
       );
     },

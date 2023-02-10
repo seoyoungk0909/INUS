@@ -228,7 +228,8 @@ class PasswordFormPageState extends State<PasswordFormPage> {
                               "Please check your password again.");
                         } else {
                           appState
-                              .registerAccount(email, passwordController1.text)
+                              .registerAccount(email, passwordController1.text,
+                                  email.split('@')[0])
                               .then((value) {
                             Navigator.pushNamed(context, 'verify', arguments: {
                               'first': firstName,
