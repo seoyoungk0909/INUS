@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../controllers/event_controller.dart';
@@ -11,11 +11,6 @@ import 'components/keep_alive_builder.dart';
 class EventPage extends StatefulWidget {
   const EventPage({Key? key, required this.title}) : super(key: key);
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -23,64 +18,57 @@ class EventPage extends StatefulWidget {
 }
 
 class EventPageState extends State<EventPage> {
-  Stream<QuerySnapshot<Map<String, dynamic>>> casualStream =
-      Event.getEventsQuery(formal: false).snapshots();
-  Stream<QuerySnapshot<Map<String, dynamic>>> formalStream =
-      Event.getEventsQuery(formal: true).snapshots();
-  // Future<void> refreshEvents({bool formal = false}) async {
-  // List<Event> events = await Event.getEventsFromFirebase(formal: formal);
-  // List<EventController> _controllers = [];
-  // for (Event event in events) {
-  //   _controllers.add(EventController(event));
-  // }
-  // if (mounted) {
-  //   setState(() {
-  //     if (formal) {
-  //       formalEventsControllers = _controllers;
-  //     } else {
-  //       casualEventsControllers = _controllers;
-  //     }
-  //   });
-  // }
-  // }
+  List<EventController> formalEventsControllers = [];
+  List<EventController> casualEventsControllers = [];
+  bool refreshing = false;
 
-  Widget eventsGridView(
-      Stream<QuerySnapshot<Map<String, dynamic>>> eventStream) {
-    return
-        // RefreshIndicator(
-        //   onRefresh: () async {
-        //     refreshEvents(formal: formal);
-        //   },
-        //   color: Theme.of(context).backgroundColor,
-        //   child:
-        StreamBuilder(
-      stream: eventStream,
-      builder:
-          (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snap) {
-        if (snap.data == null) {
-          return const Center(child: CircularProgressIndicator());
+  Future<void> refreshEvents({bool formal = false}) async {
+    setState(() {
+      refreshing = true;
+    });
+    List<Event> events = await Event.getEventsFromFirebase(formal: formal);
+    List<EventController> _controllers = [];
+    for (Event event in events) {
+      _controllers.add(EventController(event));
+    }
+    if (mounted) {
+      setState(() {
+        if (formal) {
+          formalEventsControllers = _controllers;
+        } else {
+          casualEventsControllers = _controllers;
         }
-        return GridView.builder(
-          itemCount: snap.data!.size,
-          itemBuilder: (BuildContext context, int i) {
-            return FutureBuilder<Event>(
-              future: Event.fromDocRef(firebaseSnap: snap.data!.docs[i]),
-              builder: (context, snapshot) {
-                if (snapshot.data == null) {
-                  return const SizedBox.shrink(); //NOTE: empty widget
-                }
-                return eventUI(context, EventController(snapshot.data!),
-                    setState: setState);
-              },
-            );
-          },
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.73,
-          ),
-        );
+        refreshing = false;
+      });
+    }
+  }
+
+  Widget eventsGridView({bool formal = false}) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        refreshEvents(formal: formal);
       },
-      // ),
+      color: ApdiColors.themeGreen,
+      child: FutureBuilder<List<Event>>(
+        future: Event.getEventsFromFirebase(formal: formal),
+        builder: (context, snapshot) {
+          if (snapshot.data == null) {
+            return Center(
+                child: CircularProgressIndicator(color: ApdiColors.themeGreen));
+          }
+          return GridView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (BuildContext context, int i) {
+              return eventUI(context, EventController(snapshot.data![i]),
+                  setState: setState);
+            },
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.73,
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -109,21 +97,23 @@ class EventPageState extends State<EventPage> {
                       future: snapshots,
                       builder: (context, AsyncSnapshot<dynamic> snapshot) {
                         if (snapshot.data == null) {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                          return Center(
+                              child: CircularProgressIndicator(
+                                  color: ApdiColors.themeGreen));
                         }
                         // Map documentdata = snapshot.data!.data() as Map;
-                        return eventsGridView(formalStream);
+                        return eventsGridView(formal: true);
                       }),
                   KeepAliveFutureBuilder(
                       future: snapshots,
                       builder: (context, AsyncSnapshot<dynamic> snapshot) {
                         if (snapshot.data == null) {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                          return Center(
+                              child: CircularProgressIndicator(
+                                  color: ApdiColors.themeGreen));
                         }
                         // Map documentdata = snapshot.data!.data() as Map;
-                        return eventsGridView(casualStream);
+                        return eventsGridView(formal: false);
                       }),
                 ]),
               ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../controllers/post_controller.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import '../../utils/math_utils.dart';
 
 class ViewCommentSave extends StatefulWidget {
   const ViewCommentSave(
@@ -44,7 +45,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
         children: [
           //view
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
+            padding: const EdgeInsetsDirectional.only(end: 5),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -59,7 +60,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                 ),
                 widget.showText
                     ? Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
+                        padding: EdgeInsetsDirectional.only(start: 4),
                         child: Text(
                           'View',
                           style: Theme.of(context)
@@ -75,9 +76,9 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                       )
                     : SizedBox.shrink(),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
+                  padding: EdgeInsetsDirectional.only(start: 4),
                   child: Text(
-                    widget.controller.post.views.toString(),
+                    summarizeLongInt(widget.controller.post.views),
                     style: Theme.of(context).textTheme.bodyText2?.copyWith(
                           fontFamily: 'Outfit',
                           color: hexStringToColor(widget.hexButtonColor),
@@ -91,7 +92,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
           ),
           //comment
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
+            padding: EdgeInsetsDirectional.only(end: 5),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -110,7 +111,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                 ),
                 widget.showText
                     ? Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
+                        padding: EdgeInsetsDirectional.only(start: 4),
                         child: Text(
                           'Comment',
                           style: Theme.of(context)
@@ -126,9 +127,9 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                       )
                     : SizedBox.shrink(),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
+                  padding: EdgeInsetsDirectional.only(start: 4),
                   child: Text(
-                    widget.controller.post.numComments().toString(),
+                    summarizeLongInt(widget.controller.post.numComments()),
                     style: Theme.of(context).textTheme.bodyText2?.copyWith(
                           fontFamily: 'Outfit',
                           color: hexStringToColor(widget.hexButtonColor),
@@ -168,7 +169,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
               });
             },
             child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
+              padding: EdgeInsetsDirectional.only(end: 5),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -188,7 +189,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                       )),
                   widget.showText
                       ? Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
+                          padding: EdgeInsetsDirectional.only(start: 4),
                           child: Text(
                             'Save',
                             style: Theme.of(context)
@@ -204,7 +205,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                           ),
                         )
                       : Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(4, 0, 6, 0),
+                          padding: EdgeInsetsDirectional.only(start: 4),
                           child: Text(
                             widget.controller.post.saveCount.toString(),
                             style: Theme.of(context)

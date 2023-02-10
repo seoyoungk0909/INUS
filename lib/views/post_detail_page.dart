@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import '../controllers/post_controller.dart';
 import '../models/comment_model.dart';
 import '../models/post_model.dart';
+import '../utils/color_utils.dart';
 import 'components/post_ui.dart';
 import 'components/comment_ui.dart';
 import 'components/comment_box.dart';
@@ -24,6 +25,14 @@ class PostDetailPage extends StatefulWidget {
 }
 
 class PostDetailPageState extends State<PostDetailPage> {
+  Future<List<Comment>> getCommentsFromRefs(commentRefs) async {
+    List<Comment> comments = [];
+    for (DocumentReference<Map<String, dynamic>> ref in commentRefs) {
+      comments.add(await Comment.fromCommentRef(ref));
+    }
+    return comments;
+  }
+
   @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
@@ -55,22 +64,24 @@ class PostDetailPageState extends State<PostDetailPage> {
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snap) {
                 if (snap.data == null) {
-                  return const Center(child: CircularProgressIndicator());
+                  return Center(
+                      child: CircularProgressIndicator(
+                          color: ApdiColors.themeGreen));
                 }
                 List commentRefs = snap.data!.get('comments');
                 if (commentRefs.isEmpty) {
                   return const Center(child: Text("No Comments"));
                 }
-                return ListView.builder(
-                    itemCount: commentRefs.length,
-                    itemBuilder: (context, idx) {
-                      return FutureBuilder(
-                        future: Comment.fromCommentRef(commentRefs[idx]),
-                        builder: (context, AsyncSnapshot<Comment> snapshot) {
-                          if (snapshot.data == null) {
-                            return const SizedBox.shrink(); // empty widget
-                          }
-                          return CommentUI(snapshot.data!);
+                return FutureBuilder(
+                    future: getCommentsFromRefs(commentRefs),
+                    builder: (context, AsyncSnapshot<List<Comment>> snapshot) {
+                      if (snapshot.data == null) {
+                        return const SizedBox.shrink(); // empty widget
+                      }
+                      return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, idx) {
+                          return CommentUI(snapshot.data![idx]);
                         },
                       );
                     });
