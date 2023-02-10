@@ -66,11 +66,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCX16FrAB0jkBDLDjN7ukW_dqFm0GnaKkw',
-    appId: '1:1025622893706:ios:cb58dc81823da6054cf973',
+    appId: '1:1025622893706:ios:8e6df03cc38f68e34cf973',
     messagingSenderId: '1025622893706',
     projectId: 'apdi-aus',
     storageBucket: 'apdi-aus.appspot.com',
-    iosClientId: '1025622893706-g5fp9n5p177n7fgfi83pt3larjv0k1ft.apps.googleusercontent.com',
-    iosBundleId: 'com.example.aus',
+    iosClientId: '1025622893706-tj2a73imumt8tn1sgaav20o7t8quemeh.apps.googleusercontent.com',
+    iosBundleId: 'com.inus.apdi',
   );
 }
