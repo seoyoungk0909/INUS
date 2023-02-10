@@ -107,6 +107,14 @@ class ProfilePageState extends State<ProfilePage> {
     // });
   }
 
+  Future<List<Post>> getPostsFromRefs(postRefs) async {
+    List<Post> posts = [];
+    for (DocumentReference<Map<String, dynamic>> ref in postRefs) {
+      posts.add(await Post.fromDocRef(firebaseDoc: ref));
+    }
+    return posts;
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -146,8 +154,9 @@ class ProfilePageState extends State<ProfilePage> {
                           if (snap.data == null) {
                             print(snap);
                             print(snap.data);
-                            return const Center(
-                                child: CircularProgressIndicator());
+                            return Center(
+                                child: CircularProgressIndicator(
+                                    color: ApdiColors.themeGreen));
                           }
                           try {
                             Map<String, dynamic> data = snap.data!.data()!;
@@ -160,21 +169,20 @@ class ProfilePageState extends State<ProfilePage> {
                             if (postRefs.isEmpty) {
                               return const Center(child: Text("No Posts"));
                             }
-                            return ListView.builder(
-                              // physics: const AlwaysScrollableScrollPhysics(),
-                              itemCount: postRefs.length,
-                              itemBuilder: (BuildContext context, int idx) {
-                                bool saved = savedPostRefs.isNotEmpty &&
-                                    savedPostRefs.contains(postRefs[idx]);
-                                return FutureBuilder<Post>(
-                                  future: Post.fromDocRef(
-                                      firebaseDoc: postRefs[idx]),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.data == null) {
-                                      return const SizedBox.shrink();
-                                    }
-                                    return postUI(
-                                        context, PostController(snapshot.data!),
+                            return FutureBuilder<List<Post>>(
+                              future: getPostsFromRefs(postRefs),
+                              builder: (context, snapshot) {
+                                if (snapshot.data == null) {
+                                  return const SizedBox.shrink();
+                                }
+                                return ListView.builder(
+                                  // physics: const AlwaysScrollableScrollPhysics(),
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (BuildContext context, int idx) {
+                                    bool saved = savedPostRefs.isNotEmpty &&
+                                        savedPostRefs.contains(postRefs[idx]);
+                                    return postUI(context,
+                                        PostController(snapshot.data![idx]),
                                         setState: setState, saved: saved);
                                   },
                                 );
@@ -192,8 +200,9 @@ class ProfilePageState extends State<ProfilePage> {
                             .snapshots(),
                         builder: (context, AsyncSnapshot<dynamic> snap) {
                           if (snap.data == null) {
-                            return const Center(
-                                child: CircularProgressIndicator());
+                            return Center(
+                                child: CircularProgressIndicator(
+                                    color: ApdiColors.themeGreen));
                           }
                           try {
                             List postRefs = snap.data!.get('savedPosts');
@@ -202,19 +211,18 @@ class ProfilePageState extends State<ProfilePage> {
                               return const Center(
                                   child: Text("No Saved Posts"));
                             }
-                            return ListView.builder(
-                              // physics: const AlwaysScrollableScrollPhysics(),
-                              itemCount: postRefs.length,
-                              itemBuilder: (BuildContext context, int idx) {
-                                return FutureBuilder<Post>(
-                                  future: Post.fromDocRef(
-                                      firebaseDoc: postRefs[idx]),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.data == null) {
-                                      return const SizedBox.shrink();
-                                    }
-                                    return postUI(
-                                        context, PostController(snapshot.data!),
+                            return FutureBuilder<List<Post>>(
+                              future: getPostsFromRefs(postRefs),
+                              builder: (context, snapshot) {
+                                if (snapshot.data == null) {
+                                  return const SizedBox.shrink();
+                                }
+                                return ListView.builder(
+                                  // physics: const AlwaysScrollableScrollPhysics(),
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (BuildContext context, int idx) {
+                                    return postUI(context,
+                                        PostController(snapshot.data![idx]),
                                         setState: setState, saved: true);
                                   },
                                 );
