@@ -1,4 +1,5 @@
 import 'package:aus/utils/color_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../firebase_login_state.dart';
@@ -140,7 +141,7 @@ class EmailFormPageState extends State<EmailFormPage> {
                     ),
                   ),
                   onPressed: () {
-                    if (emailController.text.isEmpty) {
+                    if (emailController.text.trim().isEmpty) {
                       popUpDialog(context, 'Field Required',
                           "Please input your email.");
                     } else {
@@ -154,7 +155,7 @@ class EmailFormPageState extends State<EmailFormPage> {
                               'school': school,
                             });
                       } on Exception catch (error) {
-                        popUpDialog(context, 'Login Failed',
+                        popUpDialog(context, 'Wrong email',
                             error.toString().split(':')[1]);
                       }
                     }
