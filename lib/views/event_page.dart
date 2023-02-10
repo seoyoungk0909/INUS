@@ -73,6 +73,14 @@ class EventPageState extends State<EventPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    refreshEvents(formal: true);
+    refreshEvents(formal: false);
+  }
+
+  @override
   Widget build(BuildContext context) {
     DocumentReference userRef = FirebaseFirestore.instance
         .collection('user_info')
