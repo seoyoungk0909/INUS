@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../utils/color_utils.dart';
+
 class EventWritePage extends StatefulWidget {
   const EventWritePage({Key? key, required this.title}) : super(key: key);
 
@@ -66,6 +68,7 @@ class EventWritePageState extends State<EventWritePage> {
     final pickedDate = await showDatePicker(
       context: context,
       initialDate: initialDate,
+      initialEntryMode: DatePickerEntryMode.calendar,
       firstDate: DateTime(DateTime.now().year - 3),
       lastDate: DateTime(DateTime.now().year + 3),
     );
@@ -78,6 +81,7 @@ class EventWritePageState extends State<EventWritePage> {
     TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
+      initialEntryMode: TimePickerEntryMode.input,
     );
     if (pickedTime == null) return;
     time = pickedTime;
@@ -159,8 +163,8 @@ class EventWritePageState extends State<EventWritePage> {
                       ),
                       TextButton(
                           onPressed: () {
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, '/', (route) => false);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
                           },
                           child: Text("yes"))
                     ],
@@ -379,7 +383,7 @@ class EventWritePageState extends State<EventWritePage> {
                         child: OutlinedButton(
                             child: Text(getDate(),
                                 style: TextStyle(
-                                    fontSize: 15.0, color: Colors.white10)),
+                                    fontSize: 15.0, color: Colors.white54)),
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(
@@ -400,7 +404,7 @@ class EventWritePageState extends State<EventWritePage> {
                         child: OutlinedButton(
                             child: Text(getTime(),
                                 style: TextStyle(
-                                    fontSize: 15.0, color: Colors.white10)),
+                                    fontSize: 15.0, color: Colors.white54)),
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(
@@ -565,19 +569,21 @@ class EventWritePageState extends State<EventWritePage> {
               Center(
                 child: SizedBox(
                   width: 340,
-                  height: 50,
+                  height: 250,
                   child: TextField(
-                      controller: eventDetail,
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 1, color: Colors.white24), //<-- SEE HERE
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        hintText: "Input event's detail or description",
-                        hintStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white10),
-                      )),
+                    controller: eventDetail,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            width: 1, color: Colors.white24), //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      hintText: "Input event's detail or description",
+                      hintStyle:
+                          TextStyle(fontSize: 15.0, color: Colors.white10),
+                    ),
+                    maxLines: 10,
+                  ),
                 ),
               ),
               Padding(
@@ -589,8 +595,8 @@ class EventWritePageState extends State<EventWritePage> {
                       child: isButtonEnabled
                           ? ElevatedButton(
                               style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.green),
+                                backgroundColor: MaterialStateProperty.all(
+                                    ApdiColors.themeGreen),
                               ),
                               onPressed: () {
                                 showDialog<void>(
@@ -599,7 +605,7 @@ class EventWritePageState extends State<EventWritePage> {
                                       return AlertDialog(
                                         title: Text('Create Post'),
                                         content: Text(
-                                            "Are you sure you want to create this post?"),
+                                            "Are you sure you want to create this event?"),
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () =>
@@ -636,7 +642,7 @@ class EventWritePageState extends State<EventWritePage> {
                                     });
                               },
                               child: const Text(
-                                'Request to Post',
+                                'Request Event',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20.0),
                               ),
@@ -665,7 +671,7 @@ class EventWritePageState extends State<EventWritePage> {
                                     });
                               },
                               child: const Text(
-                                'Request to Post',
+                                'Request Event',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20.0),
                               ),
