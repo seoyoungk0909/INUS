@@ -166,6 +166,9 @@ class ProfilePageState extends State<ProfilePage> {
                             if (data.containsKey('savedPosts')) {
                               savedPostRefs = data['savedPosts'];
                             }
+                            if (data.containsKey('savedEvents')) {
+                              savedPostRefs.add(data['savedPosts']);
+                            }
                             if (postRefs.isEmpty) {
                               return const Center(child: Text("No Posts"));
                             }
