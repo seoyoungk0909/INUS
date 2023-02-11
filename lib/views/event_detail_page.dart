@@ -108,7 +108,7 @@ class EventDetailPageState extends State<EventDetailPage> {
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width * 0.76,
-                        height: 28,
+                        height: 40,
                         child: ElevatedButton(
                           onPressed: () async {
                             _launchURL(controller.event.registerLink);
@@ -118,7 +118,7 @@ class EventDetailPageState extends State<EventDetailPage> {
                                   Theme.of(context).colorScheme.secondary),
                               textStyle:
                                   MaterialStateProperty.all(const TextStyle(
-                                fontSize: 14,
+                                fontSize: 18,
                                 fontFamily: 'Outfit',
                                 fontWeight: FontWeight.w600,
                               ))),
@@ -161,7 +161,10 @@ class EventDetailPageState extends State<EventDetailPage> {
                                             saved = false;
                                           })
                                         },
-                                    icon: const Icon(Icons.bookmark));
+                                    icon: const Icon(
+                                      Icons.bookmark,
+                                      size: 35,
+                                    ));
                               } else {
                                 return IconButton(
                                     onPressed: () => {
@@ -176,26 +179,12 @@ class EventDetailPageState extends State<EventDetailPage> {
                                             saved = true;
                                           })
                                         },
-                                    icon: const Icon(Icons.bookmark_border));
+                                    icon: const Icon(
+                                      Icons.bookmark_border,
+                                      size: 35,
+                                    ));
                               }
                             }),
-
-                        //IconButton(
-                        //   onPressed: () => {
-                        //     setState(() {
-                        //       saveEvent(currentUser.uid, controller);
-                        //       // controller.changeSave();
-                        //     })
-                        //   },
-                        //   icon: saved
-                        //       ? const Icon(Icons.bookmark)
-                        //       : const Icon(Icons.bookmark),
-                        //   // icon: (controller.event.save == false)
-                        //   //     ? const Icon(Icons.bookmark_border)
-                        //   //     : const Icon(Icons.bookmark),
-                        //   color: hexStringToColor("#AAAAAA"),
-                        //   iconSize: 37.0,
-                        // ),
                       ),
                     ],
                   ),
