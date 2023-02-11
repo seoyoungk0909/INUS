@@ -48,7 +48,10 @@ class VerifyPageState extends State<VerifyPage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Check your school email and come back after completing authentication.",
+                    """Check your school email and come back after completing authentication.
+
+                    If you can't find the email in your inbox, please check your spam folder.
+                    """,
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
