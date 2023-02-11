@@ -167,8 +167,6 @@ Widget eventUI(BuildContext context, EventController controller,
           onTap: () {
             Navigator.pushNamed(context, 'event_detail',
                 arguments: {'event': controller.event});
-            controller.event.firebaseDocRef
-                ?.update({"viewCount": FieldValue.increment(1)});
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
