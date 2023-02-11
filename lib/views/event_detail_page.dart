@@ -48,21 +48,6 @@ class EventDetailPageState extends State<EventDetailPage> {
     });
   }
 
-  // Future<void> checkIfSaved(
-  //     String currentUserId, EventController controller) async {
-  //   FirebaseFirestore.instance
-  //       .doc('user_info/$currentUserId')
-  //       .snapshots()
-  //       .listen((docSnapshot) {
-  //     if (docSnapshot.exists) {
-  //       Map<String, dynamic> data = docSnapshot.data()!;
-  //       if (data['name'] == controller.event.firebaseDocRef) {
-  //         saved = true;
-  //       }
-  //     }
-  //   });
-  // }
-
   final User currentUser = FirebaseAuth.instance.currentUser!;
   bool saved = false;
 
