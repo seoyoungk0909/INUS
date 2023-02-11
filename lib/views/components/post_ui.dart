@@ -50,7 +50,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
+                  padding: EdgeInsetsDirectional.fromSTEB(5, 8, 0, 8),
                   // TODO: use eye-open
                   child: Icon(
                     Icons.remove_red_eye_outlined,
@@ -97,7 +97,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
+                  padding: EdgeInsetsDirectional.fromSTEB(5, 8, 0, 8),
                   // child: Icon(
                   //   Icons.comment,
                   //   color: hexStringToColor(hexButtonColor),
