@@ -134,14 +134,18 @@ class EventDetailPageState extends State<EventDetailPage> {
                                 .snapshots(),
                             builder: (BuildContext context,
                                 AsyncSnapshot<DocumentSnapshot> snapshot) {
-                              print(snapshot.data);
+                              if (snapshot.data == null) {
+                                return Center(
+                                    child: CircularProgressIndicator(
+                                        color: ApdiColors.themeGreen));
+                              }
                               Map documentdata = snapshot.data!.data() as Map;
                               List? savedEvents =
                                   documentdata.containsKey('savedEvents')
                                       ? snapshot.data!['savedEvents']
                                       : null;
-                              if (savedEvents!.isNotEmpty) {
-                                saved = true;
+                              if (savedEvents == null) {
+                                saved = false;
                               }
                               if (saved) {
                                 return IconButton(
