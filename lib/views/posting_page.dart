@@ -69,7 +69,7 @@ class _PostListPageState extends State<PostListPage> {
           bool saved =
               savedPosts?.contains(controllers[i].post.firebaseDocRef) ?? false;
           return postUI(context, controllers[i],
-              setState: setState, saved: saved);
+              setState: setState, saved: saved, first: i == 0);
         },
       ),
     );

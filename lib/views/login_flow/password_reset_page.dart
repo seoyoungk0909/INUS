@@ -41,10 +41,8 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    """We will send a password recovery email to your school email.
-
-                    If you can't find the email in your inbox, please check your spam folder.
-                    """,
+                    "We will send a password recovery email to your school email.\n\n"
+                    "If you can't find the email in your inbox, please check your spam folder.",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
