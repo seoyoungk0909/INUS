@@ -81,7 +81,8 @@ class PostDetailPageState extends State<PostDetailPage> {
                       return ListView.builder(
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, idx) {
-                          return CommentUI(snapshot.data![idx]);
+                          return CommentUI(snapshot.data![idx],
+                              first: idx == 0);
                         },
                       );
                     });

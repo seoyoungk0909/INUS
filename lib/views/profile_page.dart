@@ -183,7 +183,9 @@ class ProfilePageState extends State<ProfilePage> {
                                         savedPostRefs.contains(postRefs[idx]);
                                     return postUI(context,
                                         PostController(snapshot.data![idx]),
-                                        setState: setState, saved: saved);
+                                        setState: setState,
+                                        saved: saved,
+                                        first: idx == 0);
                                   },
                                 );
                               },
@@ -223,7 +225,9 @@ class ProfilePageState extends State<ProfilePage> {
                                   itemBuilder: (BuildContext context, int idx) {
                                     return postUI(context,
                                         PostController(snapshot.data![idx]),
-                                        setState: setState, saved: true);
+                                        setState: setState,
+                                        saved: true,
+                                        first: idx == 0);
                                   },
                                 );
                               },
