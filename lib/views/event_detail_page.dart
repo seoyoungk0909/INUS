@@ -319,14 +319,18 @@ Widget detailedView(BuildContext context, EventController controller) {
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: Row(
-                children: [
+                children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
                     child: text(context, controller, 'Language', 14,
                         textColor: '#AAAAAA'),
                   ),
-                  text(context, controller, controller.event.language, 15,
+                  text(context, controller, controller.event.language[0], 15,
                       bold: true),
+                  for (String language in controller.event.language.sublist(1))
+                    Row(children: <Widget>[
+                      text(context, controller, ", $language", 15, bold: true),
+                    ])
                 ],
               ),
             ),

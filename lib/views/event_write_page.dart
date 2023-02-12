@@ -33,11 +33,10 @@ class EventWritePageState extends State<EventWritePage> {
       'language': trueLanguages,
       'category': trueCategories,
       'location': eventLocation.text.trim(),
-      'registrationLink': eventRegistrationLink.text.trim(),
-      'eventDetail': eventDetail.text.trim(),
+      'registration link': eventRegistrationLink.text.trim(),
+      'event detail': eventDetail.text.trim(),
       'viewCount': 0,
       'saveCount': 0,
-      // 'comments': [],
       'user': FirebaseFirestore.instance.doc('user_info/$currentUserId'),
       'uploadTime': Timestamp.now(),
       'formal': formal,
@@ -119,7 +118,6 @@ class EventWritePageState extends State<EventWritePage> {
 
   String trueCategories = "";
   var trueLanguages = [];
-  bool trueFormalities = false;
   Map<String, bool> textChecker = {
     'Title': false,
     'Tags': false,
@@ -188,7 +186,7 @@ class EventWritePageState extends State<EventWritePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //formality?
+              //formality
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
                 child: RichText(
@@ -354,7 +352,7 @@ class EventWritePageState extends State<EventWritePage> {
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
                 child: RichText(
-                  text: TextSpan(
+                  text: const TextSpan(
                       text: "Title",
                       style: TextStyle(
                           fontSize: 16,
@@ -400,7 +398,7 @@ class EventWritePageState extends State<EventWritePage> {
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
                 child: RichText(
-                  text: TextSpan(
+                  text: const TextSpan(
                       text: "Tags",
                       style: TextStyle(
                           fontSize: 16,
