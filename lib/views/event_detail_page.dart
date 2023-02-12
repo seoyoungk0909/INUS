@@ -40,8 +40,6 @@ class EventDetailPageState extends State<EventDetailPage> {
       backgroundColor: Theme.of(context).primaryColorDark,
       appBar: AppBar(
         backgroundColor: Theme.of(context).backgroundColor,
-        // title: Text(widget.title),
-        // centerTitle: false,
         actions: [
           IconButton(
               onPressed: () {
@@ -71,7 +69,7 @@ class EventDetailPageState extends State<EventDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.76,
+                        width: MediaQuery.of(context).size.width * 0.753,
                         height: 28,
                         child: ElevatedButton(
                           onPressed: () async {
@@ -92,15 +90,8 @@ class EventDetailPageState extends State<EventDetailPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 9),
                         child: IconButton(
-                          onPressed: () => {
-                            setState(() {
-                              // controller.changeSave();
-                            })
-                          },
+                          onPressed: () => {setState(() {})},
                           icon: const Icon(Icons.bookmark_border),
-                          // icon: (controller.event.save == false)
-                          //     ? const Icon(Icons.bookmark_border)
-                          //     : const Icon(Icons.bookmark),
                           color: hexStringToColor("#AAAAAA"),
                           iconSize: 37.0,
                         ),
@@ -127,7 +118,7 @@ Widget text(BuildContext context, EventController controller, String content,
             fontFamily: 'Outfit',
             color: hexStringToColor(textColor),
             fontSize: size,
-            fontWeight: FontWeight.w600));
+            fontWeight: FontWeight.w500));
   }
   return Text(content,
       style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -171,18 +162,6 @@ Widget categoryHashtag(BuildContext context, EventController controller) {
     ),
   );
 }
-
-//all of category hashtags in a row
-// Widget categoryHashtagRow(BuildContext context, EventController controller) {
-//   final hashtagArr = (controller.event.tag).split(' ');
-//   // const hashtagArr = "#Environment, #Education";
-//   return Row(
-//     children: [
-//       categoryHashtag(context, controller, hashtagArr[0]),
-//       categoryHashtag(context, controller, hashtagArr[1]),
-//     ],
-//   );
-// }
 
 //Quick view
 Widget quickView(BuildContext context, EventController controller) {
