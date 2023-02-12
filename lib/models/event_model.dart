@@ -39,7 +39,6 @@ class Event {
     DateTime? eventUploadTime,
     bool? eventFormality,
     String? eventRegisterLink,
-    // bool? savedEvent,
     DocumentReference<Map<String, dynamic>>? docRef,
   }) {
     writer = eventWriter ?? writer;
@@ -54,7 +53,6 @@ class Event {
     eventTime = eventHeldTime ?? DateTime.now();
     formal = eventFormality ?? formal;
     registerLink = eventRegisterLink ?? registerLink;
-    // save = savedEvent ?? save;
     firebaseDocRef = docRef;
   }
 
@@ -83,14 +81,13 @@ class Event {
         eventTitle: eventData.get('title'),
         eventCategory: eventData.get('category'),
         eventTag: eventData.get('tag'),
-        eventDescription: eventData.get('event detail'),
+        eventDescription: eventData.get('eventDetail'),
         eventLanguage: eventData.get('language'),
         eventLocation: eventData.get('location'),
         eventUploadTime: (eventData.get('uploadTime') as Timestamp).toDate(),
         eventHeldTime: (eventData.get('eventTime') as Timestamp).toDate(),
         eventFormality: (eventData.get('formal')),
-        eventRegisterLink: eventData.get('registration link'),
-        // savedEvent: (eventData.get('save')),
+        eventRegisterLink: eventData.get('registrationLink'),
         docRef: firebaseDoc);
   }
 

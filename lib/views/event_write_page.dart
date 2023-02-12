@@ -21,23 +21,26 @@ class EventWritePage extends StatefulWidget {
 }
 
 class EventWritePageState extends State<EventWritePage> {
+  bool formal = false;
   Future<void> uploadEvent(String currentUserId) async {
     DocumentReference newEvent =
         await FirebaseFirestore.instance.collection("event").add({
       'title': eventTitle.text.trim(),
       'tag': tags.text.trim(),
-      'time': Timestamp.fromDate(
+      'eventTime': Timestamp.fromDate(
         DateTime(date.year, date.month, date.day, time.hour, time.minute),
       ),
       'language': trueLanguages,
       'category': trueCategories,
       'location': eventLocation.text.trim(),
-      'registration link': eventRegistrationLink.text.trim(),
-      'event detail': eventDetail.text.trim(),
+      'registrationLink': eventRegistrationLink.text.trim(),
+      'eventDetail': eventDetail.text.trim(),
       'viewCount': 0,
       'saveCount': 0,
-      'comments': [],
+      // 'comments': [],
       'user': FirebaseFirestore.instance.doc('user_info/$currentUserId'),
+      'uploadTime': Timestamp.now(),
+      'formal': formal,
     });
   }
 
@@ -96,6 +99,12 @@ class EventWritePageState extends State<EventWritePage> {
   final TextEditingController eventDetail = TextEditingController();
 
   final User currentUser = FirebaseAuth.instance.currentUser!;
+
+  Map<String, bool> formalities = {
+    'Casual': true,
+    'Formal': false,
+  };
+
   Map<String, bool> categories = {
     'Party': true,
     'Workshop': false,
@@ -110,6 +119,7 @@ class EventWritePageState extends State<EventWritePage> {
 
   String trueCategories = "";
   var trueLanguages = [];
+  bool trueFormalities = false;
   Map<String, bool> textChecker = {
     'Title': false,
     'Tags': false,
@@ -178,6 +188,90 @@ class EventWritePageState extends State<EventWritePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              //formality?
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
+                child: RichText(
+                  text: const TextSpan(
+                      text: "Formality",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.bold),
+                      children: [
+                        TextSpan(
+                            text: ' *',
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16))
+                      ]),
+                ),
+              ),
+              Container(
+                height: 55,
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
+                  child: ListView(
+                    shrinkWrap: false,
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      for (var formality in formalities.keys)
+                        Row(children: <Widget>[
+                          Container(
+                            width: 100,
+                            height: 35,
+                            decoration: BoxDecoration(
+                                color: formalities[formality]!
+                                    ? Colors.white24
+                                    : Colors.transparent,
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: formalities[formality]!
+                                        ? Colors.white24
+                                        : Colors.white70),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                textStyle: const TextStyle(
+                                    fontSize: 15, color: Colors.white),
+                              ),
+                              onPressed: () {
+                                for (var reset in formalities.keys) {
+                                  formalities[reset] = false;
+                                }
+                                setState(() {
+                                  formalities[formality] == true
+                                      ? formalities[formality] = false
+                                      : formalities[formality] = true;
+                                  formality == 'Formal'
+                                      ? formal = true
+                                      : formal = false;
+                                });
+                              },
+                              child: Text(
+                                formality,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: formalities[formality]!
+                                        ? FontWeight.w500
+                                        : FontWeight.normal,
+                                    color: formalities[formality]!
+                                        ? Color(0xff57AD9E)
+                                        : Colors.white70),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          )
+                        ]),
+                    ],
+                  ),
+                ),
+              ),
+              //formality end
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
                 child: RichText(
