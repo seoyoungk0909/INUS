@@ -25,7 +25,7 @@ class EventWritePageState extends State<EventWritePage> {
     DocumentReference newEvent =
         await FirebaseFirestore.instance.collection("event").add({
       'title': eventTitle.text.trim(),
-      'tag': tags.text.trim(),
+      'tag': tags.text.split(','),
       'time': Timestamp.fromDate(
         DateTime(date.year, date.month, date.day, time.hour, time.minute),
       ),
@@ -105,7 +105,7 @@ class EventWritePageState extends State<EventWritePage> {
   Map<String, bool> languages = {
     'English': true,
     'Cantonese': false,
-    'Mandarine': false,
+    'Mandarin': false,
   };
 
   String trueCategories = "";
@@ -166,7 +166,7 @@ class EventWritePageState extends State<EventWritePage> {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
-                          child: Text("yes"))
+                          child: Text("Yes"))
                     ],
                   );
                 });
@@ -314,7 +314,7 @@ class EventWritePageState extends State<EventWritePage> {
                           fontWeight: FontWeight.bold),
                       children: [
                         TextSpan(
-                            text: ' (max. 1-2)',
+                            text: '(max. 1-2, separated by comma)',
                             style: TextStyle(
                                 color: Colors.white10,
                                 fontWeight: FontWeight.normal,
@@ -636,7 +636,7 @@ class EventWritePageState extends State<EventWritePage> {
                                                         '/',
                                                         (route) => false);
                                               },
-                                              child: Text("yes"))
+                                              child: Text("Yes"))
                                         ],
                                       );
                                     });
