@@ -145,8 +145,8 @@ Widget eventDetailPhoto(BuildContext context, EventController controller) {
   );
 }
 
-//category hashtag each element
-Widget categoryHashtag(BuildContext context, EventController controller) {
+Widget singleHashtag(
+    BuildContext context, EventController controller, int index) {
   return Padding(
     padding: const EdgeInsets.only(top: 14, right: 10),
     child: Container(
@@ -157,10 +157,21 @@ Widget categoryHashtag(BuildContext context, EventController controller) {
       ),
       child: Container(
         padding: const EdgeInsetsDirectional.fromSTEB(9, 5, 9, 0),
-        child: text(context, controller, "#${controller.event.tag}", 12),
+        child: text(context, controller, "#${controller.event.tag[index]}", 12),
       ),
     ),
   );
+}
+
+//category hashtag each element
+Widget categoryHashtag(BuildContext context, EventController controller) {
+  List<Widget> hashtags = [];
+
+  for (int i = 0; i < controller.event.tag.length; i++) {
+    hashtags.add(singleHashtag(context, controller, i));
+  }
+
+  return Row(children: hashtags);
 }
 
 //Quick view
@@ -304,12 +315,9 @@ Widget detailedView(BuildContext context, EventController controller) {
                     child: text(context, controller, 'Language', 14,
                         textColor: '#AAAAAA'),
                   ),
-                  text(context, controller, controller.event.language[0], 15,
+                  text(context, controller,
+                      controller.event.language.join(', '), 15,
                       bold: true),
-                  for (String language in controller.event.language.sublist(1))
-                    Row(children: <Widget>[
-                      text(context, controller, ", $language", 15, bold: true),
-                    ])
                 ],
               ),
             ),

@@ -80,7 +80,10 @@ class ReportPageState extends State<ReportPage> {
         appBar: AppBar(
           title: Text(
             widget.title,
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           centerTitle: true,
           backgroundColor: Theme.of(context).backgroundColor,
@@ -88,7 +91,7 @@ class ReportPageState extends State<ReportPage> {
         body: Column(children: <Widget>[
           Container(
             alignment: Alignment.centerLeft,
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 30, 20, 20),
             child: const Text(
               "Please identify reason(s) for the report.",
               style: TextStyle(
@@ -109,6 +112,10 @@ class ReportPageState extends State<ReportPage> {
                   height: 48,
                   child: ElevatedButton(
                     style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
                       backgroundColor: selectedReportType.isEmpty
                           ? MaterialStateProperty.all(Colors.white60)
                           : MaterialStateProperty.all(ApdiColors.errorRed),
@@ -125,7 +132,12 @@ class ReportPageState extends State<ReportPage> {
                     },
                     child: const Text(
                       'Submit',
-                      style: TextStyle(color: Colors.white, fontSize: 16.0),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   )),
             ),
@@ -161,7 +173,7 @@ class ListTileWidgetState extends State<ListTileWidget> {
             )
           : Icon(
               Icons.radio_button_unchecked_outlined,
-              color: Colors.grey,
+              color: ApdiColors.greyText,
             ),
       title: Text(
         widget.name,

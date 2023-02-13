@@ -1,3 +1,4 @@
+import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 
 void popUpDialog(BuildContext context, String title, String body,
@@ -23,7 +24,10 @@ void popUpDialog(BuildContext context, String title, String body,
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: Text(
+              'Close',
+              style: TextStyle(color: ApdiColors.themeGreen),
+            ),
           ),
           action ?? SizedBox.shrink(),
         ],

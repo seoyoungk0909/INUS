@@ -47,15 +47,18 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             primaryColorDark: ApdiColors.darkerBackground,
             backgroundColor: ApdiColors.darkBackground,
-            colorScheme: ColorScheme.fromSwatch(
-              primarySwatch: Colors.blue,
-              primaryColorDark: ApdiColors.darkerBackground, //darker
-              accentColor: ApdiColors.themeGreen,
-              cardColor: hexStringToColor("##3E3E3E"),
-              backgroundColor: ApdiColors.darkBackground, //dark
-              errorColor: ApdiColors.errorRed,
-              brightness: Brightness.dark,
-            ),
+            colorScheme: ColorScheme(
+                brightness: Brightness.dark,
+                primary: ApdiColors.themeGreen,
+                onPrimary: ApdiColors.lightText,
+                secondary: ApdiColors.pointGreen,
+                onSecondary: ApdiColors.lightText,
+                error: ApdiColors.errorRed,
+                onError: ApdiColors.lightText,
+                background: ApdiColors.darkerBackground,
+                onBackground: ApdiColors.lightText,
+                surface: ApdiColors.darkBackground,
+                onSurface: ApdiColors.lightText),
             textTheme: TextTheme(
               bodyText2: TextStyle(color: ApdiColors.lightText),
               labelMedium: TextStyle(color: ApdiColors.greyText, fontSize: 14),
