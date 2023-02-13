@@ -28,7 +28,7 @@ class EventWritePageState extends State<EventWritePage> {
         await FirebaseFirestore.instance.collection("event").add({
       'title': eventTitle.text.trim(),
       'tag': tags.text.split(' '),
-      'time': Timestamp.fromDate(
+      'eventTime': Timestamp.fromDate(
         DateTime(date.year, date.month, date.day, time.hour, time.minute),
       ),
       'language': trueLanguages,
@@ -209,13 +209,13 @@ class EventWritePageState extends State<EventWritePage> {
                         style: TextStyle(
                             fontSize: 16,
                             color: Colors.white70,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.w600),
                         children: [
                           TextSpan(
                               text: ' *',
                               style: TextStyle(
                                   color: Colors.red,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   fontSize: 16))
                         ]),
                   ),
@@ -231,24 +231,25 @@ class EventWritePageState extends State<EventWritePage> {
                         for (var formality in formalities.keys)
                           Row(children: <Widget>[
                             Container(
-                              width: 100,
+                              width: 95,
                               height: 35,
                               decoration: BoxDecoration(
                                   color: formalities[formality]!
-                                      ? Colors.white24
+                                      ? Colors.white12
                                       : Colors.transparent,
                                   border: Border.all(
                                       width: 0.5,
                                       color: formalities[formality]!
-                                          ? Colors.white24
-                                          : Colors.white70),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
+                                          ? Colors.white12
+                                          : Colors.white24),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(5))),
                               child: TextButton(
                                 style: TextButton.styleFrom(
                                   textStyle: const TextStyle(
                                       fontSize: 15, color: Colors.white),
                                 ),
+                                //커멘트
                                 onPressed: () {
                                   for (var reset in formalities.keys) {
                                     formalities[reset] = false;
@@ -265,7 +266,7 @@ class EventWritePageState extends State<EventWritePage> {
                                 child: Text(
                                   formality,
                                   style: TextStyle(
-                                      fontSize: 15,
+                                      fontSize: 14,
                                       fontWeight: formalities[formality]!
                                           ? FontWeight.w500
                                           : FontWeight.normal,
