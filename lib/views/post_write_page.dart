@@ -79,11 +79,14 @@ class PostWritePageState extends State<PostWritePage> {
         backgroundColor: Theme.of(context).backgroundColor,
         title: Text(
           widget.title,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         centerTitle: true,
         leading: GestureDetector(
-          child: Icon(
+          child: const Icon(
             Icons.arrow_back_ios,
           ),
           onTap: () {
@@ -91,20 +94,31 @@ class PostWritePageState extends State<PostWritePage> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Discard Writings'),
-                    content: Text(
-                        "Are you sure you want to go back to the main page? (All you have written will be lost!) "),
+                    title: const Text(
+                      'Discard Writings',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    content: const Text(
+                      "Are you sure you want to go back to the main page? (All you have written will be lost!) ",
+                      style: TextStyle(fontSize: 12),
+                    ),
                     actions: <Widget>[
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: Text("No"),
+                        child: Text(
+                          "No",
+                          style: TextStyle(color: ApdiColors.themeGreen),
+                        ),
                       ),
                       TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
-                          child: Text("yes"))
+                          child: Text(
+                            "Yes",
+                            style: TextStyle(color: ApdiColors.themeGreen),
+                          ))
                     ],
                   );
                 });
@@ -118,23 +132,23 @@ class PostWritePageState extends State<PostWritePage> {
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
               child: RichText(
-                text: TextSpan(
+                text: const TextSpan(
                     text: "Category",
                     style: TextStyle(
                         fontSize: 16,
                         color: Colors.white70,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.w600),
                     children: [
                       TextSpan(
                           text: ' *',
                           style: TextStyle(
                               color: Colors.red,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 16))
                     ]),
               ),
             ),
-            Container(
+            SizedBox(
               height: 55,
               child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
@@ -145,19 +159,19 @@ class PostWritePageState extends State<PostWritePage> {
                     for (var category in categories.keys)
                       Row(children: <Widget>[
                         Container(
-                          width: 100,
+                          width: 95,
                           height: 35,
                           decoration: BoxDecoration(
                               color: categories[category]!
-                                  ? Colors.white24
+                                  ? Colors.white12
                                   : Colors.transparent,
                               border: Border.all(
                                   width: 0.5,
                                   color: categories[category]!
-                                      ? Colors.white24
-                                      : Colors.white70),
+                                      ? Colors.white12
+                                      : Colors.white24),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(5))),
+                                  const BorderRadius.all(Radius.circular(5))),
                           child: TextButton(
                             style: TextButton.styleFrom(
                               textStyle: const TextStyle(
@@ -186,7 +200,7 @@ class PostWritePageState extends State<PostWritePage> {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         )
                       ]),
@@ -195,7 +209,7 @@ class PostWritePageState extends State<PostWritePage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 20, left: 10),
+              padding: const EdgeInsets.only(top: 20, left: 10),
               child: Row(
                 children: [
                   Checkbox(
@@ -208,12 +222,15 @@ class PostWritePageState extends State<PostWritePage> {
                           isAnonymous = value!;
                         });
                       }),
-                  Text("Anonymous Post")
+                  const Text(
+                    "Anonymous Post",
+                    style: TextStyle(color: Colors.white70),
+                  )
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(15, 40, 0, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(15, 10, 0, 0),
             ),
             Center(
               child: SizedBox(
@@ -230,7 +247,7 @@ class PostWritePageState extends State<PostWritePage> {
                         textChecking();
                       }
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "Write your title here.",
                       hintStyle:
@@ -263,7 +280,7 @@ class PostWritePageState extends State<PostWritePage> {
                       textChecking();
                     }
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: "Write your contents here.",
                     hintStyle: TextStyle(fontSize: 16.0, color: Colors.white24),
@@ -278,7 +295,7 @@ class PostWritePageState extends State<PostWritePage> {
             Center(
               child: SizedBox(
                   width: 350,
-                  height: 55,
+                  height: 46,
                   child: isButtonEnabled
                       ? ElevatedButton(
                           style: ButtonStyle(
@@ -290,13 +307,22 @@ class PostWritePageState extends State<PostWritePage> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text('Create Post'),
-                                    content: Text(
-                                        "Are you sure you want to create this post?"),
+                                    title: const Text(
+                                      'Create Post',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    content: const Text(
+                                      "Are you sure you want to create this post?",
+                                      style: TextStyle(fontSize: 12),
+                                    ),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () => Navigator.pop(context),
-                                        child: Text("No"),
+                                        child: Text(
+                                          "No",
+                                          style: TextStyle(
+                                              color: ApdiColors.themeGreen),
+                                        ),
                                       ),
                                       TextButton(
                                           onPressed: () {
@@ -311,19 +337,32 @@ class PostWritePageState extends State<PostWritePage> {
                                             Navigator.pushNamedAndRemoveUntil(
                                                 context, '/', (route) => false);
                                           },
-                                          child: Text("yes"))
+                                          child: Text(
+                                            "Yes",
+                                            style: TextStyle(
+                                                color: ApdiColors.themeGreen),
+                                          ))
                                     ],
                                   );
                                 });
                           },
                           child: const Text(
                             'Post',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20.0),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontFamily: 'Outfit',
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         )
                       : ElevatedButton(
                           style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.white60),
                           ),
@@ -332,22 +371,35 @@ class PostWritePageState extends State<PostWritePage> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text('Warning'),
-                                    content: Text(
-                                        "You have not filled certain parts. Please check again"),
+                                    title: const Text(
+                                      'Warning',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    content: const Text(
+                                      "You have not filled certain parts. Please check again.",
+                                      style: TextStyle(fontSize: 12),
+                                    ),
                                     actions: <Widget>[
                                       TextButton(
                                           onPressed: () =>
                                               Navigator.pop(context),
-                                          child: Text("yes"))
+                                          child: Text(
+                                            "OK",
+                                            style: TextStyle(
+                                                color: ApdiColors.themeGreen),
+                                          ))
                                     ],
                                   );
                                 });
                           },
                           child: const Text(
                             'Post',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20.0),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontFamily: 'Outfit',
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         )),
             ),
