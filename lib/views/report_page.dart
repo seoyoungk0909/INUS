@@ -93,11 +93,10 @@ class ReportPageState extends State<ReportPage> {
             alignment: Alignment.centerLeft,
             padding: const EdgeInsetsDirectional.fromSTEB(20, 30, 20, 20),
             child: const Text(
-              "Please identify a reason for the report",
+              "Please identify reason(s) for the report.",
               style: TextStyle(
-                fontSize: 15,
-                fontFamily: 'Outfit',
-                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -110,7 +109,7 @@ class ReportPageState extends State<ReportPage> {
             child: Center(
               child: SizedBox(
                   width: 350,
-                  height: 46,
+                  height: 48,
                   child: ElevatedButton(
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -178,10 +177,9 @@ class ListTileWidgetState extends State<ListTileWidget> {
             ),
       title: Text(
         widget.name,
-        style: const TextStyle(
-          fontSize: 14,
-          fontFamily: 'Outfit',
-        ),
+        style: TextStyle(
+            fontSize: 14,
+            fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300),
       ),
       onTap: (() {
         setState(() {
