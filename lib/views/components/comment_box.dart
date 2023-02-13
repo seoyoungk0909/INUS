@@ -55,7 +55,7 @@ class CommentBoxState extends State<CommentBox> {
                 ),
               ),
               TextButton(
-                style: TextButton.styleFrom(primary: Colors.blue),
+                style: TextButton.styleFrom(primary: ApdiColors.themeGreen),
                 onPressed: !typed
                     ? null
                     : () {

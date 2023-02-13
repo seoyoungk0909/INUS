@@ -393,6 +393,8 @@ Widget postUI(BuildContext context, PostController controller,
     child: Container(
       width: double.infinity,
       decoration: BoxDecoration(
+        border:
+            BorderDirectional(bottom: BorderSide(color: ApdiColors.lineGrey)),
         // color: hexStringToColor("#3E3E3E"),
         // boxShadow: const [
         //   BoxShadow(
@@ -401,7 +403,7 @@ Widget postUI(BuildContext context, PostController controller,
         //     offset: Offset(0, 3),
         //   )
         // ],
-        borderRadius: BorderRadius.circular(8),
+        // borderRadius: BorderRadius.circular(8),
       ),
       child: TextButton(
         style: ButtonStyle(
@@ -424,11 +426,6 @@ Widget postUI(BuildContext context, PostController controller,
                   controller: controller,
                   showText: !isDetail,
                   saved: saved),
-              const Divider(
-                height: 8,
-                thickness: 1,
-                color: Color.fromARGB(255, 74, 74, 74),
-              ),
             ],
           ),
         ),
