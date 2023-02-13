@@ -165,15 +165,13 @@ Widget singleHashtag(
 
 //category hashtag each element
 Widget categoryHashtag(BuildContext context, EventController controller) {
-  if (controller.event.tag.length == 2) {
-    return Row(
-      children: [
-        singleHashtag(context, controller, 0),
-        singleHashtag(context, controller, 1),
-      ],
-    );
+  List<Widget> hashtags = [];
+
+  for (int i = 0; i < controller.event.tag.length; i++) {
+    hashtags.add(singleHashtag(context, controller, i));
   }
-  return Container(child: singleHashtag(context, controller, 0));
+
+  return Row(children: hashtags);
 }
 
 //Quick view
