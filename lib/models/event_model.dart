@@ -48,7 +48,9 @@ class Event {
 
     title = eventTitle ?? title;
     category = eventCategory ?? category;
-    tag = eventTag ?? tag;
+    tag = (eventTag != null
+        ? (eventTag.length >= 2 ? eventTag.sublist(0, 2) : eventTag)
+        : tag);
     description = eventDescription ?? description;
     language = eventLanguage ?? language;
     location = eventLocation ?? location;
@@ -84,13 +86,13 @@ class Event {
         eventTitle: eventData.get('title'),
         eventCategory: eventData.get('category'),
         eventTag: eventData.get('tag'),
-        eventDescription: eventData.get('event detail'),
+        eventDescription: eventData.get('eventDetail'),
         eventLanguage: eventData.get('language'),
         eventLocation: eventData.get('location'),
         eventUploadTime: (eventData.get('uploadTime') as Timestamp).toDate(),
         eventHeldTime: (eventData.get('eventTime') as Timestamp).toDate(),
         eventFormality: (eventData.get('formal')),
-        eventRegisterLink: eventData.get('registration link'),
+        eventRegisterLink: eventData.get('registrationLink'),
         docRef: firebaseDoc);
   }
 
