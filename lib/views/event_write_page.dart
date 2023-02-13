@@ -142,32 +142,43 @@ class EventWritePageState extends State<EventWritePage> {
         backgroundColor: Theme.of(context).backgroundColor,
         title: Text(
           widget.title,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         centerTitle: true,
         leading: GestureDetector(
-          child: Icon(
-            Icons.arrow_back_ios,
-          ),
+          child: const Icon(Icons.arrow_back_ios),
           onTap: () {
             showDialog<void>(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Discard Writings'),
-                    content: Text(
-                        "Are you sure you want to go back to the main page? (All you have written will be lost!) "),
+                    title: const Text(
+                      'Discard Writings',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    content: const Text(
+                        "Are you sure you want to go back to the main page? (All you have written will be lost!) ",
+                        style: TextStyle(fontSize: 12)),
                     actions: <Widget>[
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: Text("No"),
+                        child: Text(
+                          "No",
+                          style: TextStyle(color: ApdiColors.themeGreen),
+                        ),
                       ),
                       TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
-                          child: Text("Yes"))
+                          child: Text(
+                            "Yes",
+                            style: TextStyle(color: ApdiColors.themeGreen),
+                          ))
                     ],
                   );
                 });
@@ -187,18 +198,18 @@ class EventWritePageState extends State<EventWritePage> {
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.white70,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.w600),
                       children: [
                         TextSpan(
                             text: ' *',
                             style: TextStyle(
                                 color: Colors.red,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                                 fontSize: 16))
                       ]),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 55,
                 child: Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
@@ -209,19 +220,19 @@ class EventWritePageState extends State<EventWritePage> {
                       for (var category in categories.keys)
                         Row(children: <Widget>[
                           Container(
-                            width: 100,
+                            width: 95,
                             height: 35,
                             decoration: BoxDecoration(
                                 color: categories[category]!
-                                    ? Colors.white24
+                                    ? Colors.white12
                                     : Colors.transparent,
                                 border: Border.all(
                                     width: 0.5,
                                     color: categories[category]!
-                                        ? Colors.white24
-                                        : Colors.white70),
+                                        ? Colors.white12
+                                        : Colors.white24),
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
+                                    const BorderRadius.all(Radius.circular(5))),
                             child: TextButton(
                               style: TextButton.styleFrom(
                                 textStyle: const TextStyle(
@@ -240,7 +251,7 @@ class EventWritePageState extends State<EventWritePage> {
                               child: Text(
                                 category,
                                 style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 14,
                                     fontWeight: categories[category]!
                                         ? FontWeight.w500
                                         : FontWeight.normal,
@@ -250,7 +261,7 @@ class EventWritePageState extends State<EventWritePage> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           )
                         ]),
@@ -259,20 +270,20 @@ class EventWritePageState extends State<EventWritePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
                 child: RichText(
-                  text: TextSpan(
+                  text: const TextSpan(
                       text: "Title",
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.white70,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.w600),
                       children: [
                         TextSpan(
                             text: ' *',
                             style: TextStyle(
                                 color: Colors.red,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                                 fontSize: 16))
                       ]),
                 ),
@@ -294,37 +305,39 @@ class EventWritePageState extends State<EventWritePage> {
                       },
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                               width: 1, color: Colors.white24), //<-- SEE HERE
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                         hintText: "Input event name",
-                        hintStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white10),
+                        hintStyle: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white24,
+                        ),
                       )),
                 ),
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
                 child: RichText(
-                  text: TextSpan(
+                  text: const TextSpan(
                       text: "Tags",
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.white70,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.w600),
                       children: [
                         TextSpan(
-                            text: '(max. 1-2, separated by space)',
+                            text: ' (max. 1-2, separated by space)',
                             style: TextStyle(
-                                color: Colors.white10,
+                                color: Colors.white24,
                                 fontWeight: FontWeight.normal,
-                                fontSize: 16)),
+                                fontSize: 14)),
                         TextSpan(
                             text: ' *',
                             style: TextStyle(
                                 color: Colors.red,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                                 fontSize: 16))
                       ]),
                 ),
@@ -346,31 +359,33 @@ class EventWritePageState extends State<EventWritePage> {
                       },
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                               width: 1, color: Colors.white24), //<-- SEE HERE
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                         hintText: "Input tag",
-                        hintStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white10),
+                        hintStyle: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white24,
+                        ),
                       )),
                 ),
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
                 child: RichText(
-                  text: TextSpan(
+                  text: const TextSpan(
                       text: "Date and Time",
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.white70,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.w600),
                       children: [
                         TextSpan(
                             text: ' *',
                             style: TextStyle(
                                 color: Colors.red,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                                 fontSize: 16))
                       ]),
                 ),
@@ -379,65 +394,71 @@ class EventWritePageState extends State<EventWritePage> {
                   padding: const EdgeInsetsDirectional.fromSTEB(25, 20, 0, 0),
                   child: Row(children: <Widget>[
                     SizedBox(
-                        width: 140,
+                        width: 130,
                         height: 50,
                         child: OutlinedButton(
-                            child: Text(getDate(),
-                                style: TextStyle(
-                                    fontSize: 15.0, color: Colors.white54)),
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(5.0))),
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0))),
+                          ),
+                          onPressed: () {
+                            _pickDateDialog(context);
+                            textChecker['Date'] = true;
+                            textChecking();
+                          },
+                          child: Text(
+                            getDate(),
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white24,
                             ),
-                            onPressed: () {
-                              _pickDateDialog(context);
-                              textChecker['Date'] = true;
-                              textChecking();
-                            })),
-                    SizedBox(
+                          ),
+                        )),
+                    const SizedBox(
                       width: 10,
                     ),
                     SizedBox(
-                        width: 140,
+                        width: 100,
                         height: 50,
                         child: OutlinedButton(
-                            child: Text(getTime(),
-                                style: TextStyle(
-                                    fontSize: 15.0, color: Colors.white54)),
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(5.0))),
-                            ),
-                            onPressed: () {
-                              _pickTimeDialog(context);
-                              textChecker['Time'] = true;
-                              textChecking();
-                            }))
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0))),
+                          ),
+                          onPressed: () {
+                            _pickTimeDialog(context);
+                            textChecker['Time'] = true;
+                            textChecking();
+                          },
+                          child: Text(getTime(),
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.white24,
+                              )),
+                        ))
                   ])),
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
                 child: RichText(
-                  text: TextSpan(
+                  text: const TextSpan(
                       text: "Language(s)",
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.white70,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.w600),
                       children: [
                         TextSpan(
                             text: ' *',
                             style: TextStyle(
                                 color: Colors.red,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                                 fontSize: 16))
                       ]),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 55,
                 child: Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
@@ -448,19 +469,19 @@ class EventWritePageState extends State<EventWritePage> {
                       for (var language in languages.keys)
                         Row(children: <Widget>[
                           Container(
-                            width: 100,
+                            width: 95,
                             height: 35,
                             decoration: BoxDecoration(
                                 color: languages[language]!
-                                    ? Colors.white24
+                                    ? Colors.white12
                                     : Colors.transparent,
                                 border: Border.all(
                                     width: 0.5,
                                     color: languages[language]!
-                                        ? Colors.white24
-                                        : Colors.white70),
+                                        ? Colors.white12
+                                        : Colors.white24),
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
+                                    const BorderRadius.all(Radius.circular(5))),
                             child: TextButton(
                               style: TextButton.styleFrom(
                                 textStyle: const TextStyle(
@@ -483,17 +504,17 @@ class EventWritePageState extends State<EventWritePage> {
                               child: Text(
                                 language,
                                 style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 14,
                                     fontWeight: languages[language]!
                                         ? FontWeight.w500
                                         : FontWeight.normal,
                                     color: languages[language]!
-                                        ? Color(0xff57AD9E)
+                                        ? ApdiColors.themeGreen
                                         : Colors.white70),
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           )
                         ]),
@@ -502,13 +523,13 @@ class EventWritePageState extends State<EventWritePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
+                padding: EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
                 child: Text(
                   " Location",
                   style: TextStyle(
                       fontSize: 16,
                       color: Colors.white70,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.w600),
                 ),
               ),
               Center(
@@ -519,13 +540,15 @@ class EventWritePageState extends State<EventWritePage> {
                       controller: eventLocation,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                               width: 1, color: Colors.white24), //<-- SEE HERE
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                         hintText: "Input event's location here.",
-                        hintStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white10),
+                        hintStyle: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white24,
+                        ),
                       )),
                 ),
               ),
@@ -536,7 +559,7 @@ class EventWritePageState extends State<EventWritePage> {
                   style: TextStyle(
                       fontSize: 16,
                       color: Colors.white70,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.w600),
                 ),
               ),
               Center(
@@ -547,13 +570,15 @@ class EventWritePageState extends State<EventWritePage> {
                       controller: eventRegistrationLink,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                               width: 1, color: Colors.white24), //<-- SEE HERE
                           borderRadius: BorderRadius.circular(5.0),
                         ),
-                        hintText: "Input event name",
-                        hintStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white10),
+                        hintText: "Input event's registration URL here.",
+                        hintStyle: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white24,
+                        ),
                       )),
                 ),
               ),
@@ -564,7 +589,7 @@ class EventWritePageState extends State<EventWritePage> {
                   style: TextStyle(
                       fontSize: 16,
                       color: Colors.white70,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.w600),
                 ),
               ),
               Center(
@@ -575,13 +600,15 @@ class EventWritePageState extends State<EventWritePage> {
                     controller: eventDetail,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                             width: 1, color: Colors.white24), //<-- SEE HERE
                         borderRadius: BorderRadius.circular(5.0),
                       ),
                       hintText: "Input event's detail or description",
-                      hintStyle:
-                          TextStyle(fontSize: 15.0, color: Colors.white10),
+                      hintStyle: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white24,
+                      ),
                     ),
                     maxLines: 10,
                   ),
@@ -596,6 +623,11 @@ class EventWritePageState extends State<EventWritePage> {
                       child: isButtonEnabled
                           ? ElevatedButton(
                               style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
                                 backgroundColor: MaterialStateProperty.all(
                                     ApdiColors.themeGreen),
                               ),
@@ -604,14 +636,23 @@ class EventWritePageState extends State<EventWritePage> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text('Create Post'),
-                                        content: Text(
-                                            "Are you sure you want to create this event?"),
+                                        title: const Text(
+                                          'Create Event',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        content: const Text(
+                                          "Are you sure you want to create this event?",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () =>
                                                 Navigator.pop(context),
-                                            child: Text("No"),
+                                            child: Text(
+                                              "No",
+                                              style: TextStyle(
+                                                  color: ApdiColors.themeGreen),
+                                            ),
                                           ),
                                           TextButton(
                                               onPressed: () {
@@ -637,19 +678,33 @@ class EventWritePageState extends State<EventWritePage> {
                                                         '/',
                                                         (route) => false);
                                               },
-                                              child: Text("Yes"))
+                                              child: Text(
+                                                "Yes",
+                                                style: TextStyle(
+                                                    color:
+                                                        ApdiColors.themeGreen),
+                                              ))
                                         ],
                                       );
                                     });
                               },
                               child: const Text(
-                                'Request Event',
+                                'Request to Post',
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 20.0),
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontFamily: 'Outfit',
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             )
                           : ElevatedButton(
                               style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
                                 backgroundColor:
                                     MaterialStateProperty.all(Colors.white60),
                               ),
@@ -658,23 +713,36 @@ class EventWritePageState extends State<EventWritePage> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text('Warning'),
-                                        content: Text(
-                                            "You have not filled certain parts. Please check again"),
+                                        title: const Text(
+                                          'Warning',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        content: const Text(
+                                          "You have not filled certain parts. Please check again.",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () =>
                                                 Navigator.pop(context),
-                                            child: Text("OK"),
+                                            child: Text(
+                                              "OK",
+                                              style: TextStyle(
+                                                  color: ApdiColors.themeGreen),
+                                            ),
                                           ),
                                         ],
                                       );
                                     });
                               },
                               child: const Text(
-                                'Request Event',
+                                'Request to Post',
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 20.0),
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontFamily: 'Outfit',
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             )),
                 ),
