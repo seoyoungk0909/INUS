@@ -1,3 +1,4 @@
+import 'package:aus/controllers/event_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -32,8 +33,8 @@ class EventWritePageState extends State<EventWritePage> {
       'language': trueLanguages,
       'category': trueCategories,
       'location': eventLocation.text.trim(),
-      'registration link': eventRegistrationLink.text.trim(),
-      'event detail': eventDetail.text.trim(),
+      'registrationLink': eventRegistrationLink.text.trim(),
+      'eventDetail': eventDetail.text.trim(),
       'viewCount': 0,
       'saveCount': 0,
       'comments': [],
