@@ -718,7 +718,7 @@ class EventWritePageState extends State<EventWritePage> {
                                           style: TextStyle(fontSize: 16),
                                         ),
                                         content: const Text(
-                                          "You have not filled certain parts. Please check again",
+                                          "You have not filled certain parts. Please check again.",
                                           style: TextStyle(fontSize: 12),
                                         ),
                                         actions: <Widget>[
