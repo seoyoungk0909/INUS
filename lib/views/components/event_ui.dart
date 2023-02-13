@@ -126,7 +126,7 @@ Widget eventHashTag(BuildContext context, EventController controller) {
       children: [
         Expanded(
           child: Text(
-            "#${controller.event.tag}",
+            "#${controller.event.tag.join(' #')}",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyText2?.copyWith(

@@ -1,3 +1,4 @@
+import 'package:aus/controllers/event_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -25,15 +26,15 @@ class EventWritePageState extends State<EventWritePage> {
     DocumentReference newEvent =
         await FirebaseFirestore.instance.collection("event").add({
       'title': eventTitle.text.trim(),
-      'tag': tags.text.trim(),
+      'tag': tags.text.split(' '),
       'time': Timestamp.fromDate(
         DateTime(date.year, date.month, date.day, time.hour, time.minute),
       ),
       'language': trueLanguages,
       'category': trueCategories,
       'location': eventLocation.text.trim(),
-      'registration link': eventRegistrationLink.text.trim(),
-      'event detail': eventDetail.text.trim(),
+      'registrationLink': eventRegistrationLink.text.trim(),
+      'eventDetail': eventDetail.text.trim(),
       'viewCount': 0,
       'saveCount': 0,
       'comments': [],
@@ -105,7 +106,7 @@ class EventWritePageState extends State<EventWritePage> {
   Map<String, bool> languages = {
     'English': true,
     'Cantonese': false,
-    'Mandarine': false,
+    'Mandarin': false,
   };
 
   String trueCategories = "";
@@ -166,7 +167,7 @@ class EventWritePageState extends State<EventWritePage> {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
-                          child: Text("yes"))
+                          child: Text("Yes"))
                     ],
                   );
                 });
@@ -314,7 +315,7 @@ class EventWritePageState extends State<EventWritePage> {
                           fontWeight: FontWeight.bold),
                       children: [
                         TextSpan(
-                            text: ' (max. 1-2)',
+                            text: '(max. 1-2, separated by space)',
                             style: TextStyle(
                                 color: Colors.white10,
                                 fontWeight: FontWeight.normal,
@@ -636,7 +637,7 @@ class EventWritePageState extends State<EventWritePage> {
                                                         '/',
                                                         (route) => false);
                                               },
-                                              child: Text("yes"))
+                                              child: Text("Yes"))
                                         ],
                                       );
                                     });
