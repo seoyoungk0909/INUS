@@ -22,12 +22,13 @@ class EventWritePage extends StatefulWidget {
 }
 
 class EventWritePageState extends State<EventWritePage> {
+  bool formal = false;
   Future<void> uploadEvent(String currentUserId) async {
     DocumentReference newEvent =
         await FirebaseFirestore.instance.collection("event").add({
       'title': eventTitle.text.trim(),
       'tag': tags.text.split(' '),
-      'time': Timestamp.fromDate(
+      'eventTime': Timestamp.fromDate(
         DateTime(date.year, date.month, date.day, time.hour, time.minute),
       ),
       'language': trueLanguages,
@@ -37,8 +38,9 @@ class EventWritePageState extends State<EventWritePage> {
       'eventDetail': eventDetail.text.trim(),
       'viewCount': 0,
       'saveCount': 0,
-      'comments': [],
       'user': FirebaseFirestore.instance.doc('user_info/$currentUserId'),
+      'uploadTime': Timestamp.now(),
+      'formal': formal,
     });
   }
 
@@ -97,6 +99,7 @@ class EventWritePageState extends State<EventWritePage> {
   final TextEditingController eventDetail = TextEditingController();
 
   final User currentUser = FirebaseAuth.instance.currentUser!;
+
   Map<String, bool> categories = {
     'Party': true,
     'Workshop': false,
@@ -192,6 +195,82 @@ class EventWritePageState extends State<EventWritePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                //formality
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
+                  child: RichText(
+                    text: const TextSpan(
+                        text: "Formality",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white70,
+                            fontWeight: FontWeight.w600),
+                        children: [
+                          TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16))
+                        ]),
+                  ),
+                ),
+                Container(
+                  height: 55,
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
+                    child: ListView(
+                      shrinkWrap: false,
+                      scrollDirection: Axis.horizontal,
+                      children: <Widget>[
+                        for (var formality in ['Casual', 'Formal'])
+                          Row(children: <Widget>[
+                            Container(
+                              width: 95,
+                              height: 35,
+                              decoration: BoxDecoration(
+                                  color: ((formality == 'Formal') == formal)
+                                      ? Colors.white12
+                                      : Colors.transparent,
+                                  border: Border.all(
+                                      width: 0.5,
+                                      color: ((formality == 'Formal') == formal)
+                                          ? Colors.white12
+                                          : Colors.white24),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(5))),
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                  textStyle: const TextStyle(
+                                      fontSize: 15, color: Colors.white),
+                                ),
+                                //커멘트
+                                onPressed: () {
+                                  setState(() {
+                                    formal = formality != 'Casual';
+                                  });
+                                },
+                                child: Text(
+                                  formality,
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight:
+                                          ((formality == 'Formal') == formal)
+                                              ? FontWeight.w500
+                                              : FontWeight.normal,
+                                      color: ((formality == 'Formal') == formal)
+                                          ? Color(0xff57AD9E)
+                                          : Colors.white70),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10)
+                          ]),
+                      ],
+                    ),
+                  ),
+                ),
+                //formality end
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
                   child: RichText(
