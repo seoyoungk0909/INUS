@@ -8,11 +8,11 @@ String buttonColor(String eventCategory) {
   if (eventCategory == "Seminar" || eventCategory == "Webinar") {
     return "#56bed2"; //mint
   } else if (eventCategory == "Competition") {
-    return "#ef8632"; //orange
+    return "#4ba7f8"; //orange
   } else if (eventCategory == "Workshop") {
     return "#4ca98f"; //green
   } else if (eventCategory == "Party") {
-    return "8d65f2"; //purple
+    return "#ef8632"; //purple
   }
   return "#4ba7f8"; //blue
 }
@@ -126,7 +126,7 @@ Widget eventHashTag(BuildContext context, EventController controller) {
       children: [
         Expanded(
           child: Text(
-            "#${controller.event.tag}",
+            "#${controller.event.tag.join(' #')}",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyText2?.copyWith(

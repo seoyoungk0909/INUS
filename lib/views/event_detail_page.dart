@@ -67,8 +67,6 @@ class EventDetailPageState extends State<EventDetailPage> {
       backgroundColor: Theme.of(context).primaryColorDark,
       appBar: AppBar(
         backgroundColor: Theme.of(context).backgroundColor,
-        // title: Text(widget.title),
-        // centerTitle: false,
         actions: [
           IconButton(
               onPressed: () {
@@ -98,7 +96,7 @@ class EventDetailPageState extends State<EventDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.76,
+                        width: MediaQuery.of(context).size.width * 0.8,
                         height: 40,
                         child: ElevatedButton(
                           onPressed: () async {
@@ -201,7 +199,7 @@ Widget text(BuildContext context, EventController controller, String content,
             fontFamily: 'Outfit',
             color: hexStringToColor(textColor),
             fontSize: size,
-            fontWeight: FontWeight.w600));
+            fontWeight: FontWeight.w500));
   }
   return Text(content,
       style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -228,8 +226,8 @@ Widget eventDetailPhoto(BuildContext context, EventController controller) {
   );
 }
 
-//category hashtag each element
-Widget categoryHashtag(BuildContext context, EventController controller) {
+Widget singleHashtag(
+    BuildContext context, EventController controller, int index) {
   return Padding(
     padding: const EdgeInsets.only(top: 14, right: 10),
     child: Container(
@@ -240,23 +238,22 @@ Widget categoryHashtag(BuildContext context, EventController controller) {
       ),
       child: Container(
         padding: const EdgeInsetsDirectional.fromSTEB(9, 5, 9, 0),
-        child: text(context, controller, "#${controller.event.tag}", 12),
+        child: text(context, controller, "#${controller.event.tag[index]}", 12),
       ),
     ),
   );
 }
 
-//all of category hashtags in a row
-// Widget categoryHashtagRow(BuildContext context, EventController controller) {
-//   final hashtagArr = (controller.event.tag).split(' ');
-//   // const hashtagArr = "#Environment, #Education";
-//   return Row(
-//     children: [
-//       categoryHashtag(context, controller, hashtagArr[0]),
-//       categoryHashtag(context, controller, hashtagArr[1]),
-//     ],
-//   );
-// }
+//category hashtag each element
+Widget categoryHashtag(BuildContext context, EventController controller) {
+  List<Widget> hashtags = [];
+
+  for (int i = 0; i < controller.event.tag.length; i++) {
+    hashtags.add(singleHashtag(context, controller, i));
+  }
+
+  return Row(children: hashtags);
+}
 
 //Quick view
 Widget quickView(BuildContext context, EventController controller) {
@@ -393,14 +390,14 @@ Widget detailedView(BuildContext context, EventController controller) {
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: Row(
-                children: [
+                children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
                     child: text(context, controller, 'Language', 14,
                         textColor: '#AAAAAA'),
                   ),
-                  text(context, controller, controller.event.language.join(','),
-                      15,
+                  text(context, controller,
+                      controller.event.language.join(', '), 15,
                       bold: true),
                 ],
               ),

@@ -10,14 +10,16 @@ const List EVENT_CATEGORY = [
   "Party"
 ];
 
+const List EVENT_LANGUAGE = ["English", "Cantonese", "Mandarin"];
+
 class Event {
   User writer = User();
   String title = "Tissue-engineering Integrated";
   String category = "Event";
-  List tag = ["#environment' ,'#education"];
+  List tag = ["#environment", "#education"];
   String description =
       "Since their first direct discovery in 2015, gravitational waves have contributed significantly to knowledge about astrophysics and fundamental physics. This talk will first introduce the Open... ";
-  List language = ["English, Cantonese"];
+  List language = ["English", "Cantonese"];
   String location =
       "IAS4042, 4/F, Lo Ka Chung Building, Lee Shau Kee Campus, HKUST";
   late DateTime eventTime;
@@ -39,14 +41,15 @@ class Event {
     DateTime? eventUploadTime,
     bool? eventFormality,
     String? eventRegisterLink,
-    // bool? savedEvent,
     DocumentReference<Map<String, dynamic>>? docRef,
   }) {
     writer = eventWriter ?? writer;
 
     title = eventTitle ?? title;
     category = eventCategory ?? category;
-    tag = eventTag ?? tag;
+    tag = (eventTag != null
+        ? (eventTag.length >= 2 ? eventTag.sublist(0, 2) : eventTag)
+        : tag);
     description = eventDescription ?? description;
     language = eventLanguage ?? language;
     location = eventLocation ?? location;
@@ -54,7 +57,6 @@ class Event {
     eventTime = eventHeldTime ?? DateTime.now();
     formal = eventFormality ?? formal;
     registerLink = eventRegisterLink ?? registerLink;
-    // save = savedEvent ?? save;
     firebaseDocRef = docRef;
   }
 
@@ -84,13 +86,12 @@ class Event {
         eventCategory: eventData.get('category'),
         eventTag: eventData.get('tag'),
         eventDescription: eventData.get('eventDetail'),
-        eventLanguage: eventData.get('language') as List,
+        eventLanguage: eventData.get('language'),
         eventLocation: eventData.get('location'),
         eventUploadTime: (eventData.get('uploadTime') as Timestamp).toDate(),
         eventHeldTime: (eventData.get('eventTime') as Timestamp).toDate(),
         eventFormality: (eventData.get('formal')),
         eventRegisterLink: eventData.get('registrationLink'),
-        // savedEvent: (eventData.get('save')),
         docRef: firebaseDoc);
   }
 

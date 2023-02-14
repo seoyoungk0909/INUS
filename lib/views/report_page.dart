@@ -1,3 +1,4 @@
+import 'package:aus/utils/color_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../controllers/post_controller.dart';
@@ -77,19 +78,25 @@ class ReportPageState extends State<ReportPage> {
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text(
+            widget.title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           centerTitle: true,
           backgroundColor: Theme.of(context).backgroundColor,
         ),
         body: Column(children: <Widget>[
           Container(
             alignment: Alignment.centerLeft,
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 30, 20, 20),
             child: const Text(
-              "Please identify a reason for the report",
+              "Please identify reason(s) for the report.",
               style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -102,12 +109,16 @@ class ReportPageState extends State<ReportPage> {
             child: Center(
               child: SizedBox(
                   width: 350,
-                  height: 46,
+                  height: 48,
                   child: ElevatedButton(
                     style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
                       backgroundColor: selectedReportType.isEmpty
                           ? MaterialStateProperty.all(Colors.white60)
-                          : MaterialStateProperty.all(Colors.red),
+                          : MaterialStateProperty.all(ApdiColors.errorRed),
                     ),
                     // onPressed: selectedRadio.trim().isEmpty ? null : () {},
                     onPressed: () {
@@ -121,7 +132,12 @@ class ReportPageState extends State<ReportPage> {
                     },
                     child: const Text(
                       'Submit',
-                      style: TextStyle(color: Colors.white, fontSize: 20.0),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   )),
             ),
@@ -153,15 +169,17 @@ class ListTileWidgetState extends State<ListTileWidget> {
       leading: isSelected
           ? Icon(
               Icons.radio_button_checked_outlined,
-              color: Colors.red,
+              color: ApdiColors.errorRed,
             )
           : Icon(
               Icons.radio_button_unchecked_outlined,
-              color: Colors.grey,
+              color: ApdiColors.greyText,
             ),
       title: Text(
         widget.name,
-        style: TextStyle(fontSize: 15),
+        style: TextStyle(
+            fontSize: 14,
+            fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300),
       ),
       onTap: (() {
         setState(() {

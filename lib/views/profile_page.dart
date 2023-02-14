@@ -28,7 +28,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  User defaultUser = User(userName: "", userSchool: School.PolyU);
+  User defaultUser = User(userName: "", userSchool: School.Loading);
 
   // Stream<DocumentSnapshot<Map<String, dynamic>>> userInfoStream =
   //     FirebaseFirestore.instance
@@ -200,7 +200,9 @@ class ProfilePageState extends State<ProfilePage> {
                                         savedPostRefs.contains(postRefs[idx]);
                                     return postUI(context,
                                         PostController(snapshot.data![idx]),
-                                        setState: setState, saved: saved);
+                                        setState: setState,
+                                        saved: saved,
+                                        first: idx == 0);
                                   },
                                 );
                               },
@@ -246,7 +248,9 @@ class ProfilePageState extends State<ProfilePage> {
                                     } else {
                                       return postUI(context,
                                           PostController(snapshot.data![idx]),
-                                          setState: setState, saved: true);
+                                          setState: setState,
+                                          saved: true,
+                                          first: idx == 0);
                                     }
                                   },
                                 ));

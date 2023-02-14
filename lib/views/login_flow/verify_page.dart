@@ -14,6 +14,8 @@ class VerifyPage extends StatefulWidget {
 }
 
 class VerifyPageState extends State<VerifyPage> {
+  bool emailVerified = false;
+
   @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
@@ -22,8 +24,6 @@ class VerifyPageState extends State<VerifyPage> {
     String lastName = arguments['last'];
     String email = arguments['email'];
     String school = arguments['school'];
-
-    bool emailVerified = false;
 
     return Scaffold(
       backgroundColor: hexStringToColor("##121212"),
@@ -48,7 +48,8 @@ class VerifyPageState extends State<VerifyPage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Check your school email and come back after completing authentication.",
+                    "Check your school email and come back after completing authentication.\n\n"
+                    "If you can't find the email in your inbox, please check your spam folder.",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -110,8 +111,13 @@ class VerifyPageState extends State<VerifyPage> {
                             popUpDialog(context, 'Email verified',
                                 "You can now move on to the next step.");
                           } else {
+                            Widget action = TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Send email again'),
+                            );
                             popUpDialog(context, 'Email not verified',
-                                "Please verify your email first.");
+                                "Please verify your email first.",
+                                action: action);
                           }
                         });
                       }),

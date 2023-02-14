@@ -1,3 +1,4 @@
+import 'package:aus/controllers/event_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -21,23 +22,25 @@ class EventWritePage extends StatefulWidget {
 }
 
 class EventWritePageState extends State<EventWritePage> {
+  bool formal = false;
   Future<void> uploadEvent(String currentUserId) async {
     DocumentReference newEvent =
         await FirebaseFirestore.instance.collection("event").add({
       'title': eventTitle.text.trim(),
-      'tag': tags.text.trim(),
-      'time': Timestamp.fromDate(
+      'tag': tags.text.split(' '),
+      'eventTime': Timestamp.fromDate(
         DateTime(date.year, date.month, date.day, time.hour, time.minute),
       ),
       'language': trueLanguages,
       'category': trueCategories,
       'location': eventLocation.text.trim(),
-      'registration link': eventRegistrationLink.text.trim(),
-      'event detail': eventDetail.text.trim(),
+      'registrationLink': eventRegistrationLink.text.trim(),
+      'eventDetail': eventDetail.text.trim(),
       'viewCount': 0,
       'saveCount': 0,
-      'comments': [],
       'user': FirebaseFirestore.instance.doc('user_info/$currentUserId'),
+      'uploadTime': Timestamp.now(),
+      'formal': formal,
     });
   }
 
@@ -96,6 +99,7 @@ class EventWritePageState extends State<EventWritePage> {
   final TextEditingController eventDetail = TextEditingController();
 
   final User currentUser = FirebaseAuth.instance.currentUser!;
+
   Map<String, bool> categories = {
     'Party': true,
     'Workshop': false,
@@ -105,7 +109,7 @@ class EventWritePageState extends State<EventWritePage> {
   Map<String, bool> languages = {
     'English': true,
     'Cantonese': false,
-    'Mandarine': false,
+    'Mandarin': false,
   };
 
   String trueCategories = "";
@@ -118,7 +122,7 @@ class EventWritePageState extends State<EventWritePage> {
   };
   bool isButtonEnabled = false;
 
-  Future textChecking() async {
+  void textChecking() {
     if (textChecker['Title']! &&
         textChecker['Tags']! &&
         textChecker['Date']! &&
@@ -141,476 +145,630 @@ class EventWritePageState extends State<EventWritePage> {
         backgroundColor: Theme.of(context).backgroundColor,
         title: Text(
           widget.title,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         centerTitle: true,
         leading: GestureDetector(
-          child: Icon(
-            Icons.arrow_back_ios,
-          ),
+          child: const Icon(Icons.arrow_back_ios),
           onTap: () {
             showDialog<void>(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Discard Writings'),
-                    content: Text(
-                        "Are you sure you want to go back to the main page? (All you have written will be lost!) "),
+                    title: const Text(
+                      'Discard Writings',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    content: const Text(
+                        "Are you sure you want to go back to the main page? (All you have written will be lost!) ",
+                        style: TextStyle(fontSize: 12)),
                     actions: <Widget>[
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: Text("No"),
+                        child: Text(
+                          "No",
+                          style: TextStyle(color: ApdiColors.errorRed),
+                        ),
                       ),
                       TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
-                          child: Text("yes"))
+                          child: Text(
+                            "Yes",
+                            style: TextStyle(color: ApdiColors.themeGreen),
+                          ))
                     ],
                   );
                 });
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                child: RichText(
-                  text: const TextSpan(
-                      text: "Category",
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white70,
-                          fontWeight: FontWeight.bold),
-                      children: [
-                        TextSpan(
-                            text: ' *',
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16))
-                      ]),
-                ),
-              ),
-              Container(
-                height: 55,
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                  child: ListView(
-                    shrinkWrap: false,
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      for (var category in categories.keys)
-                        Row(children: <Widget>[
-                          Container(
-                            width: 100,
-                            height: 35,
-                            decoration: BoxDecoration(
-                                color: categories[category]!
-                                    ? Colors.white24
-                                    : Colors.transparent,
-                                border: Border.all(
-                                    width: 0.5,
-                                    color: categories[category]!
-                                        ? Colors.white24
-                                        : Colors.white70),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            child: TextButton(
-                              style: TextButton.styleFrom(
-                                textStyle: const TextStyle(
-                                    fontSize: 15, color: Colors.white),
-                              ),
-                              onPressed: () {
-                                for (var reset in categories.keys) {
-                                  categories[reset] = false;
-                                }
-                                setState(() {
-                                  categories[category] == true
-                                      ? categories[category] = false
-                                      : categories[category] = true;
-                                });
-                              },
-                              child: Text(
-                                category,
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: categories[category]!
-                                        ? FontWeight.w500
-                                        : FontWeight.normal,
-                                    color: categories[category]!
-                                        ? Color(0xff57AD9E)
-                                        : Colors.white70),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          )
+      body: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //formality
+                  RichText(
+                    text: const TextSpan(
+                        text: "Formality",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white70,
+                            fontWeight: FontWeight.w600),
+                        children: [
+                          TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16))
                         ]),
-                    ],
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                child: RichText(
-                  text: TextSpan(
-                      text: "Title",
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white70,
-                          fontWeight: FontWeight.bold),
-                      children: [
-                        TextSpan(
-                            text: ' *',
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16))
-                      ]),
-                ),
-              ),
-              Center(
-                child: SizedBox(
-                  width: 340,
-                  height: 50,
-                  child: TextField(
-                      controller: eventTitle,
-                      onChanged: (content) {
-                        if (content != "") {
-                          textChecker['Title'] = true;
-                          textChecking();
-                        } else {
-                          textChecker['Title'] = false;
-                          textChecking();
-                        }
-                      },
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 1, color: Colors.white24), //<-- SEE HERE
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        hintText: "Input event name",
-                        hintStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white10),
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-                child: RichText(
-                  text: TextSpan(
-                      text: "Tags",
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white70,
-                          fontWeight: FontWeight.bold),
-                      children: [
-                        TextSpan(
-                            text: ' (max. 1-2)',
-                            style: TextStyle(
-                                color: Colors.white10,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16)),
-                        TextSpan(
-                            text: ' *',
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16))
-                      ]),
-                ),
-              ),
-              Center(
-                child: SizedBox(
-                  width: 340,
-                  height: 50,
-                  child: TextField(
-                      controller: tags,
-                      onChanged: (content) {
-                        if (content != "") {
-                          textChecker['Tags'] = true;
-                          textChecking();
-                        } else {
-                          textChecker['Tags'] = false;
-                          textChecking();
-                        }
-                      },
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 1, color: Colors.white24), //<-- SEE HERE
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        hintText: "Input tag",
-                        hintStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white10),
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                child: RichText(
-                  text: TextSpan(
-                      text: "Date and Time",
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white70,
-                          fontWeight: FontWeight.bold),
-                      children: [
-                        TextSpan(
-                            text: ' *',
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16))
-                      ]),
-                ),
-              ),
-              Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(25, 20, 0, 0),
-                  child: Row(children: <Widget>[
-                    SizedBox(
-                        width: 140,
-                        height: 50,
-                        child: OutlinedButton(
-                            child: Text(getDate(),
-                                style: TextStyle(
-                                    fontSize: 15.0, color: Colors.white54)),
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(5.0))),
-                            ),
-                            onPressed: () {
-                              _pickDateDialog(context);
-                              textChecker['Date'] = true;
-                              textChecking();
-                            })),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    SizedBox(
-                        width: 140,
-                        height: 50,
-                        child: OutlinedButton(
-                            child: Text(getTime(),
-                                style: TextStyle(
-                                    fontSize: 15.0, color: Colors.white54)),
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(5.0))),
-                            ),
-                            onPressed: () {
-                              _pickTimeDialog(context);
-                              textChecker['Time'] = true;
-                              textChecking();
-                            }))
-                  ])),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                child: RichText(
-                  text: TextSpan(
-                      text: "Language(s)",
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white70,
-                          fontWeight: FontWeight.bold),
-                      children: [
-                        TextSpan(
-                            text: ' *',
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16))
-                      ]),
-                ),
-              ),
-              Container(
-                height: 55,
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                  child: ListView(
-                    shrinkWrap: false,
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      for (var language in languages.keys)
-                        Row(children: <Widget>[
-                          Container(
-                            width: 100,
-                            height: 35,
-                            decoration: BoxDecoration(
-                                color: languages[language]!
-                                    ? Colors.white24
-                                    : Colors.transparent,
-                                border: Border.all(
-                                    width: 0.5,
-                                    color: languages[language]!
-                                        ? Colors.white24
-                                        : Colors.white70),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            child: TextButton(
-                              style: TextButton.styleFrom(
-                                textStyle: const TextStyle(
-                                    fontSize: 15, color: Colors.white),
+                  SizedBox(
+                    height: 55,
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(top: 20),
+                      child: ListView(
+                        shrinkWrap: false,
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          for (var formality in ['Casual', 'Formal'])
+                            Row(children: <Widget>[
+                              Container(
+                                width: 95,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                    color: ((formality == 'Formal') == formal)
+                                        ? Colors.white12
+                                        : Colors.transparent,
+                                    border: Border.all(
+                                        width: 0.5,
+                                        color:
+                                            ((formality == 'Formal') == formal)
+                                                ? Colors.white12
+                                                : Colors.white24),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(5))),
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: const TextStyle(
+                                        fontSize: 15, color: Colors.white),
+                                  ),
+                                  //커멘트
+                                  onPressed: () {
+                                    setState(() {
+                                      formal = formality != 'Casual';
+                                    });
+                                  },
+                                  child: Text(
+                                    formality,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight:
+                                            ((formality == 'Formal') == formal)
+                                                ? FontWeight.w500
+                                                : FontWeight.normal,
+                                        color:
+                                            ((formality == 'Formal') == formal)
+                                                ? Color(0xff57AD9E)
+                                                : Colors.white70),
+                                  ),
+                                ),
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  languages[language] == true
-                                      ? languages[language] = false
-                                      : languages[language] = true;
-                                  if (languages.values
-                                          .toList()
-                                          .where((item) => item == false)
-                                          .length ==
-                                      3) {
-                                    languages[language] = true;
-                                  }
-                                });
-                              },
-                              child: Text(
-                                language,
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: languages[language]!
-                                        ? FontWeight.w500
-                                        : FontWeight.normal,
-                                    color: languages[language]!
-                                        ? Color(0xff57AD9E)
-                                        : Colors.white70),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          )
-                        ]),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-                child: Text(
-                  " Location",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              Center(
-                child: SizedBox(
-                  width: 340,
-                  height: 50,
-                  child: TextField(
-                      controller: eventLocation,
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 1, color: Colors.white24), //<-- SEE HERE
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        hintText: "Input event's location here.",
-                        hintStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white10),
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-                child: Text(
-                  " Registration Link",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              Center(
-                child: SizedBox(
-                  width: 340,
-                  height: 50,
-                  child: TextField(
-                      controller: eventRegistrationLink,
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 1, color: Colors.white24), //<-- SEE HERE
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        hintText: "Input event name",
-                        hintStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white10),
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-                child: Text(
-                  " Event Details",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              Center(
-                child: SizedBox(
-                  width: 340,
-                  height: 250,
-                  child: TextField(
-                    controller: eventDetail,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            width: 1, color: Colors.white24), //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(5.0),
+                              const SizedBox(width: 10)
+                            ]),
+                        ],
                       ),
-                      hintText: "Input event's detail or description",
-                      hintStyle:
-                          TextStyle(fontSize: 15.0, color: Colors.white10),
                     ),
-                    maxLines: 10,
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-                child: Center(
-                  child: SizedBox(
-                      width: 350,
-                      height: 46,
-                      child: isButtonEnabled
-                          ? ElevatedButton(
+                  //formality end
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(top: 20),
+                    child: RichText(
+                      text: const TextSpan(
+                          text: "Category",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w600),
+                          children: [
+                            TextSpan(
+                                text: ' *',
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16))
+                          ]),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 55,
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(top: 20),
+                      child: ListView(
+                        shrinkWrap: false,
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          for (var category in categories.keys)
+                            Row(children: <Widget>[
+                              Container(
+                                width: 95,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                    color: categories[category]!
+                                        ? Colors.white12
+                                        : Colors.transparent,
+                                    border: Border.all(
+                                        width: 0.5,
+                                        color: categories[category]!
+                                            ? Colors.white12
+                                            : Colors.white24),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(5))),
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: const TextStyle(
+                                        fontSize: 15, color: Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    for (var reset in categories.keys) {
+                                      categories[reset] = false;
+                                    }
+                                    setState(() {
+                                      categories[category]!
+                                          ? categories[category] = false
+                                          : categories[category] = true;
+                                    });
+                                  },
+                                  child: Text(
+                                    category,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: categories[category]!
+                                            ? FontWeight.w500
+                                            : FontWeight.normal,
+                                        color: categories[category]!
+                                            ? Color(0xff57AD9E)
+                                            : Colors.white70),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10)
+                            ]),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                    child: RichText(
+                      text: const TextSpan(
+                          text: "Title",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w600),
+                          children: [
+                            TextSpan(
+                                text: ' *',
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16))
+                          ]),
+                    ),
+                  ),
+                  Center(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: 50,
+                      child: TextField(
+                          controller: eventTitle,
+                          onChanged: (content) {
+                            if (content != "") {
+                              textChecker['Title'] = true;
+                              textChecking();
+                            } else {
+                              textChecker['Title'] = false;
+                              textChecking();
+                            }
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 1, color: ApdiColors.lineGrey),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 1, color: ApdiColors.themeGreen),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            hintText: "Input event name",
+                            hintStyle: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white24,
+                            ),
+                          )),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                    child: RichText(
+                      text: const TextSpan(
+                          text: "Tags",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w600),
+                          children: [
+                            TextSpan(
+                                text: ' (max. 1-2, separated by space)',
+                                style: TextStyle(
+                                    color: Colors.white24,
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14)),
+                            TextSpan(
+                                text: ' *',
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16))
+                          ]),
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 50,
+                    child: TextField(
+                        controller: tags,
+                        onChanged: (content) {
+                          if (content != "") {
+                            textChecker['Tags'] = true;
+                            textChecking();
+                          } else {
+                            textChecker['Tags'] = false;
+                            textChecking();
+                          }
+                        },
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: ApdiColors.themeGreen), //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: ApdiColors.lineGrey), //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          hintText: "Input tag",
+                          hintStyle: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white24,
+                          ),
+                        )),
+                  ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(top: 20),
+                    child: RichText(
+                      text: const TextSpan(
+                          text: "Date and Time",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w600),
+                          children: [
+                            TextSpan(
+                                text: ' *',
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16))
+                          ]),
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsetsDirectional.only(top: 20),
+                      child: Row(children: <Widget>[
+                        SizedBox(
+                            width: 130,
+                            height: 50,
+                            child: OutlinedButton(
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    ApdiColors.themeGreen),
+                                side: MaterialStateProperty.all(BorderSide(
+                                    color: Colors.white24, width: 1)),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                ),
                               ),
                               onPressed: () {
-                                showDialog<void>(
-                                    context: context,
-                                    builder: (BuildContext context) {
+                                _pickDateDialog(context);
+                                setState(() {
+                                  textChecker['Date'] = true;
+                                });
+                                textChecking();
+                              },
+                              child: Text(
+                                getDate(),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: textChecker['Date']!
+                                      ? Colors.white70
+                                      : Colors.white24,
+                                ),
+                              ),
+                            )),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                            width: 100,
+                            height: 50,
+                            child: OutlinedButton(
+                              style: ButtonStyle(
+                                side: MaterialStateProperty.all(
+                                    BorderSide(color: Colors.white24)),
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0))),
+                              ),
+                              onPressed: () {
+                                _pickTimeDialog(context);
+                                textChecker['Time'] = true;
+                                textChecking();
+                              },
+                              child: Text(getTime(),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: textChecker['Time']!
+                                        ? Colors.white70
+                                        : Colors.white24,
+                                  )),
+                            ))
+                      ])),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(top: 20),
+                    child: RichText(
+                      text: const TextSpan(
+                          text: "Language(s)",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w600),
+                          children: [
+                            TextSpan(
+                                text: ' *',
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16))
+                          ]),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 55,
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(top: 20),
+                      child: ListView(
+                        shrinkWrap: false,
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          for (var language in languages.keys)
+                            Row(children: <Widget>[
+                              Container(
+                                width: 95,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                    color: languages[language]!
+                                        ? Colors.white12
+                                        : Colors.transparent,
+                                    border: Border.all(
+                                        width: 0.5,
+                                        color: languages[language]!
+                                            ? Colors.white12
+                                            : Colors.white24),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(5))),
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: const TextStyle(
+                                        fontSize: 15, color: Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      languages[language] == true
+                                          ? languages[language] = false
+                                          : languages[language] = true;
+                                      if (languages.values
+                                              .toList()
+                                              .where((item) => item == false)
+                                              .length ==
+                                          3) {
+                                        languages[language] = true;
+                                      }
+                                    });
+                                  },
+                                  child: Text(
+                                    language,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: languages[language]!
+                                            ? FontWeight.w500
+                                            : FontWeight.normal,
+                                        color: languages[language]!
+                                            ? ApdiColors.themeGreen
+                                            : Colors.white70),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10)
+                            ]),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                    child: Text(
+                      " Location",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 50,
+                    child: TextField(
+                        controller: eventLocation,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: ApdiColors.themeGreen), //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: ApdiColors.lineGrey), //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          hintText: "Input event's location here.",
+                          hintStyle: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white24,
+                          ),
+                        )),
+                  ),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                    child: Text(
+                      " Registration Link",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 50,
+                    child: TextField(
+                        controller: eventRegistrationLink,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: ApdiColors.themeGreen), //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: ApdiColors.lineGrey), //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          hintText: "Input event's registration URL here.",
+                          hintStyle: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white24,
+                          ),
+                        )),
+                  ),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                    child: Text(
+                      " Event Details",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 250,
+                    child: TextField(
+                      controller: eventDetail,
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              width: 1,
+                              color: ApdiColors.themeGreen), //<-- SEE HERE
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              width: 1,
+                              color: ApdiColors.lineGrey), //<-- SEE HERE
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        hintText: "Input event's detail or description",
+                        hintStyle: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white24,
+                        ),
+                      ),
+                      maxLines: 10,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(top: 20),
+                    child: Center(
+                      child: SizedBox(
+                          width: 350,
+                          height: 46,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              backgroundColor: MaterialStateProperty.all(
+                                  isButtonEnabled
+                                      ? ApdiColors.themeGreen
+                                      : Colors.white60),
+                            ),
+                            onPressed: () {
+                              showDialog<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    if (isButtonEnabled) {
                                       return AlertDialog(
-                                        title: Text('Create Post'),
-                                        content: Text(
-                                            "Are you sure you want to create this event?"),
+                                        title: const Text(
+                                          'Create Event',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        content: const Text(
+                                          "Are you sure you want to create this event?",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () =>
                                                 Navigator.pop(context),
-                                            child: Text("No"),
+                                            child: Text(
+                                              "No",
+                                              style: TextStyle(
+                                                  color: ApdiColors.errorRed),
+                                            ),
                                           ),
                                           TextButton(
                                               onPressed: () {
@@ -636,49 +794,54 @@ class EventWritePageState extends State<EventWritePage> {
                                                         '/',
                                                         (route) => false);
                                               },
-                                              child: Text("yes"))
+                                              child: Text(
+                                                "Yes",
+                                                style: TextStyle(
+                                                    color:
+                                                        ApdiColors.themeGreen),
+                                              ))
                                         ],
                                       );
-                                    });
-                              },
-                              child: const Text(
-                                'Request Event',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20.0),
-                              ),
-                            )
-                          : ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.white60),
-                              ),
-                              onPressed: () {
-                                showDialog<void>(
-                                    context: context,
-                                    builder: (BuildContext context) {
+                                    } else {
                                       return AlertDialog(
-                                        title: Text('Warning'),
-                                        content: Text(
-                                            "You have not filled certain parts. Please check again"),
+                                        title: const Text(
+                                          'Warning',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        content: const Text(
+                                          "You have not filled certain parts. Please check again.",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () =>
                                                 Navigator.pop(context),
-                                            child: Text("OK"),
+                                            child: Text(
+                                              "OK",
+                                              style: TextStyle(
+                                                  color: ApdiColors.themeGreen),
+                                            ),
                                           ),
                                         ],
                                       );
-                                    });
-                              },
-                              child: const Text(
-                                'Request Event',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20.0),
+                                    }
+                                  });
+                            },
+                            child: const Text(
+                              'Request to Post',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontFamily: 'Outfit',
+                                fontWeight: FontWeight.w600,
                               ),
-                            )),
-                ),
+                            ),
+                          )),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

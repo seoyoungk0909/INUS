@@ -174,12 +174,15 @@ class LoginState extends ChangeNotifier {
     return registerState;
   }
 
-  Future<void> registerAccount(String email, String password) async {
+  Future<void> registerAccount(
+      String email, String password, String displayName) async {
     verifyEmail(email);
     await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((user) {
-      user.user?.sendEmailVerification();
+      user.user
+          ?.updateDisplayName(displayName)
+          .then((value) => user.user?.sendEmailVerification());
     });
   }
 
