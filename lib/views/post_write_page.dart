@@ -107,7 +107,7 @@ class PostWritePageState extends State<PostWritePage> {
                         onPressed: () => Navigator.pop(context),
                         child: Text(
                           "No",
-                          style: TextStyle(color: ApdiColors.themeGreen),
+                          style: TextStyle(color: ApdiColors.errorRed),
                         ),
                       ),
                       TextButton(
@@ -327,8 +327,7 @@ class PostWritePageState extends State<PostWritePage> {
                                               child: Text(
                                                 "No",
                                                 style: TextStyle(
-                                                    color:
-                                                        ApdiColors.themeGreen),
+                                                    color: ApdiColors.errorRed),
                                               ),
                                             ),
                                             TextButton(

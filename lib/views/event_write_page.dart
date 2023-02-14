@@ -170,7 +170,7 @@ class EventWritePageState extends State<EventWritePage> {
                         onPressed: () => Navigator.pop(context),
                         child: Text(
                           "No",
-                          style: TextStyle(color: ApdiColors.themeGreen),
+                          style: TextStyle(color: ApdiColors.errorRed),
                         ),
                       ),
                       TextButton(
@@ -192,13 +192,13 @@ class EventWritePageState extends State<EventWritePage> {
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SingleChildScrollView(
           child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //formality
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                  child: RichText(
+            child: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //formality
+                  RichText(
                     text: const TextSpan(
                         text: "Formality",
                         style: TextStyle(
@@ -214,223 +214,221 @@ class EventWritePageState extends State<EventWritePage> {
                                   fontSize: 16))
                         ]),
                   ),
-                ),
-                Container(
-                  height: 55,
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                    child: ListView(
-                      shrinkWrap: false,
-                      scrollDirection: Axis.horizontal,
-                      children: <Widget>[
-                        for (var formality in ['Casual', 'Formal'])
-                          Row(children: <Widget>[
-                            Container(
-                              width: 95,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                  color: ((formality == 'Formal') == formal)
-                                      ? Colors.white12
-                                      : Colors.transparent,
-                                  border: Border.all(
-                                      width: 0.5,
-                                      color: ((formality == 'Formal') == formal)
-                                          ? Colors.white12
-                                          : Colors.white24),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(5))),
-                              child: TextButton(
-                                style: TextButton.styleFrom(
-                                  textStyle: const TextStyle(
-                                      fontSize: 15, color: Colors.white),
-                                ),
-                                //커멘트
-                                onPressed: () {
-                                  setState(() {
-                                    formal = formality != 'Casual';
-                                  });
-                                },
-                                child: Text(
-                                  formality,
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight:
-                                          ((formality == 'Formal') == formal)
-                                              ? FontWeight.w500
-                                              : FontWeight.normal,
-                                      color: ((formality == 'Formal') == formal)
-                                          ? Color(0xff57AD9E)
-                                          : Colors.white70),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10)
-                          ]),
-                      ],
-                    ),
-                  ),
-                ),
-                //formality end
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                  child: RichText(
-                    text: const TextSpan(
-                        text: "Category",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.w600),
-                        children: [
-                          TextSpan(
-                              text: ' *',
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16))
-                        ]),
-                  ),
-                ),
-                SizedBox(
-                  height: 55,
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                    child: ListView(
-                      shrinkWrap: false,
-                      scrollDirection: Axis.horizontal,
-                      children: <Widget>[
-                        for (var category in categories.keys)
-                          Row(children: <Widget>[
-                            Container(
-                              width: 95,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                  color: categories[category]!
-                                      ? Colors.white12
-                                      : Colors.transparent,
-                                  border: Border.all(
-                                      width: 0.5,
-                                      color: categories[category]!
-                                          ? Colors.white12
-                                          : Colors.white24),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(5))),
-                              child: TextButton(
-                                style: TextButton.styleFrom(
-                                  textStyle: const TextStyle(
-                                      fontSize: 15, color: Colors.white),
-                                ),
-                                onPressed: () {
-                                  for (var reset in categories.keys) {
-                                    categories[reset] = false;
-                                  }
-                                  setState(() {
-                                    categories[category]!
-                                        ? categories[category] = false
-                                        : categories[category] = true;
-                                  });
-                                },
-                                child: Text(
-                                  category,
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: categories[category]!
-                                          ? FontWeight.w500
-                                          : FontWeight.normal,
-                                      color: categories[category]!
-                                          ? Color(0xff57AD9E)
-                                          : Colors.white70),
+                  SizedBox(
+                    height: 55,
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(top: 20),
+                      child: ListView(
+                        shrinkWrap: false,
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          for (var formality in ['Casual', 'Formal'])
+                            Row(children: <Widget>[
+                              Container(
+                                width: 95,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                    color: ((formality == 'Formal') == formal)
+                                        ? Colors.white12
+                                        : Colors.transparent,
+                                    border: Border.all(
+                                        width: 0.5,
+                                        color:
+                                            ((formality == 'Formal') == formal)
+                                                ? Colors.white12
+                                                : Colors.white24),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(5))),
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: const TextStyle(
+                                        fontSize: 15, color: Colors.white),
+                                  ),
+                                  //커멘트
+                                  onPressed: () {
+                                    setState(() {
+                                      formal = formality != 'Casual';
+                                    });
+                                  },
+                                  child: Text(
+                                    formality,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight:
+                                            ((formality == 'Formal') == formal)
+                                                ? FontWeight.w500
+                                                : FontWeight.normal,
+                                        color:
+                                            ((formality == 'Formal') == formal)
+                                                ? Color(0xff57AD9E)
+                                                : Colors.white70),
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            )
-                          ]),
-                      ],
+                              const SizedBox(width: 10)
+                            ]),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-                  child: RichText(
-                    text: const TextSpan(
-                        text: "Title",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.w600),
-                        children: [
-                          TextSpan(
-                              text: ' *',
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16))
-                        ]),
+                  //formality end
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(top: 20),
+                    child: RichText(
+                      text: const TextSpan(
+                          text: "Category",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w600),
+                          children: [
+                            TextSpan(
+                                text: ' *',
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16))
+                          ]),
+                    ),
                   ),
-                ),
-                Center(
-                  child: SizedBox(
-                    width: 340,
-                    height: 50,
-                    child: TextField(
-                        controller: eventTitle,
-                        onChanged: (content) {
-                          if (content != "") {
-                            textChecker['Title'] = true;
-                            textChecking();
-                          } else {
-                            textChecker['Title'] = false;
-                            textChecking();
-                          }
-                        },
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1, color: ApdiColors.lineGrey),
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1, color: ApdiColors.themeGreen),
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          hintText: "Input event name",
-                          hintStyle: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.white24,
-                          ),
-                        )),
+                  SizedBox(
+                    height: 55,
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(top: 20),
+                      child: ListView(
+                        shrinkWrap: false,
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          for (var category in categories.keys)
+                            Row(children: <Widget>[
+                              Container(
+                                width: 95,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                    color: categories[category]!
+                                        ? Colors.white12
+                                        : Colors.transparent,
+                                    border: Border.all(
+                                        width: 0.5,
+                                        color: categories[category]!
+                                            ? Colors.white12
+                                            : Colors.white24),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(5))),
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: const TextStyle(
+                                        fontSize: 15, color: Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    for (var reset in categories.keys) {
+                                      categories[reset] = false;
+                                    }
+                                    setState(() {
+                                      categories[category]!
+                                          ? categories[category] = false
+                                          : categories[category] = true;
+                                    });
+                                  },
+                                  child: Text(
+                                    category,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: categories[category]!
+                                            ? FontWeight.w500
+                                            : FontWeight.normal,
+                                        color: categories[category]!
+                                            ? Color(0xff57AD9E)
+                                            : Colors.white70),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10)
+                            ]),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-                  child: RichText(
-                    text: const TextSpan(
-                        text: "Tags",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.w600),
-                        children: [
-                          TextSpan(
-                              text: ' (max. 1-2, separated by space)',
-                              style: TextStyle(
-                                  color: Colors.white24,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 14)),
-                          TextSpan(
-                              text: ' *',
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16))
-                        ]),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                    child: RichText(
+                      text: const TextSpan(
+                          text: "Title",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w600),
+                          children: [
+                            TextSpan(
+                                text: ' *',
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16))
+                          ]),
+                    ),
                   ),
-                ),
-                Center(
-                  child: SizedBox(
-                    width: 340,
+                  Center(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: 50,
+                      child: TextField(
+                          controller: eventTitle,
+                          onChanged: (content) {
+                            if (content != "") {
+                              textChecker['Title'] = true;
+                              textChecking();
+                            } else {
+                              textChecker['Title'] = false;
+                              textChecking();
+                            }
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 1, color: ApdiColors.lineGrey),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 1, color: ApdiColors.themeGreen),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            hintText: "Input event name",
+                            hintStyle: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white24,
+                            ),
+                          )),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                    child: RichText(
+                      text: const TextSpan(
+                          text: "Tags",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w600),
+                          children: [
+                            TextSpan(
+                                text: ' (max. 1-2, separated by space)',
+                                style: TextStyle(
+                                    color: Colors.white24,
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14)),
+                            TextSpan(
+                                text: ' *',
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16))
+                          ]),
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
                     height: 50,
                     child: TextField(
                         controller: tags,
@@ -463,184 +461,178 @@ class EventWritePageState extends State<EventWritePage> {
                           ),
                         )),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                  child: RichText(
-                    text: const TextSpan(
-                        text: "Date and Time",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.w600),
-                        children: [
-                          TextSpan(
-                              text: ' *',
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16))
-                        ]),
-                  ),
-                ),
-                Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                    child: Row(children: <Widget>[
-                      SizedBox(
-                          width: 130,
-                          height: 50,
-                          child: OutlinedButton(
-                            style: ButtonStyle(
-                              side: MaterialStateProperty.all(
-                                  BorderSide(color: Colors.white24, width: 1)),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                              ),
-                            ),
-                            onPressed: () {
-                              _pickDateDialog(context);
-                              setState(() {
-                                textChecker['Date'] = true;
-                              });
-                              textChecking();
-                            },
-                            child: Text(
-                              getDate(),
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: textChecker['Date']!
-                                    ? Colors.white70
-                                    : Colors.white24,
-                              ),
-                            ),
-                          )),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      SizedBox(
-                          width: 100,
-                          height: 50,
-                          child: OutlinedButton(
-                            style: ButtonStyle(
-                              side: MaterialStateProperty.all(
-                                  BorderSide(color: Colors.white24)),
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(5.0))),
-                            ),
-                            onPressed: () {
-                              _pickTimeDialog(context);
-                              textChecker['Time'] = true;
-                              textChecking();
-                            },
-                            child: Text(getTime(),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(top: 20),
+                    child: RichText(
+                      text: const TextSpan(
+                          text: "Date and Time",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w600),
+                          children: [
+                            TextSpan(
+                                text: ' *',
                                 style: TextStyle(
-                                  fontSize: 14,
-                                  color: textChecker['Time']!
-                                      ? Colors.white70
-                                      : Colors.white24,
-                                )),
-                          ))
-                    ])),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                  child: RichText(
-                    text: const TextSpan(
-                        text: "Language(s)",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.w600),
-                        children: [
-                          TextSpan(
-                              text: ' *',
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16))
-                        ]),
-                  ),
-                ),
-                SizedBox(
-                  height: 55,
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-                    child: ListView(
-                      shrinkWrap: false,
-                      scrollDirection: Axis.horizontal,
-                      children: <Widget>[
-                        for (var language in languages.keys)
-                          Row(children: <Widget>[
-                            Container(
-                              width: 95,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                  color: languages[language]!
-                                      ? Colors.white12
-                                      : Colors.transparent,
-                                  border: Border.all(
-                                      width: 0.5,
-                                      color: languages[language]!
-                                          ? Colors.white12
-                                          : Colors.white24),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(5))),
-                              child: TextButton(
-                                style: TextButton.styleFrom(
-                                  textStyle: const TextStyle(
-                                      fontSize: 15, color: Colors.white),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    languages[language] == true
-                                        ? languages[language] = false
-                                        : languages[language] = true;
-                                    if (languages.values
-                                            .toList()
-                                            .where((item) => item == false)
-                                            .length ==
-                                        3) {
-                                      languages[language] = true;
-                                    }
-                                  });
-                                },
-                                child: Text(
-                                  language,
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: languages[language]!
-                                          ? FontWeight.w500
-                                          : FontWeight.normal,
-                                      color: languages[language]!
-                                          ? ApdiColors.themeGreen
-                                          : Colors.white70),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            )
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16))
                           ]),
-                      ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-                  child: Text(
-                    " Location",
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w600),
+                  Padding(
+                      padding: const EdgeInsetsDirectional.only(top: 20),
+                      child: Row(children: <Widget>[
+                        SizedBox(
+                            width: 130,
+                            height: 50,
+                            child: OutlinedButton(
+                              style: ButtonStyle(
+                                side: MaterialStateProperty.all(BorderSide(
+                                    color: Colors.white24, width: 1)),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                ),
+                              ),
+                              onPressed: () {
+                                _pickDateDialog(context);
+                                setState(() {
+                                  textChecker['Date'] = true;
+                                });
+                                textChecking();
+                              },
+                              child: Text(
+                                getDate(),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: textChecker['Date']!
+                                      ? Colors.white70
+                                      : Colors.white24,
+                                ),
+                              ),
+                            )),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                            width: 100,
+                            height: 50,
+                            child: OutlinedButton(
+                              style: ButtonStyle(
+                                side: MaterialStateProperty.all(
+                                    BorderSide(color: Colors.white24)),
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0))),
+                              ),
+                              onPressed: () {
+                                _pickTimeDialog(context);
+                                textChecker['Time'] = true;
+                                textChecking();
+                              },
+                              child: Text(getTime(),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: textChecker['Time']!
+                                        ? Colors.white70
+                                        : Colors.white24,
+                                  )),
+                            ))
+                      ])),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(top: 20),
+                    child: RichText(
+                      text: const TextSpan(
+                          text: "Language(s)",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w600),
+                          children: [
+                            TextSpan(
+                                text: ' *',
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16))
+                          ]),
+                    ),
                   ),
-                ),
-                Center(
-                  child: SizedBox(
-                    width: 340,
+                  SizedBox(
+                    height: 55,
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(top: 20),
+                      child: ListView(
+                        shrinkWrap: false,
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          for (var language in languages.keys)
+                            Row(children: <Widget>[
+                              Container(
+                                width: 95,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                    color: languages[language]!
+                                        ? Colors.white12
+                                        : Colors.transparent,
+                                    border: Border.all(
+                                        width: 0.5,
+                                        color: languages[language]!
+                                            ? Colors.white12
+                                            : Colors.white24),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(5))),
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: const TextStyle(
+                                        fontSize: 15, color: Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      languages[language] == true
+                                          ? languages[language] = false
+                                          : languages[language] = true;
+                                      if (languages.values
+                                              .toList()
+                                              .where((item) => item == false)
+                                              .length ==
+                                          3) {
+                                        languages[language] = true;
+                                      }
+                                    });
+                                  },
+                                  child: Text(
+                                    language,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: languages[language]!
+                                            ? FontWeight.w500
+                                            : FontWeight.normal,
+                                        color: languages[language]!
+                                            ? ApdiColors.themeGreen
+                                            : Colors.white70),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10)
+                            ]),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                    child: Text(
+                      " Location",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
                     height: 50,
                     child: TextField(
                         controller: eventLocation,
@@ -664,20 +656,18 @@ class EventWritePageState extends State<EventWritePage> {
                           ),
                         )),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-                  child: Text(
-                    " Registration Link",
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w600),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                    child: Text(
+                      " Registration Link",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w600),
+                    ),
                   ),
-                ),
-                Center(
-                  child: SizedBox(
-                    width: 340,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
                     height: 50,
                     child: TextField(
                         controller: eventRegistrationLink,
@@ -701,20 +691,18 @@ class EventWritePageState extends State<EventWritePage> {
                           ),
                         )),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-                  child: Text(
-                    " Event Details",
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w600),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                    child: Text(
+                      " Event Details",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w600),
+                    ),
                   ),
-                ),
-                Center(
-                  child: SizedBox(
-                    width: 340,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
                     height: 250,
                     child: TextField(
                       controller: eventDetail,
@@ -740,145 +728,119 @@ class EventWritePageState extends State<EventWritePage> {
                       maxLines: 10,
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-                  child: Center(
-                    child: SizedBox(
-                        width: 350,
-                        height: 46,
-                        child: isButtonEnabled
-                            ? ElevatedButton(
-                                style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                  backgroundColor: MaterialStateProperty.all(
-                                      ApdiColors.themeGreen),
-                                ),
-                                onPressed: () {
-                                  showDialog<void>(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: const Text(
-                                            'Create Event',
-                                            style: TextStyle(fontSize: 16),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(top: 20),
+                    child: Center(
+                      child: SizedBox(
+                          width: 350,
+                          height: 46,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              backgroundColor: MaterialStateProperty.all(
+                                  isButtonEnabled
+                                      ? ApdiColors.themeGreen
+                                      : Colors.white60),
+                            ),
+                            onPressed: () {
+                              showDialog<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    if (isButtonEnabled) {
+                                      return AlertDialog(
+                                        title: const Text(
+                                          'Create Event',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        content: const Text(
+                                          "Are you sure you want to create this event?",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Text(
+                                              "No",
+                                              style: TextStyle(
+                                                  color: ApdiColors.errorRed),
+                                            ),
                                           ),
-                                          content: const Text(
-                                            "Are you sure you want to create this event?",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
+                                          TextButton(
+                                              onPressed: () {
+                                                for (var language
+                                                    in languages.keys) {
+                                                  languages[language] == true
+                                                      ? trueLanguages
+                                                          .add(language)
+                                                      : {};
+                                                }
+                                                for (var category
+                                                    in categories.keys) {
+                                                  categories[category] == true
+                                                      ? trueCategories =
+                                                          category
+                                                      : {};
+                                                }
+                                                uploadEvent(currentUser.uid);
+                                                setState(() {});
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                        context,
+                                                        '/',
+                                                        (route) => false);
+                                              },
                                               child: Text(
-                                                "No",
+                                                "Yes",
                                                 style: TextStyle(
                                                     color:
                                                         ApdiColors.themeGreen),
-                                              ),
+                                              ))
+                                        ],
+                                      );
+                                    } else {
+                                      return AlertDialog(
+                                        title: const Text(
+                                          'Warning',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        content: const Text(
+                                          "You have not filled certain parts. Please check again.",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Text(
+                                              "OK",
+                                              style: TextStyle(
+                                                  color: ApdiColors.themeGreen),
                                             ),
-                                            TextButton(
-                                                onPressed: () {
-                                                  for (var language
-                                                      in languages.keys) {
-                                                    languages[language] == true
-                                                        ? trueLanguages
-                                                            .add(language)
-                                                        : {};
-                                                  }
-                                                  for (var category
-                                                      in categories.keys) {
-                                                    categories[category] == true
-                                                        ? trueCategories =
-                                                            category
-                                                        : {};
-                                                  }
-                                                  uploadEvent(currentUser.uid);
-                                                  setState(() {});
-                                                  Navigator
-                                                      .pushNamedAndRemoveUntil(
-                                                          context,
-                                                          '/',
-                                                          (route) => false);
-                                                },
-                                                child: Text(
-                                                  "Yes",
-                                                  style: TextStyle(
-                                                      color: ApdiColors
-                                                          .themeGreen),
-                                                ))
-                                          ],
-                                        );
-                                      });
-                                },
-                                child: const Text(
-                                  'Request to Post',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontFamily: 'Outfit',
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              )
-                            : ElevatedButton(
-                                style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                  backgroundColor:
-                                      MaterialStateProperty.all(Colors.white60),
-                                ),
-                                onPressed: () {
-                                  showDialog<void>(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: const Text(
-                                            'Warning',
-                                            style: TextStyle(fontSize: 16),
                                           ),
-                                          content: const Text(
-                                            "You have not filled certain parts. Please check again.",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
-                                              child: Text(
-                                                "OK",
-                                                style: TextStyle(
-                                                    color:
-                                                        ApdiColors.themeGreen),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      });
-                                },
-                                child: const Text(
-                                  'Request to Post',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontFamily: 'Outfit',
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              )),
+                                        ],
+                                      );
+                                    }
+                                  });
+                            },
+                            child: const Text(
+                              'Request to Post',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontFamily: 'Outfit',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          )),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
