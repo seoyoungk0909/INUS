@@ -1,5 +1,6 @@
 // import 'dart:html';
 
+import 'package:aus/views/components/event_save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../controllers/event_controller.dart';
@@ -27,36 +28,17 @@ class EventDetailPage extends StatefulWidget {
 }
 
 class EventDetailPageState extends State<EventDetailPage> {
+  Future<DocumentSnapshot> userInfoSnap = FirebaseFirestore.instance
+      .collection('user_info')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .get();
+
   Future<void> _launchURL(String url) async {
     final Uri uri = Uri(scheme: "https", host: url);
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       throw "Can not launch $url";
     }
   }
-
-  Future<void> saveEvent(
-      String currentUserId, EventController controller) async {
-    FirebaseFirestore.instance
-        .collection('user_info')
-        .doc(currentUserId)
-        .update({
-      'savedPosts': FieldValue.arrayUnion([controller.event.firebaseDocRef])
-    });
-  }
-
-  Future<void> deleteEvent(
-      String currentUserId, EventController controller) async {
-    FirebaseFirestore.instance
-        .collection('user_info')
-        .doc(currentUserId)
-        .update({
-      'savedPosts': FieldValue.arrayRemove([controller.event.firebaseDocRef])
-    });
-  }
-
-  final User currentUser = FirebaseAuth.instance.currentUser!;
-
-  bool saved = false;
 
   @override
   Widget build(BuildContext context) {
@@ -76,115 +58,75 @@ class EventDetailPageState extends State<EventDetailPage> {
               icon: SvgPicture.asset('assets/icons/Report.svg'))
         ],
       ),
-      body: ListView(
-        children: [
-          eventDetailPhoto(context, controller),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 15, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      body: FutureBuilder<DocumentSnapshot>(
+          future: userInfoSnap,
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.data == null) {
+              return Center(
+                  child:
+                      CircularProgressIndicator(color: ApdiColors.themeGreen));
+            }
+            Map documentdata = snapshot.data!.data() as Map;
+            List? savedPosts = documentdata.containsKey('savedPosts')
+                ? documentdata['savedPosts']
+                : null;
+            bool isEventSaved =
+                savedPosts?.contains(controller.event.firebaseDocRef) ?? false;
+            return ListView(
               children: [
-                categoryButton(context, controller),
-                eventTitle(context, controller),
-                categoryHashtag(context, controller),
-                quickView(context, controller),
-                eventDescription(context, controller),
-                detailedView(context, controller),
+                eventDetailPhoto(context, controller),
                 Padding(
-                  padding: const EdgeInsets.only(top: 40),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        height: 40,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            _launchURL(controller.event.registerLink);
-                          },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).colorScheme.secondary),
-                              textStyle:
-                                  MaterialStateProperty.all(const TextStyle(
-                                fontSize: 18,
-                                fontFamily: 'Outfit',
-                                fontWeight: FontWeight.w600,
-                              ))),
-                          child: const Text('Register'),
-                        ),
-                      ),
+                      categoryButton(context, controller),
+                      eventTitle(context, controller),
+                      categoryHashtag(context, controller),
+                      quickView(context, controller),
+                      eventDescription(context, controller),
+                      detailedView(context, controller),
                       Padding(
-                        padding: const EdgeInsets.only(left: 9),
-                        child: StreamBuilder<DocumentSnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection('user_info')
-                                .doc(currentUser.uid)
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<DocumentSnapshot> snapshot) {
-                              if (snapshot.data == null) {
-                                return Center(
-                                    child: CircularProgressIndicator(
-                                        color: ApdiColors.themeGreen));
-                              }
-                              // To show saved UI
-                              // Map documentdata = snapshot.data!.data() as Map;
-                              // List? savedEvents =
-                              //     documentdata.containsKey('savedPosts')
-                              //         ? snapshot.data!['savedPosts']
-                              //         : null;
-                              // }
-                              // if (savedEvents.contains(controller.event.firebaseDocRef!.values)) {
-                              //   saved = false;
-                              // }
-                              if (saved) {
-                                return IconButton(
-                                    onPressed: () => {
-                                          setState(() {
-                                            deleteEvent(
-                                                currentUser.uid, controller);
-                                            controller.event.firebaseDocRef
-                                                ?.update({
-                                              "saveCount":
-                                                  FieldValue.increment(-1)
-                                            });
-                                            saved = false;
-                                          })
-                                        },
-                                    icon: const Icon(
-                                      Icons.bookmark,
-                                      size: 35,
-                                    ));
-                              } else {
-                                return IconButton(
-                                    onPressed: () => {
-                                          setState(() {
-                                            saveEvent(
-                                                currentUser.uid, controller);
-                                            controller.event.firebaseDocRef
-                                                ?.update({
-                                              "saveCount":
-                                                  FieldValue.increment(1)
-                                            });
-                                            saved = true;
-                                          })
-                                        },
-                                    icon: const Icon(
-                                      Icons.bookmark_border,
-                                      size: 35,
-                                    ));
-                              }
-                            }),
+                        padding: const EdgeInsets.only(top: 40, bottom: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.76,
+                              height: 40,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  _launchURL(controller.event.registerLink);
+                                },
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
+                                    textStyle: MaterialStateProperty.all(
+                                        const TextStyle(
+                                      fontSize: 18,
+                                      fontFamily: 'Outfit',
+                                      fontWeight: FontWeight.w600,
+                                    ))),
+                                child: const Text('Register'),
+                              ),
+                            ),
+                            Spacer(),
+                            EventSaveButton(
+                                controller: controller,
+                                currentUser: FirebaseAuth.instance.currentUser!,
+                                saved: isEventSaved),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
+            );
+          }),
     );
   }
 }

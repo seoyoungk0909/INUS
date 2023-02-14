@@ -35,6 +35,19 @@ class ProfilePageState extends State<ProfilePage> {
   //         .collection('user_info')
   //         .doc(fbauth.FirebaseAuth.instance.currentUser?.uid)
   //         .snapshots();
+  Future<List<dynamic>> getFromDocRefs(refs) async {
+    List<dynamic> eventsOrPosts = [];
+    for (DocumentReference<Map<String, dynamic>> ref in refs) {
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await ref.get();
+      Map<String, dynamic> data = snapshot.data()!;
+      if (data.containsKey("eventDetail")) {
+        eventsOrPosts.add(await Event.fromDocRef(firebaseDoc: ref));
+      } else {
+        eventsOrPosts.add(await Post.fromDocRef(firebaseDoc: ref));
+      }
+    }
+    return eventsOrPosts;
+  }
 
   Widget userGreetings(User currentUser) {
     return Column(
@@ -108,28 +121,6 @@ class ProfilePageState extends State<ProfilePage> {
       ],
     );
     // });
-  }
-
-  bool isEvent = true;
-
-  Future<List<dynamic>> getFromDocRefs(refs) async {
-    List<dynamic> eventsOrPosts = [];
-    for (DocumentReference<Map<String, dynamic>> ref in refs) {
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await ref.get();
-      Map<String, dynamic> data = snapshot.data()!;
-      if (data.containsKey("eventDetail")) {
-        isEvent = true;
-      } else {
-        isEvent = false;
-      }
-      if (isEvent) {
-        eventsOrPosts.add(await Event.fromDocRef(firebaseDoc: ref));
-      } else {
-        eventsOrPosts.add(await Post.fromDocRef(firebaseDoc: ref));
-      }
-    }
-
-    return eventsOrPosts;
   }
 
   @override
@@ -224,14 +215,14 @@ class ProfilePageState extends State<ProfilePage> {
                                     color: ApdiColors.themeGreen));
                           }
                           try {
-                            List Refs = snap.data!.get('savedPosts');
-                            Refs = Refs.reversed.toList();
-                            if (Refs.isEmpty) {
+                            List refs = snap.data!.get('savedPosts');
+                            refs = refs.reversed.toList();
+                            if (refs.isEmpty) {
                               return const Center(
                                   child: Text("No Saved Events or Posts"));
                             }
                             return FutureBuilder<List<dynamic>>(
-                              future: getFromDocRefs(Refs),
+                              future: getFromDocRefs(refs),
                               builder: (context, snapshot) {
                                 if (snapshot.data == null) {
                                   return const SizedBox.shrink();
@@ -242,9 +233,9 @@ class ProfilePageState extends State<ProfilePage> {
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (BuildContext context, int idx) {
                                     if (snapshot.data![idx] is Event) {
-                                      return eventUI(context,
+                                      return savedEventUI(context,
                                           EventController(snapshot.data![idx]),
-                                          setState: setState);
+                                          setState: setState, first: idx == 0);
                                     } else {
                                       return postUI(context,
                                           PostController(snapshot.data![idx]),
