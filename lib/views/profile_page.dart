@@ -10,6 +10,9 @@ import 'components/post_ui.dart';
 import '../controllers/post_controller.dart';
 import '../models/post_model.dart';
 import '../models/user_model.dart';
+import 'components/event_ui.dart';
+import '../controllers/event_controller.dart';
+import '../models/event_model.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key, required this.title}) : super(key: key);
@@ -107,12 +110,26 @@ class ProfilePageState extends State<ProfilePage> {
     // });
   }
 
-  Future<List<Post>> getPostsFromRefs(postRefs) async {
-    List<Post> posts = [];
-    for (DocumentReference<Map<String, dynamic>> ref in postRefs) {
-      posts.add(await Post.fromDocRef(firebaseDoc: ref));
+  bool isEvent = true;
+
+  Future<List<dynamic>> getFromDocRefs(refs) async {
+    List<dynamic> eventsOrPosts = [];
+    for (DocumentReference<Map<String, dynamic>> ref in refs) {
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await ref.get();
+      Map<String, dynamic> data = snapshot.data()!;
+      if (data.containsKey("eventDetail")) {
+        isEvent = true;
+      } else {
+        isEvent = false;
+      }
+      if (isEvent) {
+        eventsOrPosts.add(await Event.fromDocRef(firebaseDoc: ref));
+      } else {
+        eventsOrPosts.add(await Post.fromDocRef(firebaseDoc: ref));
+      }
     }
-    return posts;
+
+    return eventsOrPosts;
   }
 
   @override
@@ -166,14 +183,11 @@ class ProfilePageState extends State<ProfilePage> {
                             if (data.containsKey('savedPosts')) {
                               savedPostRefs = data['savedPosts'];
                             }
-                            if (data.containsKey('savedEvents')) {
-                              savedPostRefs.add(data['savedPosts']);
-                            }
                             if (postRefs.isEmpty) {
                               return const Center(child: Text("No Posts"));
                             }
-                            return FutureBuilder<List<Post>>(
-                              future: getPostsFromRefs(postRefs),
+                            return FutureBuilder<List<dynamic>>(
+                              future: getFromDocRefs(postRefs),
                               builder: (context, snapshot) {
                                 if (snapshot.data == null) {
                                   return const SizedBox.shrink();
@@ -208,34 +222,42 @@ class ProfilePageState extends State<ProfilePage> {
                                     color: ApdiColors.themeGreen));
                           }
                           try {
-                            List postRefs = snap.data!.get('savedPosts');
-                            postRefs = postRefs.reversed.toList();
-                            if (postRefs.isEmpty) {
+                            List Refs = snap.data!.get('savedPosts');
+                            Refs = Refs.reversed.toList();
+                            if (Refs.isEmpty) {
                               return const Center(
-                                  child: Text("No Saved Posts"));
+                                  child: Text("No Saved Events or Posts"));
                             }
-                            return FutureBuilder<List<Post>>(
-                              future: getPostsFromRefs(postRefs),
+                            return FutureBuilder<List<dynamic>>(
+                              future: getFromDocRefs(Refs),
                               builder: (context, snapshot) {
                                 if (snapshot.data == null) {
                                   return const SizedBox.shrink();
                                 }
-                                return ListView.builder(
+                                return Expanded(
+                                    child: ListView.builder(
                                   // physics: const AlwaysScrollableScrollPhysics(),
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (BuildContext context, int idx) {
-                                    return postUI(context,
-                                        PostController(snapshot.data![idx]),
-                                        setState: setState, saved: true);
+                                    if (snapshot.data![idx] is Event) {
+                                      return eventUI(context,
+                                          EventController(snapshot.data![idx]),
+                                          setState: setState);
+                                    } else {
+                                      return postUI(context,
+                                          PostController(snapshot.data![idx]),
+                                          setState: setState, saved: true);
+                                    }
                                   },
-                                );
+                                ));
                               },
                             );
                           } catch (e) {
                             print(e);
-                            return const Center(child: Text("No Saved Posts"));
+                            return const Center(
+                                child: Text("No Saved Events or Posts"));
                           }
-                        }),
+                        })
                   ],
                 ),
               ),

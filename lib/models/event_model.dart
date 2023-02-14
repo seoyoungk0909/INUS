@@ -14,10 +14,10 @@ class Event {
   User writer = User();
   String title = "Tissue-engineering Integrated";
   String category = "Event";
-  String tag = "#environment #education";
+  List tag = ["#environment' ,'#education"];
   String description =
       "Since their first direct discovery in 2015, gravitational waves have contributed significantly to knowledge about astrophysics and fundamental physics. This talk will first introduce the Open... ";
-  String language = "English, Cantonese";
+  List language = ["English, Cantonese"];
   String location =
       "IAS4042, 4/F, Lo Ka Chung Building, Lee Shau Kee Campus, HKUST";
   late DateTime eventTime;
@@ -31,9 +31,9 @@ class Event {
     User? eventWriter,
     String? eventTitle,
     String? eventCategory,
-    String? eventTag,
+    List? eventTag,
     String? eventDescription,
-    String? eventLanguage,
+    List? eventLanguage,
     String? eventLocation,
     DateTime? eventHeldTime,
     DateTime? eventUploadTime,
@@ -83,13 +83,13 @@ class Event {
         eventTitle: eventData.get('title'),
         eventCategory: eventData.get('category'),
         eventTag: eventData.get('tag'),
-        eventDescription: eventData.get('event detail'),
-        eventLanguage: eventData.get('language'),
+        eventDescription: eventData.get('eventDetail'),
+        eventLanguage: eventData.get('language') as List,
         eventLocation: eventData.get('location'),
         eventUploadTime: (eventData.get('uploadTime') as Timestamp).toDate(),
         eventHeldTime: (eventData.get('eventTime') as Timestamp).toDate(),
         eventFormality: (eventData.get('formal')),
-        eventRegisterLink: eventData.get('registration link'),
+        eventRegisterLink: eventData.get('registrationLink'),
         // savedEvent: (eventData.get('save')),
         docRef: firebaseDoc);
   }

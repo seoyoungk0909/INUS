@@ -181,3 +181,29 @@ Widget eventUI(BuildContext context, EventController controller,
     ),
   );
 }
+
+Widget savedEventUI(BuildContext context, EventController controller,
+    {Function? setState}) {
+  return Padding(
+    padding: const EdgeInsetsDirectional.fromSTEB(8, 12, 6, 0),
+    child: SizedBox(
+      height: 100,
+      width: 176,
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(6, 8, 6, 4),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, 'event_detail',
+                arguments: {'event': controller.event});
+          },
+          child: Row(
+            children: [
+              eventPhoto(context, controller),
+              contentUI(context, controller)
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}

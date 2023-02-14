@@ -37,14 +37,14 @@ class EventDetailPageState extends State<EventDetailPage> {
   Future<void> saveEvent(
       String currentUserId, EventController controller) async {
     FirebaseFirestore.instance.doc('user_info/$currentUserId').update({
-      'savedEvents': FieldValue.arrayUnion([controller.event.firebaseDocRef])
+      'savedPosts': FieldValue.arrayUnion([controller.event.firebaseDocRef])
     });
   }
 
   Future<void> deleteEvent(
       String currentUserId, EventController controller) async {
     FirebaseFirestore.instance.doc('user_info/$currentUserId').update({
-      'savedEvents': FieldValue.arrayRemove([controller.event.firebaseDocRef])
+      'savedPosts': FieldValue.arrayRemove([controller.event.firebaseDocRef])
     });
   }
 
@@ -124,14 +124,16 @@ class EventDetailPageState extends State<EventDetailPage> {
                                     child: CircularProgressIndicator(
                                         color: ApdiColors.themeGreen));
                               }
-                              Map documentdata = snapshot.data!.data() as Map;
-                              List? savedEvents =
-                                  documentdata.containsKey('savedEvents')
-                                      ? snapshot.data!['savedEvents']
-                                      : null;
-                              if (savedEvents == null) {
-                                saved = false;
-                              }
+                              // To show saved UI
+                              // Map documentdata = snapshot.data!.data() as Map;
+                              // List? savedEvents =
+                              //     documentdata.containsKey('savedPosts')
+                              //         ? snapshot.data!['savedPosts']
+                              //         : null;
+                              // }
+                              // if (savedEvents.contains(controller.event.firebaseDocRef!.values)) {
+                              //   saved = false;
+                              // }
                               if (saved) {
                                 return IconButton(
                                     onPressed: () => {
@@ -391,7 +393,8 @@ Widget detailedView(BuildContext context, EventController controller) {
                     child: text(context, controller, 'Language', 14,
                         textColor: '#AAAAAA'),
                   ),
-                  text(context, controller, controller.event.language, 15,
+                  text(context, controller, controller.event.language.join(','),
+                      15,
                       bold: true),
                 ],
               ),
