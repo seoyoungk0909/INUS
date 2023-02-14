@@ -100,11 +100,6 @@ class EventWritePageState extends State<EventWritePage> {
 
   final User currentUser = FirebaseAuth.instance.currentUser!;
 
-  Map<String, bool> formalities = {
-    'Casual': true,
-    'Formal': false,
-  };
-
   Map<String, bool> categories = {
     'Party': true,
     'Workshop': false,
@@ -228,18 +223,18 @@ class EventWritePageState extends State<EventWritePage> {
                       shrinkWrap: false,
                       scrollDirection: Axis.horizontal,
                       children: <Widget>[
-                        for (var formality in formalities.keys)
+                        for (var formality in ['Casual', 'Formal'])
                           Row(children: <Widget>[
                             Container(
                               width: 95,
                               height: 35,
                               decoration: BoxDecoration(
-                                  color: formalities[formality]!
+                                  color: ((formality == 'Formal') == formal)
                                       ? Colors.white12
                                       : Colors.transparent,
                                   border: Border.all(
                                       width: 0.5,
-                                      color: formalities[formality]!
+                                      color: ((formality == 'Formal') == formal)
                                           ? Colors.white12
                                           : Colors.white24),
                                   borderRadius: const BorderRadius.all(
@@ -251,34 +246,25 @@ class EventWritePageState extends State<EventWritePage> {
                                 ),
                                 //커멘트
                                 onPressed: () {
-                                  for (var reset in formalities.keys) {
-                                    formalities[reset] = false;
-                                  }
                                   setState(() {
-                                    formalities[formality] == true
-                                        ? formalities[formality] = false
-                                        : formalities[formality] = true;
-                                    formality == 'Formal'
-                                        ? formal = true
-                                        : formal = false;
+                                    formal = formality != 'Casual';
                                   });
                                 },
                                 child: Text(
                                   formality,
                                   style: TextStyle(
                                       fontSize: 14,
-                                      fontWeight: formalities[formality]!
-                                          ? FontWeight.w500
-                                          : FontWeight.normal,
-                                      color: formalities[formality]!
+                                      fontWeight:
+                                          ((formality == 'Formal') == formal)
+                                              ? FontWeight.w500
+                                              : FontWeight.normal,
+                                      color: ((formality == 'Formal') == formal)
                                           ? Color(0xff57AD9E)
                                           : Colors.white70),
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              width: 10,
-                            )
+                            const SizedBox(width: 10)
                           ]),
                       ],
                     ),
