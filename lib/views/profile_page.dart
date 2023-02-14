@@ -30,11 +30,18 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   User defaultUser = User(userName: "", userSchool: School.Loading);
 
-  // Stream<DocumentSnapshot<Map<String, dynamic>>> userInfoStream =
-  //     FirebaseFirestore.instance
-  //         .collection('user_info')
-  //         .doc(fbauth.FirebaseAuth.instance.currentUser?.uid)
-  //         .snapshots();
+  Stream<DocumentSnapshot<Map<String, dynamic>>> userInfoStream1 =
+      FirebaseFirestore.instance
+          .collection('user_info')
+          .doc(fbauth.FirebaseAuth.instance.currentUser?.uid)
+          .snapshots();
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> userInfoStream2 =
+      FirebaseFirestore.instance
+          .collection('user_info')
+          .doc(fbauth.FirebaseAuth.instance.currentUser?.uid)
+          .snapshots();
+
   Future<List<dynamic>> getFromDocRefs(refs) async {
     List<dynamic> eventsOrPosts = [];
     for (DocumentReference<Map<String, dynamic>> ref in refs) {
@@ -154,10 +161,7 @@ class ProfilePageState extends State<ProfilePage> {
                 child: TabBarView(
                   children: [
                     KeepAliveStreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection('user_info')
-                            .doc(state.currentUser?.uid)
-                            .snapshots(),
+                        stream: userInfoStream1,
                         builder: (context, AsyncSnapshot<dynamic> snap) {
                           if (snap.data == null) {
                             print(snap);
@@ -204,10 +208,7 @@ class ProfilePageState extends State<ProfilePage> {
                           }
                         }),
                     KeepAliveStreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection('user_info')
-                            .doc(state.currentUser?.uid)
-                            .snapshots(),
+                        stream: userInfoStream2,
                         builder: (context, AsyncSnapshot<dynamic> snap) {
                           if (snap.data == null) {
                             return Center(
@@ -227,8 +228,7 @@ class ProfilePageState extends State<ProfilePage> {
                                 if (snapshot.data == null) {
                                   return const SizedBox.shrink();
                                 }
-                                return Expanded(
-                                    child: ListView.builder(
+                                return ListView.builder(
                                   // physics: const AlwaysScrollableScrollPhysics(),
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (BuildContext context, int idx) {
@@ -244,7 +244,7 @@ class ProfilePageState extends State<ProfilePage> {
                                           first: idx == 0);
                                     }
                                   },
-                                ));
+                                );
                               },
                             );
                           } catch (e) {
