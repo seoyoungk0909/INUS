@@ -1,4 +1,5 @@
 import 'package:aus/utils/color_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../firebase_login_state.dart';
@@ -74,6 +75,7 @@ class EmailFormPageState extends State<EmailFormPage> {
                       obscureText: false,
                       autocorrect: false,
                       enableSuggestions: false,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: 'School email',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
@@ -139,23 +141,56 @@ class EmailFormPageState extends State<EmailFormPage> {
                     ),
                   ),
                   onPressed: () {
-                    if (emailController.text.isEmpty) {
+                    if (emailController.text.trim().isEmpty) {
                       popUpDialog(context, 'Field Required',
                           "Please input your email.");
                     } else {
+                      String school;
                       try {
-                        String school = verifyEmail(emailController.text);
-                        Navigator.pushNamed(context, 'password_form',
-                            arguments: {
-                              'first': firstName,
-                              'last': lastName,
-                              'email': emailController.text,
-                              'school': school,
-                            });
+                        school = verifyEmail(emailController.text.trim());
                       } on Exception catch (error) {
-                        popUpDialog(context, 'Login Failed',
+                        popUpDialog(context, 'Wrong email',
                             error.toString().split(':')[1]);
+                        return;
                       }
+                      // check if email is already in use
+                      bool emailInUse = true;
+                      // this will result in error b/c password is so random.
+                      FirebaseAuth.instance
+                          .signInWithEmailAndPassword(
+                              email: emailController.text.trim(),
+                              password:
+                                  "vlkjh1gh%jqo&uiyer*nnlk(jhf-heu+wjn[klho]vjhqoi")
+                          .then((value) => null)
+                          .catchError((error, stackTrace) {
+                        print(error.code);
+                        switch (error.code) {
+                          case "user-not-found":
+                            // Thrown if there is no user corresponding to the given email.
+                            emailInUse = false;
+                            break;
+                          case "wrong-password":
+                            // Thrown if the password is invalid for the given email, or the account corresponding to the email does not have a password set.
+                            emailInUse = true;
+                            break;
+                          default:
+                            popUpDialog(context, 'Wrong email',
+                                error.toString().split(':')[1]);
+                        }
+                      }).then((value) {
+                        if (emailInUse) {
+                          popUpDialog(context, 'Email already in use',
+                              "This email is already registered. Please sign in.");
+                        } else {
+                          Navigator.pushNamed(context, 'password_form',
+                              arguments: {
+                                'first': firstName,
+                                'last': lastName,
+                                'email': emailController.text,
+                                'school': school,
+                              });
+                        }
+                      });
                     }
                   }),
             ],

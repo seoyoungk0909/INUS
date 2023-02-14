@@ -35,7 +35,9 @@ class HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    // TODO: implement initState
+    super.initState();
     DocumentReference<Map<String, dynamic>> userRef = FirebaseFirestore.instance
         .collection('user_info')
         .doc(FirebaseAuth.instance.currentUser?.uid);
@@ -46,6 +48,7 @@ class HomePageState extends State<HomePage> {
       if (!confirmed) {
         Future.delayed(Duration(seconds: 2), () {
           showModalBottomSheet(
+              isScrollControlled: true,
               isDismissible: false,
               backgroundColor: Colors.transparent,
               context: context,
@@ -55,6 +58,10 @@ class HomePageState extends State<HomePage> {
         });
       }
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(

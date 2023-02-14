@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 
+import '../utils/color_utils.dart';
+
 class PostWritePage extends StatefulWidget {
   const PostWritePage({Key? key, required this.title}) : super(key: key);
 
@@ -51,200 +53,366 @@ class PostWritePageState extends State<PostWritePage> {
   };
   String trueCategories = "";
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).backgroundColor,
-        title: Text(
-          widget.title,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-            child: Text(
-              " Category",
+  bool isButtonEnabled = false;
+
+  Map<String, bool> textChecker = {
+    'Title': false,
+    'Contents': false,
+  };
+  void textChecking() {
+    if (textChecker['Title']! && textChecker['Contents']!) {
+      setState(() {
+        isButtonEnabled = true;
+      });
+    } else {
+      setState(() {
+        isButtonEnabled = false;
+      });
+    }
+  }
+
+  Widget categorySelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RichText(
+          text: const TextSpan(
+              text: "Category",
               style: TextStyle(
                   fontSize: 16,
                   color: Colors.white70,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-          Container(
-            height: 55,
-            child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
-              child: ListView(
-                shrinkWrap: false,
-                scrollDirection: Axis.horizontal,
-                children: <Widget>[
-                  for (var category in categories.keys)
-                    Row(children: <Widget>[
-                      Container(
-                        width: 100,
-                        height: 35,
-                        decoration: BoxDecoration(
-                            color: categories[category]!
-                                ? Colors.white24
-                                : Colors.transparent,
-                            border: Border.all(
-                                width: 0.5,
-                                color: categories[category]!
-                                    ? Colors.white24
-                                    : Colors.white70),
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            textStyle: const TextStyle(
-                                fontSize: 15, color: Colors.white),
-                          ),
-                          onPressed: () {
-                            for (var reset in categories.keys) {
-                              categories[reset] = false;
-                            }
-                            setState(() {
-                              categories[category] == true
-                                  ? categories[category] = false
-                                  : categories[category] = true;
-                            });
-                          },
-                          child: Text(
-                            category,
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: categories[category]!
-                                    ? FontWeight.w500
-                                    : FontWeight.normal,
-                                color: categories[category]!
-                                    ? Color(0xff57AD9E)
-                                    : Colors.white70),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      )
-                    ]),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 20, left: 10),
-            child: Row(
+                  fontWeight: FontWeight.w600),
               children: [
-                Checkbox(
-                    checkColor: Colors.white,
-                    fillColor: MaterialStateProperty.all(
-                        Theme.of(context).colorScheme.secondary),
-                    value: isAnonymous,
-                    onChanged: (bool? value) {
+                TextSpan(
+                    text: ' *',
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16))
+              ]),
+        ),
+        Padding(
+          padding: const EdgeInsetsDirectional.only(top: 16),
+          child: SizedBox(
+            height: 36,
+            child: ListView.builder(
+              shrinkWrap: false,
+              scrollDirection: Axis.horizontal,
+              itemCount: categories.length,
+              itemBuilder: (context, idx) {
+                List<String> keys = categories.keys.toList();
+                var category = keys[idx];
+                return Container(
+                  width: 100,
+                  height: 36,
+                  margin: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
+                  decoration: BoxDecoration(
+                      color: categories[category]!
+                          ? Colors.white24
+                          : Colors.transparent,
+                      border: Border.all(
+                          width: 0.5,
+                          color: categories[category]!
+                              ? Colors.white24
+                              : Colors.white70),
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle:
+                          const TextStyle(fontSize: 14, color: Colors.white),
+                    ),
+                    onPressed: () {
+                      for (var reset in categories.keys) {
+                        categories[reset] = false;
+                      }
                       setState(() {
-                        isAnonymous = value!;
+                        categories[category] == true
+                            ? categories[category] = false
+                            : categories[category] = true;
                       });
-                    }),
-                Text("Anonymous Post")
-              ],
+                    },
+                    child: Text(
+                      category,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: categories[category]!
+                              ? FontWeight.w500
+                              : FontWeight.normal,
+                          color: categories[category]!
+                              ? Color(0xff57AD9E)
+                              : Colors.white70),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(15, 30, 0, 0),
+        ),
+      ],
+    );
+  }
+
+  Widget anonymousSelector() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Row(
+        children: [
+          // NOTE: this is needed to remove default padding of checkbox
+          // match the width with the page padding value.
+          SizedBox(
+            width: 20,
+            child: Checkbox(
+                checkColor: Colors.white,
+                fillColor: MaterialStateProperty.all(
+                    Theme.of(context).colorScheme.secondary),
+                value: isAnonymous,
+                onChanged: (bool? value) {
+                  setState(() {
+                    isAnonymous = value!;
+                  });
+                }),
           ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-          ),
-          Center(
+          const SizedBox(width: 8),
+          const Text(
+            "Anonymous Post",
+            style: TextStyle(color: Colors.white70),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget titleAndContent() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsetsDirectional.only(top: 20),
+          child: Center(
             child: SizedBox(
               width: 350,
               height: 48,
               child: TextField(
                   controller: postTitle,
-                  decoration: InputDecoration(
+                  onChanged: (content) {
+                    if (content != "") {
+                      textChecker['Title'] = true;
+                      textChecking();
+                    } else {
+                      textChecker['Title'] = false;
+                      textChecking();
+                    }
+                  },
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: "Write your title here.",
                     hintStyle: TextStyle(fontSize: 20.0, color: Colors.white24),
                   )),
             ),
           ),
-          const Divider(
+        ),
+        Padding(
+          padding: const EdgeInsetsDirectional.only(top: 8, bottom: 8),
+          child: Divider(
             color: Colors.white24,
             height: 0,
-            thickness: 2,
-            indent: 20,
-            endIndent: 20,
+            thickness: 1,
+            indent: 0,
+            endIndent: 0,
           ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-          ),
-          Center(
-            child: SizedBox(
-              width: 350,
-              height: 247,
-              child: TextField(
-                controller: postContent,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Write your contents here.",
-                  hintStyle: TextStyle(fontSize: 16.0, color: Colors.white24),
-                ),
-                maxLines: 10,
+        ),
+        Center(
+          child: SizedBox(
+            width: 350,
+            height: 240,
+            child: TextField(
+              controller: postContent,
+              onChanged: (content) {
+                if (content != "") {
+                  textChecker['Contents'] = true;
+                  textChecking();
+                } else {
+                  textChecker['Contents'] = false;
+                  textChecking();
+                }
+              },
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                hintText: "Write your contents here.",
+                hintStyle: TextStyle(fontSize: 16.0, color: Colors.white24),
               ),
+              maxLines: null,
             ),
           ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
+        ),
+      ],
+    );
+  }
+
+  Widget postButton() {
+    return SizedBox(
+        width: 350,
+        height: 46,
+        child: ElevatedButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            backgroundColor: MaterialStateProperty.all(
+                isButtonEnabled ? ApdiColors.themeGreen : Colors.white60),
           ),
-          Center(
-            child: SizedBox(
-                width: 350,
-                height: 55,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.white60),
-                  ),
-                  onPressed: () {
-                    showDialog<void>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Create Post'),
-                            content: Text(
-                                "Are you sure you want to create this post?"),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text("No"),
-                              ),
-                              TextButton(
-                                  onPressed: () {
-                                    for (var category in categories.keys) {
-                                      categories[category] == true
-                                          ? trueCategories = category
-                                          : {};
-                                    }
-                                    uploadPost(currentUser.uid);
-                                    setState(() {});
-                                    Navigator.pushNamedAndRemoveUntil(
-                                        context, '/', (route) => false);
-                                  },
-                                  child: Text("yes"))
-                            ],
-                          );
-                        });
-                  },
-                  child: const Text(
-                    'Post',
-                    style: TextStyle(color: Colors.white, fontSize: 20.0),
-                  ),
-                )),
+          onPressed: () {
+            showDialog<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  if (isButtonEnabled) {
+                    return AlertDialog(
+                      title: const Text(
+                        'Create Post',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      content: const Text(
+                        "Are you sure you want to create this post?",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(
+                            "No",
+                            style: TextStyle(color: ApdiColors.errorRed),
+                          ),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              for (var category in categories.keys) {
+                                categories[category] == true
+                                    ? trueCategories = category
+                                    : {};
+                              }
+                              uploadPost(currentUser.uid);
+                              setState(() {});
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, '/', (route) => false);
+                            },
+                            child: Text(
+                              "Yes",
+                              style: TextStyle(color: ApdiColors.themeGreen),
+                            ))
+                      ],
+                    );
+                  }
+                  return AlertDialog(
+                    title: const Text(
+                      'Warning',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    content: const Text(
+                      "You have not filled certain parts. Please check again.",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(
+                            "OK",
+                            style: TextStyle(color: ApdiColors.themeGreen),
+                          ))
+                    ],
+                  );
+                });
+          },
+          child: const Text(
+            'Post',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontFamily: 'Outfit',
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ],
+        ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).backgroundColor,
+        title: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: Text(
+            widget.title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios,
+          ),
+          onPressed: () {
+            showDialog<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text(
+                      'Discard Writings',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    content: const Text(
+                      "Are you sure you want to go back to the main page? (All you have written will be lost!) ",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          "No",
+                          style: TextStyle(color: ApdiColors.errorRed),
+                        ),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "Yes",
+                            style: TextStyle(color: ApdiColors.themeGreen),
+                          ))
+                    ],
+                  );
+                });
+          },
+        ),
+      ),
+      body: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ListView(
+                  children: [
+                    categorySelector(),
+                    anonymousSelector(),
+                    titleAndContent(),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsetsDirectional.only(top: 0, bottom: 8),
+                child: Center(child: postButton()),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

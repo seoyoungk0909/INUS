@@ -41,7 +41,8 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "We will send a password recovery email to your school email.",
+                    "We will send a password recovery email to your school email.\n\n"
+                    "If you can't find the email in your inbox, please check your spam folder.",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -69,6 +70,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                       obscureText: false,
                       autocorrect: false,
                       enableSuggestions: false,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: 'Your email address',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
@@ -126,9 +128,10 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                           if (emailSent) {
                             Navigator.pop(context);
                           } else {
+                            print(emailController.text.trim());
                             FirebaseAuth.instance
                                 .sendPasswordResetEmail(
-                                    email: emailController.text)
+                                    email: emailController.text.trim())
                                 .then((_) {
                               popUpDialog(context, "Reset Email Sent!",
                                   "We have sent a password reset link to your email.");

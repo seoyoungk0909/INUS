@@ -1,4 +1,5 @@
 import 'package:aus/utils/color_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +46,17 @@ class LoginPageState extends State<LoginPage> {
               "should've thrown another exception");
       }
     }).catchError((error) {
-      popUpDialog(context, 'Login Failed', error.message);
+      Widget? action;
+      if (error.message == "Please verify your email.") {
+        action = TextButton(
+          onPressed: () {
+            FirebaseAuth.instance.currentUser?.sendEmailVerification();
+            Navigator.pop(context);
+          },
+          child: const Text('Send verification again', softWrap: true),
+        );
+      }
+      popUpDialog(context, 'Login Failed', error.message, action: action);
     });
   }
 
@@ -88,6 +99,7 @@ class LoginPageState extends State<LoginPage> {
                       obscureText: false,
                       autocorrect: false,
                       enableSuggestions: false,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: 'School email',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
@@ -131,6 +143,7 @@ class LoginPageState extends State<LoginPage> {
                       obscureText: !passwordVisibility,
                       autocorrect: false,
                       enableSuggestions: false,
+                      keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
                         hintText: 'password',
                         hintStyle: Theme.of(context).textTheme.labelMedium,

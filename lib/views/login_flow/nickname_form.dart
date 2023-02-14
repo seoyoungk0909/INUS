@@ -78,6 +78,7 @@ class NickNameFormPageState extends State<NickNameFormPage> {
                       obscureText: false,
                       autocorrect: false,
                       enableSuggestions: false,
+                      keyboardType: TextInputType.name,
                       decoration: InputDecoration(
                         hintText: 'Enter your username',
                         labelStyle: Theme.of(context).textTheme.labelMedium,

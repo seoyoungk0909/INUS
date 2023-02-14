@@ -72,6 +72,7 @@ class NameFormPageState extends State<NameFormPage> {
                       obscureText: false,
                       autocorrect: false,
                       enableSuggestions: false,
+                      keyboardType: TextInputType.name,
                       decoration: InputDecoration(
                         hintText: 'First Name',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
@@ -115,6 +116,7 @@ class NameFormPageState extends State<NameFormPage> {
                       obscureText: false,
                       autocorrect: false,
                       enableSuggestions: false,
+                      keyboardType: TextInputType.name,
                       decoration: InputDecoration(
                         hintText: 'Last Name',
                         hintStyle: Theme.of(context).textTheme.labelMedium,

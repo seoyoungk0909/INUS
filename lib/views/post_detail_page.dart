@@ -56,38 +56,51 @@ class PostDetailPageState extends State<PostDetailPage> {
       body: Column(
         children: [
           // post detail
-          postUI(context, controller, isDetail: true, saved: saved),
-          // comment list
           Expanded(
-            child: StreamBuilder(
-              stream: controller.post.firebaseDocRef?.snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snap) {
-                if (snap.data == null) {
-                  return Center(
-                      child: CircularProgressIndicator(
-                          color: ApdiColors.themeGreen));
-                }
-                List commentRefs = snap.data!.get('comments');
-                if (commentRefs.isEmpty) {
-                  return const Center(child: Text("No Comments"));
-                }
-                return FutureBuilder(
-                    future: getCommentsFromRefs(commentRefs),
-                    builder: (context, AsyncSnapshot<List<Comment>> snapshot) {
-                      if (snapshot.data == null) {
-                        return const SizedBox.shrink(); // empty widget
-                      }
-                      return ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, idx) {
-                          return CommentUI(snapshot.data![idx]);
-                        },
-                      );
-                    });
-              },
-            ),
+            child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    postUI(context, controller, isDetail: true, saved: saved),
+                    // comment list
+                    // Expanded(
+                    StreamBuilder(
+                      stream: controller.post.firebaseDocRef?.snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                              snap) {
+                        if (snap.data == null) {
+                          return Center(
+                              child: CircularProgressIndicator(
+                                  color: ApdiColors.themeGreen));
+                        }
+                        List commentRefs = snap.data!.get('comments');
+                        if (commentRefs.isEmpty) {
+                          return const Center(child: Text("No Comments"));
+                        }
+                        return FutureBuilder(
+                            future: getCommentsFromRefs(commentRefs),
+                            builder: (context,
+                                AsyncSnapshot<List<Comment>> snapshot) {
+                              if (snapshot.data == null) {
+                                return const SizedBox.shrink(); // empty widget
+                              }
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: snapshot.data!.length,
+                                itemBuilder: (context, idx) {
+                                  return CommentUI(snapshot.data![idx],
+                                      first: idx == 0);
+                                },
+                              );
+                            });
+                      },
+                    ),
+                  ],
+                )),
           ),
+
           // comment write
           CommentBox(controller: controller),
         ],

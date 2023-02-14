@@ -10,14 +10,16 @@ const List EVENT_CATEGORY = [
   "Party"
 ];
 
+const List EVENT_LANGUAGE = ["English", "Cantonese", "Mandarin"];
+
 class Event {
   User writer = User();
   String title = "Tissue-engineering Integrated";
   String category = "Event";
-  String tag = "#environment #education";
+  List tag = ["#environment", "#education"];
   String description =
       "Since their first direct discovery in 2015, gravitational waves have contributed significantly to knowledge about astrophysics and fundamental physics. This talk will first introduce the Open... ";
-  String language = "English, Cantonese";
+  List language = ["English", "Cantonese"];
   String location =
       "IAS4042, 4/F, Lo Ka Chung Building, Lee Shau Kee Campus, HKUST";
   late DateTime eventTime;
@@ -31,22 +33,23 @@ class Event {
     User? eventWriter,
     String? eventTitle,
     String? eventCategory,
-    String? eventTag,
+    List? eventTag,
     String? eventDescription,
-    String? eventLanguage,
+    List? eventLanguage,
     String? eventLocation,
     DateTime? eventHeldTime,
     DateTime? eventUploadTime,
     bool? eventFormality,
     String? eventRegisterLink,
-    // bool? savedEvent,
     DocumentReference<Map<String, dynamic>>? docRef,
   }) {
     writer = eventWriter ?? writer;
 
     title = eventTitle ?? title;
     category = eventCategory ?? category;
-    tag = eventTag ?? tag;
+    tag = (eventTag != null
+        ? (eventTag.length >= 2 ? eventTag.sublist(0, 2) : eventTag)
+        : tag);
     description = eventDescription ?? description;
     language = eventLanguage ?? language;
     location = eventLocation ?? location;
@@ -54,7 +57,6 @@ class Event {
     eventTime = eventHeldTime ?? DateTime.now();
     formal = eventFormality ?? formal;
     registerLink = eventRegisterLink ?? registerLink;
-    // save = savedEvent ?? save;
     firebaseDocRef = docRef;
   }
 
@@ -83,14 +85,13 @@ class Event {
         eventTitle: eventData.get('title'),
         eventCategory: eventData.get('category'),
         eventTag: eventData.get('tag'),
-        eventDescription: eventData.get('event detail'),
+        eventDescription: eventData.get('eventDetail'),
         eventLanguage: eventData.get('language'),
         eventLocation: eventData.get('location'),
         eventUploadTime: (eventData.get('uploadTime') as Timestamp).toDate(),
         eventHeldTime: (eventData.get('eventTime') as Timestamp).toDate(),
         eventFormality: (eventData.get('formal')),
-        eventRegisterLink: eventData.get('registration link'),
-        // savedEvent: (eventData.get('save')),
+        eventRegisterLink: eventData.get('registrationLink'),
         docRef: firebaseDoc);
   }
 
@@ -101,7 +102,7 @@ class Event {
     Query<Map<String, dynamic>> firebaseQuery = getEventsQuery(formal: formal);
 
     QuerySnapshot<Map<String, dynamic>> firebaseEvents =
-        await firebaseQuery.get(const GetOptions(source: Source.cache));
+        await firebaseQuery.get();
 
     for (QueryDocumentSnapshot<Map<String, dynamic>> fbEvent
         in firebaseEvents.docs) {

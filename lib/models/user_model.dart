@@ -8,6 +8,7 @@ enum School {
   CUHK,
   PolyU,
   CityU,
+  Loading,
 }
 
 School string2School(String school) {
@@ -61,5 +62,6 @@ class User {
       userRef: userRef,
     );
   }
+
   String getSchool() => school.toString().split('.').last;
 }

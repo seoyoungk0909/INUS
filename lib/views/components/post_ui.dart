@@ -38,10 +38,10 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(4, 0, 4, 4),
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           //view
           Padding(
@@ -50,7 +50,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
+                  padding: EdgeInsetsDirectional.fromSTEB(5, 8, 0, 8),
                   // TODO: use eye-open
                   child: Icon(
                     Icons.remove_red_eye_outlined,
@@ -97,7 +97,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
+                  padding: EdgeInsetsDirectional.fromSTEB(5, 8, 0, 8),
                   // child: Icon(
                   //   Icons.comment,
                   //   color: hexStringToColor(hexButtonColor),
@@ -250,7 +250,7 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
   }
   return Column(children: [
     Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(8, 12, 8, 16),
+      padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 8, 16),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -336,10 +336,11 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
 
 Widget contentUI(BuildContext context, PostController controller,
     {bool isDetail = false}) {
+  double topPad = isDetail ? 16 : 8;
   return Column(
     children: [
       Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 8, 4),
+        padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 8, 4),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -350,9 +351,9 @@ Widget contentUI(BuildContext context, PostController controller,
                     : controller.post.title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontFamily: 'Outfit',
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      color: ApdiColors.lightText,
+                      fontSize: isDetail ? 20 : 18,
+                      fontWeight: FontWeight.w500,
                     ),
               ),
             ),
@@ -360,7 +361,7 @@ Widget contentUI(BuildContext context, PostController controller,
         ),
       ),
       Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(20, 8, 8, 4),
+        padding: EdgeInsetsDirectional.fromSTEB(8, topPad, 8, 4),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -373,9 +374,11 @@ Widget contentUI(BuildContext context, PostController controller,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText2?.copyWith(
                       fontFamily: 'Outfit',
-                      color: hexStringToColor("#AAAAAA"),
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
+                      color: isDetail
+                          ? ApdiColors.lightText
+                          : hexStringToColor("#AAAAAA"),
+                      fontSize: isDetail ? 16 : 14,
+                      fontWeight: FontWeight.w400,
                     ),
               ),
             ),
@@ -387,22 +390,18 @@ Widget contentUI(BuildContext context, PostController controller,
 }
 
 Widget postUI(BuildContext context, PostController controller,
-    {Function? setState, bool isDetail = false, bool saved = false}) {
+    {Function? setState,
+    bool isDetail = false,
+    bool saved = false,
+    bool first = false}) {
+  double topPad = first ? 16 : 0;
   return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(16, 14, 16, 0),
+    padding: EdgeInsetsDirectional.fromSTEB(16, topPad, 16, 0),
     child: Container(
-      width: double.infinity,
       decoration: BoxDecoration(
-        // color: hexStringToColor("#3E3E3E"),
-        // boxShadow: const [
-        //   BoxShadow(
-        //     blurRadius: 5,
-        //     color: Color(0x3416202A),
-        //     offset: Offset(0, 3),
-        //   )
-        // ],
-        borderRadius: BorderRadius.circular(8),
-      ),
+          // border:
+          //     BorderDirectional(bottom: BorderSide(color: ApdiColors.lineGrey)),
+          ),
       child: TextButton(
         style: ButtonStyle(
             overlayColor: MaterialStateProperty.all(Colors.transparent)),
@@ -424,10 +423,12 @@ Widget postUI(BuildContext context, PostController controller,
                   controller: controller,
                   showText: !isDetail,
                   saved: saved),
-              const Divider(
-                height: 8,
+              Divider(
+                color: ApdiColors.lineGrey,
+                height: 0,
                 thickness: 1,
-                color: Color.fromARGB(255, 74, 74, 74),
+                indent: 0,
+                endIndent: 0,
               ),
             ],
           ),

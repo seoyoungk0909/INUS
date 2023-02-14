@@ -80,6 +80,7 @@ class PasswordFormPageState extends State<PasswordFormPage> {
                       obscureText: !passwordVisibility1,
                       autocorrect: false,
                       enableSuggestions: false,
+                      keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
                         hintText: 'Enter your password',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
@@ -136,6 +137,7 @@ class PasswordFormPageState extends State<PasswordFormPage> {
                       obscureText: !passwordVisibility2,
                       autocorrect: false,
                       enableSuggestions: false,
+                      keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
                         hintText: 'confirm your password',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
@@ -226,7 +228,8 @@ class PasswordFormPageState extends State<PasswordFormPage> {
                               "Please check your password again.");
                         } else {
                           appState
-                              .registerAccount(email, passwordController1.text)
+                              .registerAccount(email, passwordController1.text,
+                                  email.split('@')[0])
                               .then((value) {
                             Navigator.pushNamed(context, 'verify', arguments: {
                               'first': firstName,
