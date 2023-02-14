@@ -7,7 +7,7 @@ import '../../utils/color_utils.dart';
 Widget CommentUI(Comment comment, {bool first = false}) {
   double topPad = first ? 8 : 16;
   return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+    padding: const EdgeInsetsDirectional.fromSTEB(28, 0, 28, 0),
     child: Container(
       decoration: BoxDecoration(
         border:
