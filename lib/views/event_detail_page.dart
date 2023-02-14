@@ -36,26 +36,32 @@ class EventDetailPageState extends State<EventDetailPage> {
 
   Future<void> saveEvent(
       String currentUserId, EventController controller) async {
-    FirebaseFirestore.instance.doc('user_info/$currentUserId').update({
+    FirebaseFirestore.instance
+        .collection('user_info')
+        .doc(currentUserId)
+        .update({
       'savedPosts': FieldValue.arrayUnion([controller.event.firebaseDocRef])
     });
   }
 
   Future<void> deleteEvent(
       String currentUserId, EventController controller) async {
-    FirebaseFirestore.instance.doc('user_info/$currentUserId').update({
+    FirebaseFirestore.instance
+        .collection('user_info')
+        .doc(currentUserId)
+        .update({
       'savedPosts': FieldValue.arrayRemove([controller.event.firebaseDocRef])
     });
   }
 
   final User currentUser = FirebaseAuth.instance.currentUser!;
+
   bool saved = false;
 
   @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
-
     EventController controller = EventController(arguments['event'] ?? Event());
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColorDark,
