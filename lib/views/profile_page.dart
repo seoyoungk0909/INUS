@@ -25,7 +25,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  User defaultUser = User(userName: "", userSchool: School.PolyU);
+  User defaultUser = User(userName: "", userSchool: School.Loading);
 
   // Stream<DocumentSnapshot<Map<String, dynamic>>> userInfoStream =
   //     FirebaseFirestore.instance
