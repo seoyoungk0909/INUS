@@ -1,5 +1,6 @@
 // import 'dart:html';
 
+import 'package:aus/views/components/event_save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../controllers/event_controller.dart';
@@ -8,6 +9,9 @@ import 'package:aus/utils/color_utils.dart';
 import 'components/event_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class EventDetailPage extends StatefulWidget {
   const EventDetailPage({Key? key, required this.title}) : super(key: key);
@@ -24,6 +28,11 @@ class EventDetailPage extends StatefulWidget {
 }
 
 class EventDetailPageState extends State<EventDetailPage> {
+  Future<DocumentSnapshot> userInfoSnap = FirebaseFirestore.instance
+      .collection('user_info')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .get();
+
   Future<void> _launchURL(String url) async {
     final Uri uri = Uri(scheme: "https", host: url);
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
@@ -49,61 +58,75 @@ class EventDetailPageState extends State<EventDetailPage> {
               icon: SvgPicture.asset('assets/icons/Report.svg'))
         ],
       ),
-      body: ListView(
-        children: [
-          eventDetailPhoto(context, controller),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 15, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      body: FutureBuilder<DocumentSnapshot>(
+          future: userInfoSnap,
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.data == null) {
+              return Center(
+                  child:
+                      CircularProgressIndicator(color: ApdiColors.themeGreen));
+            }
+            Map documentdata = snapshot.data!.data() as Map;
+            List? savedPosts = documentdata.containsKey('savedPosts')
+                ? documentdata['savedPosts']
+                : null;
+            bool isEventSaved =
+                savedPosts?.contains(controller.event.firebaseDocRef) ?? false;
+            return ListView(
               children: [
-                categoryButton(context, controller),
-                eventTitle(context, controller),
-                categoryHashtag(context, controller),
-                quickView(context, controller),
-                eventDescription(context, controller),
-                detailedView(context, controller),
+                eventDetailPhoto(context, controller),
                 Padding(
-                  padding: const EdgeInsets.only(top: 40),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.753,
-                        height: 28,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            _launchURL(controller.event.registerLink);
-                          },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).colorScheme.secondary),
-                              textStyle:
-                                  MaterialStateProperty.all(const TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'Outfit',
-                                fontWeight: FontWeight.w600,
-                              ))),
-                          child: const Text('Register'),
-                        ),
-                      ),
+                      categoryButton(context, controller),
+                      eventTitle(context, controller),
+                      categoryHashtag(context, controller),
+                      quickView(context, controller),
+                      eventDescription(context, controller),
+                      detailedView(context, controller),
                       Padding(
-                        padding: const EdgeInsets.only(left: 9),
-                        child: IconButton(
-                          onPressed: () => {setState(() {})},
-                          icon: const Icon(Icons.bookmark_border),
-                          color: hexStringToColor("#AAAAAA"),
-                          iconSize: 37.0,
+                        padding: const EdgeInsets.only(top: 40, bottom: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.76,
+                              height: 40,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  _launchURL(controller.event.registerLink);
+                                },
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
+                                    textStyle: MaterialStateProperty.all(
+                                        const TextStyle(
+                                      fontSize: 18,
+                                      fontFamily: 'Outfit',
+                                      fontWeight: FontWeight.w600,
+                                    ))),
+                                child: const Text('Register'),
+                              ),
+                            ),
+                            Spacer(),
+                            EventSaveButton(
+                                controller: controller,
+                                currentUser: FirebaseAuth.instance.currentUser!,
+                                saved: isEventSaved),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
+            );
+          }),
     );
   }
 }

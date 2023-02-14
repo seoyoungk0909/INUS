@@ -36,7 +36,6 @@ class Event {
     List? eventTag,
     String? eventDescription,
     List? eventLanguage,
-    // String? eventLanguage,
     String? eventLocation,
     DateTime? eventHeldTime,
     DateTime? eventUploadTime,

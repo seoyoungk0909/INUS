@@ -46,7 +46,7 @@ Widget eventPhoto(BuildContext context, EventController controller) {
 //category button
 Widget categoryButton(BuildContext context, EventController controller) {
   return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
+    padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
     child: Container(
       decoration: BoxDecoration(
         color: hexStringToColor("#3E3E3E"),
@@ -55,7 +55,7 @@ Widget categoryButton(BuildContext context, EventController controller) {
             color: hexStringToColor(buttonColor(controller.event.category))),
       ),
       child: Container(
-        padding: const EdgeInsetsDirectional.fromSTEB(8, 3, 8, 3),
+        padding: const EdgeInsetsDirectional.fromSTEB(8, 2, 8, 2),
         child: Text(
           controller.event.category,
           style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -73,23 +73,17 @@ Widget categoryButton(BuildContext context, EventController controller) {
 //event title
 Widget eventTitle(BuildContext context, EventController controller) {
   return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
-    child: Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-          child: Text(
-            controller.event.title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontFamily: 'Outfit',
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
+    padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+    child: Text(
+      controller.event.title,
+      softWrap: true,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontFamily: 'Outfit',
+            color: Colors.white,
+            fontSize: 16,
           ),
-        ),
-      ],
     ),
   );
 }
@@ -97,21 +91,15 @@ Widget eventTitle(BuildContext context, EventController controller) {
 //event date
 Widget eventDate(BuildContext context, EventController controller) {
   return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
-    child: Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Text(
-          DateFormat('dd.MM.yyyy').format(controller.event.uploadTime),
-          style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                fontFamily: 'Outfit',
-                color: hexStringToColor("#AAAAAA"),
-                fontSize: 12,
-                fontWeight: FontWeight.normal,
-              ),
-        ),
-      ],
+    padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+    child: Text(
+      DateFormat('dd.MM.yyyy').format(controller.event.uploadTime),
+      style: Theme.of(context).textTheme.bodyText2?.copyWith(
+            fontFamily: 'Outfit',
+            color: hexStringToColor("#AAAAAA"),
+            fontSize: 12,
+            fontWeight: FontWeight.normal,
+          ),
     ),
   );
 }
@@ -119,25 +107,17 @@ Widget eventDate(BuildContext context, EventController controller) {
 //event hashtag
 Widget eventHashTag(BuildContext context, EventController controller) {
   return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(5, 10, 5, 6),
-    child: Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Text(
-            "#${controller.event.tag.join(' #')}",
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                  fontFamily: 'Outfit',
-                  color: hexStringToColor("#AAAAAA"),
-                  fontSize: 12,
-                  fontWeight: FontWeight.normal,
-                ),
+    padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 6),
+    child: Text(
+      "#${controller.event.tag.join(' #')}",
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: Theme.of(context).textTheme.bodyText2?.copyWith(
+            fontFamily: 'Outfit',
+            color: hexStringToColor("#AAAAAA"),
+            fontSize: 12,
+            fontWeight: FontWeight.normal,
           ),
-        ),
-      ],
     ),
   );
 }
@@ -157,26 +137,46 @@ Widget contentUI(BuildContext context, EventController controller) {
 Widget eventUI(BuildContext context, EventController controller,
     {Function? setState}) {
   return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(8, 12, 6, 0),
-    child: SizedBox(
-      width: 176,
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(6, 8, 6, 4),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, 'event_detail',
-                arguments: {'event': controller.event});
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              eventPhoto(context, controller),
-              contentUI(context, controller)
-            ],
-          ),
-        ),
+    padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
+    child: GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, 'event_detail',
+            arguments: {'event': controller.event});
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          eventPhoto(context, controller),
+          contentUI(context, controller),
+        ],
       ),
     ),
   );
+}
+
+Widget savedEventUI(BuildContext context, EventController controller,
+    {Function? setState, bool first = false}) {
+  double topPad = first ? 16 : 0;
+  return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(16, topPad, 16, 0),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, 'event_detail',
+              arguments: {'event': controller.event});
+        },
+        child: Column(
+          children: [
+            Row(
+              children: [
+                eventPhoto(context, controller),
+                const SizedBox(width: 12),
+                Expanded(child: contentUI(context, controller)),
+              ],
+            ),
+            Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+                child: Divider()),
+          ],
+        ),
+      ));
 }
