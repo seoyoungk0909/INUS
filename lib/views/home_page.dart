@@ -62,6 +62,11 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final arguments =
+        (ModalRoute.of(context)?.settings.arguments ?? <String, bool>{}) as Map;
+    if (arguments['postpage'] == true) {
+      _selectedIndex = 1;
+    }
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(
