@@ -124,9 +124,17 @@ class HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.add_event,
+        // childMargin: const EdgeInsets.symmetric(horizontal: 150, vertical: 50),
+        // childPadding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+        icon: Icons.add,
+        activeIcon: Icons.close,
         children: [
           SpeedDialChild(
+              // shape: RoundedRectangleBorder(),
+              // child: Container(
+              //     child: Row(
+              //   children: [Icon(Icons.save), Text("Create Post")],
+              // )),
               child: Icon(Icons.save),
               label: "Create Post",
               onTap: () => Navigator.pushNamed(context, 'post_write')),
@@ -136,10 +144,6 @@ class HomePageState extends State<HomePage> {
               onTap: () => Navigator.pushNamed(context, 'event_write')),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => Navigator.pushNamed(context, 'post_write'),
-      //   child: const Icon(Icons.add),
-      // ),
     );
   }
 }
