@@ -66,6 +66,7 @@ class HomePageState extends State<HomePage> {
         (ModalRoute.of(context)?.settings.arguments ?? <String, bool>{}) as Map;
     if (arguments['postpage'] == true) {
       _selectedIndex = 1;
+      arguments['postpage'] = false;
     }
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
