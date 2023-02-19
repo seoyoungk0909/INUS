@@ -352,7 +352,7 @@ Widget contentUI(BuildContext context, PostController controller,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontFamily: 'Outfit',
                       color: ApdiColors.lightText,
-                      fontSize: isDetail ? 24 : 20,
+                      fontSize: isDetail ? 20 : 16,
                       fontWeight: FontWeight.w500,
                     ),
               ),
