@@ -1,4 +1,5 @@
 import 'package:aus/controllers/event_controller.dart';
+import 'package:aus/views/components/popup_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -441,6 +442,14 @@ class EventWritePageState extends State<EventWritePage> {
                             textChecker['Tags'] = false;
                             textChecking();
                           }
+                          List twoTagsAllowed = tags.text.split(' ');
+                          if (twoTagsAllowed.length >= 3) {
+                            textChecker['Tags'] = false;
+                            textChecking();
+                            popUpDialog(context,
+                                "Maximum of two tags is allowed", 'try again');
+                          }
+                          ;
                         },
                         decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
