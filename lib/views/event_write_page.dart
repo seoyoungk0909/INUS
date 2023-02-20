@@ -24,8 +24,9 @@ class EventWritePage extends StatefulWidget {
 class EventWritePageState extends State<EventWritePage> {
   bool formal = false;
   Future<void> uploadEvent(String currentUserId) async {
-    DocumentReference newEvent =
-        await FirebaseFirestore.instance.collection("event").add({
+    DocumentReference newEvent = await FirebaseFirestore.instance
+        .collection("event_requested_for_approval")
+        .add({
       'title': eventTitle.text.trim(),
       'tag': tags.text.split(' '),
       'eventTime': Timestamp.fromDate(

@@ -292,7 +292,10 @@ class PostWritePageState extends State<PostWritePage> {
                               uploadPost(currentUser.uid);
                               setState(() {});
                               Navigator.pushNamedAndRemoveUntil(
-                                  context, '/', (route) => false);
+                                  context,
+                                  '/',
+                                  arguments: {'postpage': true},
+                                  (route) => false);
                             },
                             child: Text(
                               "Yes",
