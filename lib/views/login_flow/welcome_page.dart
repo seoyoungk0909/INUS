@@ -91,7 +91,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 const Expanded(
                   child: Center(
                     child: Text(
-                      "Welcome to AUS!",
+                      "Welcome to INUS!",
                       style: TextStyle(fontSize: 30),
                       textAlign: TextAlign.center,
                     ),
