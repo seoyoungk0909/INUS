@@ -127,8 +127,31 @@ class ReportPageState extends State<ReportPage> {
                       } else if (arguments.keys.first == 'post') {
                         postSendReport(postController);
                       }
-                      popUpDialog(context, "Report Completed",
-                          "This report will be reviewed promptly by the administrator.");
+                      showDialog<void>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text(
+                                "Report Completed",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              content: const Text(
+                                  "This report will be reviewed promptly by the administrator.",
+                                  style: TextStyle(fontSize: 12)),
+                              actions: <Widget>[
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "Okay",
+                                      style: TextStyle(
+                                          color: ApdiColors.themeGreen),
+                                    ))
+                              ],
+                            );
+                          });
                     },
                     child: const Text(
                       'Submit',

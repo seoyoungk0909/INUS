@@ -133,8 +133,31 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                                 .sendPasswordResetEmail(
                                     email: emailController.text.trim())
                                 .then((_) {
-                              popUpDialog(context, "Reset Email Sent!",
-                                  "We have sent a password reset link to your email.");
+                              showDialog<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                        "Reset Email Sent!",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      content: const Text(
+                                          "We have sent a password reset link to your email.",
+                                          style: TextStyle(fontSize: 12)),
+                                      actions: <Widget>[
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              "Okay",
+                                              style: TextStyle(
+                                                  color: ApdiColors.themeGreen),
+                                            ))
+                                      ],
+                                    );
+                                  });
                               setState(() {
                                 emailSent = true;
                               });
