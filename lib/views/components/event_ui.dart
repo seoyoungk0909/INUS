@@ -93,7 +93,7 @@ Widget eventDate(BuildContext context, EventController controller) {
   return Padding(
     padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
     child: Text(
-      DateFormat('dd.MM.yyyy').format(controller.event.uploadTime),
+      DateFormat('dd.MM.yyyy').format(controller.event.eventTime),
       style: Theme.of(context).textTheme.bodyText2?.copyWith(
             fontFamily: 'Outfit',
             color: hexStringToColor("#AAAAAA"),
