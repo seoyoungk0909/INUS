@@ -94,21 +94,20 @@ class EventDetailPageState extends State<EventDetailPage> {
                           children: [
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.76,
-                              height: 40,
+                              height: 48,
                               child: ElevatedButton(
                                 onPressed: () async {
                                   _launchURL(controller.event.registerLink);
                                 },
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .secondary),
+                                        hexStringToColor(buttonColor(
+                                            controller.event.category))),
                                     textStyle: MaterialStateProperty.all(
                                         const TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w500,
                                     ))),
                                 child: const Text('Register'),
                               ),
@@ -141,7 +140,7 @@ Widget text(BuildContext context, EventController controller, String content,
             fontFamily: 'Outfit',
             color: hexStringToColor(textColor),
             fontSize: size,
-            fontWeight: FontWeight.w500));
+            fontWeight: FontWeight.w400));
   }
   return Text(content,
       style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -154,18 +153,27 @@ Widget text(BuildContext context, EventController controller, String content,
 //event photo
 Widget eventDetailPhoto(BuildContext context, EventController controller) {
   return Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: Container(
-      width: double.infinity,
-      height: 200,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(eventImage(controller.event.category)),
-          fit: BoxFit.cover,
-        ),
-      ),
-    ),
-  );
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+          width: double.infinity,
+          height: 240,
+          child: Container(
+              decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(eventImage(controller.event.category)),
+              fit: BoxFit.cover,
+            ),
+          )))
+
+      //     SizedBox(
+      //   width: double.infinity,
+      //   height: 240,
+      //   child: SvgPicture.asset(
+      //     eventImage(controller.event.category),
+      //     fit: BoxFit.cover,
+      //   ),
+      // ),
+      );
 }
 
 Widget singleHashtag(
@@ -180,7 +188,8 @@ Widget singleHashtag(
       ),
       child: Container(
         padding: const EdgeInsetsDirectional.fromSTEB(9, 5, 9, 0),
-        child: text(context, controller, "#${controller.event.tag[index]}", 12),
+        child: text(context, controller,
+            "#${capitalize(controller.event.tag[index])}", 12),
       ),
     ),
   );
@@ -212,7 +221,7 @@ Widget quickView(BuildContext context, EventController controller) {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            text(context, controller, 'Quick View', 15, bold: true),
+            text(context, controller, 'Quick View', 16, bold: true),
             Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: Row(
@@ -230,7 +239,7 @@ Widget quickView(BuildContext context, EventController controller) {
                             controller,
                             DateFormat('dd MMM y')
                                 .format(controller.event.eventTime),
-                            15,
+                            16,
                             bold: true),
                       ],
                     ),
@@ -249,7 +258,7 @@ Widget quickView(BuildContext context, EventController controller) {
                               controller,
                               DateFormat('Hm')
                                   .format(controller.event.eventTime),
-                              15,
+                              16,
                               bold: true),
                         ],
                       ),
@@ -271,7 +280,7 @@ Widget eventDescription(BuildContext context, EventController controller) {
       mainAxisSize: MainAxisSize.max,
       children: [
         Expanded(
-            child: text(context, controller, controller.event.description, 14)),
+            child: text(context, controller, controller.event.description, 16)),
       ],
     ),
   );
@@ -292,7 +301,7 @@ Widget detailedView(BuildContext context, EventController controller) {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            text(context, controller, 'Detailed View', 15, bold: true),
+            text(context, controller, 'Detailed View', 16, bold: true),
             //date
             Padding(
               padding: const EdgeInsets.only(top: 15),
@@ -307,7 +316,7 @@ Widget detailedView(BuildContext context, EventController controller) {
                       context,
                       controller,
                       DateFormat('dd MMM y').format(controller.event.eventTime),
-                      15,
+                      16,
                       bold: true),
                 ],
               ),
@@ -323,7 +332,7 @@ Widget detailedView(BuildContext context, EventController controller) {
                         textColor: '#AAAAAA'),
                   ),
                   text(context, controller,
-                      DateFormat('Hm').format(controller.event.eventTime), 15,
+                      DateFormat('Hm').format(controller.event.eventTime), 16,
                       bold: true),
                 ],
               ),
@@ -339,7 +348,7 @@ Widget detailedView(BuildContext context, EventController controller) {
                         textColor: '#AAAAAA'),
                   ),
                   text(context, controller,
-                      controller.event.language.join(', '), 15,
+                      controller.event.language.join(', '), 16,
                       bold: true),
                 ],
               ),
@@ -358,7 +367,7 @@ Widget detailedView(BuildContext context, EventController controller) {
                   ),
                   Expanded(
                     child: text(
-                        context, controller, controller.event.location, 15,
+                        context, controller, controller.event.location, 16,
                         bold: true),
                   ),
                 ],

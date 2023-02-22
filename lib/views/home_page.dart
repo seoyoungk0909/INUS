@@ -136,11 +136,25 @@ class HomePageState extends State<HomePage> {
               //     child: Row(
               //   children: [Icon(Icons.save), Text("Create Post")],
               // )),
-              child: Icon(Icons.save),
+              child: SizedBox(
+                width: 28,
+                height: 28,
+                child: Image.asset(
+                  "assets/icons/create-post.png",
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
               label: "Create Post",
               onTap: () => Navigator.pushNamed(context, 'post_write')),
           SpeedDialChild(
-              child: Icon(Icons.event),
+              child: SizedBox(
+                width: 28,
+                height: 28,
+                child: Image.asset(
+                  "assets/icons/create-event.png",
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
               label: "Create Event",
               onTap: () => Navigator.pushNamed(context, 'event_write')),
         ],

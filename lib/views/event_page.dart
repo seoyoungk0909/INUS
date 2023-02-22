@@ -64,8 +64,10 @@ class EventPageState extends State<EventPage> {
             },
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 0.7,
+              childAspectRatio: 0.57,
+              crossAxisSpacing: 14,
             ),
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
           );
         },
       ),
@@ -93,6 +95,9 @@ class EventPageState extends State<EventPage> {
           child: Column(
             children: [
               const TabBar(
+                labelStyle:
+                    (TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                unselectedLabelStyle: (TextStyle(fontSize: 18)),
                 indicatorColor: Colors.white,
                 tabs: [
                   Tab(text: "Formal"),
