@@ -47,6 +47,7 @@ dependencies:
   date_format:
   flutter_svg:
   flutter_keyboard_visibility:
+  flutter_widget_from_html:
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -80,7 +81,7 @@ flutter:
   assets:
     - assets/imgs/
     - assets/icons/
-    - assets/terms&conditions.txt
+    - assets/terms&conditions.html
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

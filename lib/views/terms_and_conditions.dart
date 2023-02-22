@@ -1,6 +1,7 @@
 import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class TandCPage extends StatefulWidget {
   const TandCPage({Key? key}) : super(key: key);
@@ -49,13 +50,13 @@ class TandCPageState extends State<TandCPage> {
                     alignment: Alignment.centerLeft,
                     child: FutureBuilder(
                       initialData: "INUS가 준수하는 개인정보처리방침입니다.",
-                      future: loadAsset("assets/terms&conditions.txt"),
+                      future: loadAsset("assets/terms&conditions.html"),
                       builder: (context, AsyncSnapshot<String> snapshot) =>
-                          Text(
+                          HtmlWidget(
                         snapshot.data!,
-                        style: TextStyle(
+                        textStyle: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w300),
-                        textAlign: TextAlign.left,
+                        // textAlign: TextAlign.left,
                       ),
                     )),
               ),
