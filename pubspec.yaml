@@ -47,7 +47,7 @@ dependencies:
   date_format:
   flutter_svg:
   flutter_keyboard_visibility:
-  flutter_widget_from_html:
+  flutter_html: ^2.2.1
 
 
   # The following adds the Cupertino Icons font to your application.
