@@ -42,6 +42,12 @@ class ProfilePageState extends State<ProfilePage> {
           .doc(fbauth.FirebaseAuth.instance.currentUser?.uid)
           .snapshots();
 
+  Stream<DocumentSnapshot<Map<String, dynamic>>> userInfoStream3 =
+      FirebaseFirestore.instance
+          .collection('user_info')
+          .doc(fbauth.FirebaseAuth.instance.currentUser?.uid)
+          .snapshots();
+
   Future<List<dynamic>> getFromDocRefs(refs) async {
     List<dynamic> eventsOrPosts = [];
     for (DocumentReference<Map<String, dynamic>> ref in refs) {
@@ -64,7 +70,7 @@ class ProfilePageState extends State<ProfilePage> {
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(20, 30, 20, 20),
             child: Text(
-              "Welcome, ${currentUser.name}",
+              "${currentUser.name}'s Page",
               style: const TextStyle(
                 fontFamily: 'Roboto',
                 fontSize: 25,
@@ -133,7 +139,7 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).backgroundColor,
@@ -153,8 +159,9 @@ class ProfilePageState extends State<ProfilePage> {
               const TabBar(
                 indicatorColor: Colors.white,
                 tabs: [
-                  Tab(text: "My Post"),
-                  Tab(text: "Saved"),
+                  Tab(text: "Post"),
+                  Tab(text: "Comment"),
+                  Tab(text: "Save"),
                 ],
               ),
               Expanded(
@@ -208,6 +215,55 @@ class ProfilePageState extends State<ProfilePage> {
                           }
                         }),
                     KeepAliveStreamBuilder(
+                        stream: userInfoStream3,
+                        builder: (context, AsyncSnapshot<dynamic> snap) {
+                          if (snap.data == null) {
+                            print(snap);
+                            print(snap.data);
+                            return Center(
+                                child: CircularProgressIndicator(
+                                    color: ApdiColors.themeGreen));
+                          }
+                          try {
+                            Map<String, dynamic> data = snap.data!.data()!;
+                            List postRefs = data['myComments'];
+                            postRefs = postRefs.reversed.toList();
+                            List savedPostRefs = [];
+                            if (data.containsKey('savedPosts')) {
+                              savedPostRefs = data['savedPosts'];
+                            }
+                            if (postRefs.isEmpty) {
+                              return const Center(
+                                  child: Text("You Did not Comment Yet"));
+                            }
+                            return FutureBuilder<List<dynamic>>(
+                              future: getFromDocRefs(postRefs),
+                              builder: (context, snapshot) {
+                                if (snapshot.data == null) {
+                                  return const SizedBox.shrink();
+                                }
+                                return ListView.builder(
+                                  // physics: const AlwaysScrollableScrollPhysics(),
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (BuildContext context, int idx) {
+                                    bool saved = savedPostRefs.isNotEmpty &&
+                                        savedPostRefs.contains(postRefs[idx]);
+                                    return postUI(context,
+                                        PostController(snapshot.data![idx]),
+                                        setState: setState,
+                                        saved: saved,
+                                        first: idx == 0);
+                                  },
+                                );
+                              },
+                            );
+                          } catch (e) {
+                            print(e);
+                            return const Center(
+                                child: Text("You Did Not Comment Yet"));
+                          }
+                        }),
+                    KeepAliveStreamBuilder(
                         stream: userInfoStream2,
                         builder: (context, AsyncSnapshot<dynamic> snap) {
                           if (snap.data == null) {
@@ -252,7 +308,7 @@ class ProfilePageState extends State<ProfilePage> {
                             return const Center(
                                 child: Text("No Saved Events or Posts"));
                           }
-                        })
+                        }),
                   ],
                 ),
               ),

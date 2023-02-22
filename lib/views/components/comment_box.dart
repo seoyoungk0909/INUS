@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-
 import '../../controllers/post_controller.dart';
 
 class CommentBox extends StatefulWidget {
@@ -24,6 +23,15 @@ class CommentBoxState extends State<CommentBox> {
   bool isWriter() {
     return widget.controller.post.writer.uid ==
         FirebaseAuth.instance.currentUser?.uid;
+  }
+
+  Future<void> saveComments(post) async {
+    DocumentReference userRef = FirebaseFirestore.instance
+        .collection('user_info')
+        .doc(FirebaseAuth.instance.currentUser?.uid);
+    userRef.update({
+      'myComments': FieldValue.arrayUnion([post.firebaseDocRef])
+    });
   }
 
   @override
@@ -72,6 +80,7 @@ class CommentBoxState extends State<CommentBox> {
                             typed = false;
                           });
                         });
+                        saveComments(widget.controller.post);
                       },
                 child: const Text("Post"),
               ),
