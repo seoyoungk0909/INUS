@@ -116,8 +116,8 @@ class Event {
         FirebaseFirestore.instance.collection('event');
 
     Query<Map<String, dynamic>> firebaseQuery = eventCollection
-        .where('uploadTime', isLessThanOrEqualTo: DateTime.now())
-        .orderBy('uploadTime', descending: true)
+        .where('eventTime', isGreaterThanOrEqualTo: DateTime.now())
+        .orderBy('eventTime', descending: true)
         .limit(20);
     firebaseQuery = firebaseQuery.where('formal', isEqualTo: formal);
 

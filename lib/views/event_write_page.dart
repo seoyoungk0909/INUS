@@ -73,7 +73,7 @@ class EventWritePageState extends State<EventWritePage> {
       context: context,
       initialDate: initialDate,
       initialEntryMode: DatePickerEntryMode.calendar,
-      firstDate: DateTime(DateTime.now().year - 3),
+      firstDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 3),
     );
     if (pickedDate == null) return;
