@@ -25,9 +25,8 @@ class EventWritePage extends StatefulWidget {
 class EventWritePageState extends State<EventWritePage> {
   bool formal = false;
   Future<void> uploadEvent(String currentUserId) async {
-    DocumentReference newEvent = await FirebaseFirestore.instance
-        .collection("event_requested_for_approval")
-        .add({
+    DocumentReference newEvent =
+        await FirebaseFirestore.instance.collection("event").add({
       'title': eventTitle.text.trim(),
       'tag': tags.text.split(' '),
       'eventTime': Timestamp.fromDate(
@@ -107,7 +106,9 @@ class EventWritePageState extends State<EventWritePage> {
     'Workshop': false,
     'Seminar': false,
     'Webinar': false,
+    'Competition': false,
   };
+
   Map<String, bool> languages = {
     'English': true,
     'Cantonese': false,
@@ -200,79 +201,79 @@ class EventWritePageState extends State<EventWritePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //formality
-                  RichText(
-                    text: const TextSpan(
-                        text: "Formality",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.w600),
-                        children: [
-                          TextSpan(
-                              text: ' *',
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16))
-                        ]),
-                  ),
-                  SizedBox(
-                    height: 55,
-                    child: Padding(
-                      padding: const EdgeInsetsDirectional.only(top: 20),
-                      child: ListView(
-                        shrinkWrap: false,
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          for (var formality in ['Casual', 'Formal'])
-                            Row(children: <Widget>[
-                              Container(
-                                width: 95,
-                                height: 35,
-                                decoration: BoxDecoration(
-                                    color: ((formality == 'Formal') == formal)
-                                        ? Colors.white12
-                                        : Colors.transparent,
-                                    border: Border.all(
-                                        width: 0.5,
-                                        color:
-                                            ((formality == 'Formal') == formal)
-                                                ? Colors.white12
-                                                : Colors.white24),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(5))),
-                                child: TextButton(
-                                  style: TextButton.styleFrom(
-                                    textStyle: const TextStyle(
-                                        fontSize: 15, color: Colors.white),
-                                  ),
-                                  //커멘트
-                                  onPressed: () {
-                                    setState(() {
-                                      formal = formality != 'Casual';
-                                    });
-                                  },
-                                  child: Text(
-                                    formality,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight:
-                                            ((formality == 'Formal') == formal)
-                                                ? FontWeight.w500
-                                                : FontWeight.normal,
-                                        color:
-                                            ((formality == 'Formal') == formal)
-                                                ? Color(0xff57AD9E)
-                                                : Colors.white70),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10)
-                            ]),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // RichText(
+                  //   text: const TextSpan(
+                  //       text: "Formality",
+                  //       style: TextStyle(
+                  //           fontSize: 16,
+                  //           color: Colors.white70,
+                  //           fontWeight: FontWeight.w600),
+                  //       children: [
+                  //         TextSpan(
+                  //             text: ' *',
+                  //             style: TextStyle(
+                  //                 color: Colors.red,
+                  //                 fontWeight: FontWeight.w600,
+                  //                 fontSize: 16))
+                  //       ]),
+                  // ),
+                  // SizedBox(
+                  //   height: 55,
+                  //   child: Padding(
+                  //     padding: const EdgeInsetsDirectional.only(top: 20),
+                  //     child: ListView(
+                  // shrinkWrap: false,
+                  // scrollDirection: Axis.horizontal,
+                  // children: <Widget>[
+                  //   for (var formality in ['Casual', 'Formal'])
+                  //     Row(children: <Widget>[
+                  //       Container(
+                  //         width: 95,
+                  //         height: 35,
+                  //         decoration: BoxDecoration(
+                  //             color: ((formality == 'Formal') == formal)
+                  //                 ? Colors.white12
+                  //                 : Colors.transparent,
+                  //             border: Border.all(
+                  //                 width: 0.5,
+                  //                 color:
+                  //                     ((formality == 'Formal') == formal)
+                  //                         ? Colors.white12
+                  //                         : Colors.white24),
+                  //             borderRadius: const BorderRadius.all(
+                  //                 Radius.circular(5))),
+                  //         child: TextButton(
+                  //           style: TextButton.styleFrom(
+                  //             textStyle: const TextStyle(
+                  //                 fontSize: 15, color: Colors.white),
+                  //           ),
+                  //           //커멘트
+                  //           onPressed: () {
+                  //                   setState(() {
+                  //                     formal = formality != 'Casual';
+                  //                   });
+                  //                 },
+                  //                 child: Text(
+                  //                   formality,
+                  //                   style: TextStyle(
+                  //                       fontSize: 14,
+                  //                       fontWeight:
+                  //                           ((formality == 'Formal') == formal)
+                  //                               ? FontWeight.w500
+                  //                               : FontWeight.normal,
+                  //                       color:
+                  //                           ((formality == 'Formal') == formal)
+                  //                               ? Color(0xff57AD9E)
+                  //                               : Colors.white70),
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //             const SizedBox(width: 10)
+                  //           ]),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   //formality end
                   Padding(
                     padding: const EdgeInsetsDirectional.only(top: 20),
@@ -304,7 +305,7 @@ class EventWritePageState extends State<EventWritePage> {
                           for (var category in categories.keys)
                             Row(children: <Widget>[
                               Container(
-                                width: 95,
+                                width: 102,
                                 height: 35,
                                 decoration: BoxDecoration(
                                     color: categories[category]!
@@ -838,7 +839,7 @@ class EventWritePageState extends State<EventWritePage> {
                                   });
                             },
                             child: const Text(
-                              'Request to Post',
+                              'Post',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
