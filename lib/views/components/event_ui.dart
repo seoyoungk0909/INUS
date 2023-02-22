@@ -2,38 +2,69 @@ import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import '../../controllers/event_controller.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_svg/svg.dart';
 
-//determine color of category button, default color is blue
-String buttonColor(String eventCategory) {
-  if (eventCategory == "Seminar" || eventCategory == "Webinar") {
-    return "#56bed2"; //mint
-  } else if (eventCategory == "Competition") {
-    return "#4ba7f8"; //orange
+//determine image of category button, default is seminar
+String categoryButtonImage(String eventCategory) {
+  if (eventCategory == "Webinar") {
+    return 'assets/imgs/button-webinar.svg';
   } else if (eventCategory == "Workshop") {
-    return "#4ca98f"; //green
+    return 'assets/imgs/button-workshop.svg';
   } else if (eventCategory == "Party") {
-    return "#ef8632"; //purple
+    return 'assets/imgs/button-party.svg';
+  } else if (eventCategory == "Competition") {
+    return 'assets/imgs/button-competition.svg';
   }
-  return "#4ba7f8"; //blue
+  return 'assets/imgs/button-seminar.svg';
+}
+
+//default color is blue
+String buttonColor(String eventCategory) {
+  if (eventCategory == "Webinar") {
+    return "#578a5a"; //green
+  } else if (eventCategory == "Competition") {
+    return "#864ac0"; //purple
+  } else if (eventCategory == "Workshop") {
+    return "#dfb064"; //yellow
+  } else if (eventCategory == "Party") {
+    return "#249998"; //blue
+  }
+  return "b05033"; //orange
 }
 
 //determine thumbnail image of events, default image is seminar
 String eventImage(String eventCategory) {
   if (eventCategory == "Webinar") {
-    return 'assets/imgs/event_webinar.png';
+    return 'assets/imgs/thumbnail-webinar.png';
   } else if (eventCategory == "Workshop") {
-    return 'assets/imgs/event_workshop.png';
+    return 'assets/imgs/thumbnail-workshop.png';
   } else if (eventCategory == "Party") {
-    return 'assets/imgs/event_party.png';
+    return 'assets/imgs/thumbnail-party.png';
+  } else if (eventCategory == "Competition") {
+    return 'assets/imgs/thumbnail-competition.png';
   }
-  return 'assets/imgs/event_seminar.png';
+  return 'assets/imgs/thumbnail-seminar.png';
+}
+
+String capitalize(String value) {
+  var result = value[0].toUpperCase();
+  bool cap = true;
+  for (int i = 1; i < value.length; i++) {
+    if (value[i - 1] == " " && cap == true) {
+      result = result + value[i].toUpperCase();
+    } else {
+      result = result + value[i];
+      cap = false;
+    }
+  }
+  return result;
 }
 
 //event photo
 Widget eventPhoto(BuildContext context, EventController controller) {
   return Container(
-    width: 180,
-    height: 110,
+    width: 168,
+    height: 112,
     decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(eventImage(controller.event.category)),
@@ -41,49 +72,44 @@ Widget eventPhoto(BuildContext context, EventController controller) {
         ),
         borderRadius: BorderRadius.circular(5)),
   );
+
+  //     SizedBox(
+  //   width: 168,
+  //   height: 112,
+  //   child: SvgPicture.asset(
+  //     eventImage(controller.event.category),
+  //   ),
+  // );
 }
 
 //category button
 Widget categoryButton(BuildContext context, EventController controller) {
   return Padding(
     padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-    child: Container(
-      decoration: BoxDecoration(
-        color: hexStringToColor("#3E3E3E"),
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(
-            color: hexStringToColor(buttonColor(controller.event.category))),
-      ),
-      child: Container(
-        padding: const EdgeInsetsDirectional.fromSTEB(8, 2, 8, 2),
-        child: Text(
-          controller.event.category,
-          style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                fontFamily: 'Outfit',
-                color: hexStringToColor(buttonColor(controller.event.category)),
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-      ),
-    ),
+    child: SizedBox(
+        child:
+            SvgPicture.asset(categoryButtonImage(controller.event.category))),
   );
 }
 
 //event title
 Widget eventTitle(BuildContext context, EventController controller) {
-  return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-    child: Text(
-      controller.event.title,
-      softWrap: true,
-      overflow: TextOverflow.ellipsis,
-      maxLines: 2,
-      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+  return Container(
+    width: 168,
+    child: Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+      child: Text(
+        capitalize(controller.event.title),
+        // controller.event.title,
+        softWrap: true,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 2,
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontFamily: 'Outfit',
             color: Colors.white,
-            fontSize: 16,
-          ),
+            fontSize: 18,
+            fontWeight: FontWeight.w600),
+      ),
     ),
   );
 }
@@ -93,11 +119,11 @@ Widget eventDate(BuildContext context, EventController controller) {
   return Padding(
     padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
     child: Text(
-      DateFormat('dd.MM.yyyy').format(controller.event.uploadTime),
+      DateFormat('dd.MM.yyyy').format(controller.event.eventTime),
       style: Theme.of(context).textTheme.bodyText2?.copyWith(
             fontFamily: 'Outfit',
             color: hexStringToColor("#AAAAAA"),
-            fontSize: 12,
+            fontSize: 14,
             fontWeight: FontWeight.normal,
           ),
     ),
@@ -106,18 +132,21 @@ Widget eventDate(BuildContext context, EventController controller) {
 
 //event hashtag
 Widget eventHashTag(BuildContext context, EventController controller) {
-  return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 6),
-    child: Text(
-      "#${controller.event.tag.join(' #')}",
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: Theme.of(context).textTheme.bodyText2?.copyWith(
-            fontFamily: 'Outfit',
-            color: hexStringToColor("#AAAAAA"),
-            fontSize: 12,
-            fontWeight: FontWeight.normal,
-          ),
+  return Container(
+    width: 168,
+    child: Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+      child: Text(
+        "#${controller.event.tag.join(' #')}",
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+              fontFamily: 'Outfit',
+              color: hexStringToColor("#AAAAAA"),
+              fontSize: 14,
+              fontWeight: FontWeight.normal,
+            ),
+      ),
     ),
   );
 }
@@ -137,18 +166,20 @@ Widget contentUI(BuildContext context, EventController controller) {
 Widget eventUI(BuildContext context, EventController controller,
     {Function? setState}) {
   return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
+    padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
     child: GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, 'event_detail',
             arguments: {'event': controller.event});
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          eventPhoto(context, controller),
-          contentUI(context, controller),
-        ],
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            eventPhoto(context, controller),
+            contentUI(context, controller),
+          ],
+        ),
       ),
     ),
   );

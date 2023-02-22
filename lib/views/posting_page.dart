@@ -92,6 +92,9 @@ class _PostListPageState extends State<PostListPage> {
         child: Column(
           children: [
             const TabBar(
+              labelStyle:
+                  (TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+              unselectedLabelStyle: (TextStyle(fontSize: 18)),
               indicatorColor: Colors.white,
               tabs: [
                 Tab(text: "Recent"),
