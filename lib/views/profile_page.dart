@@ -70,7 +70,7 @@ class ProfilePageState extends State<ProfilePage> {
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(20, 30, 20, 20),
             child: Text(
-              "Welcome, ${currentUser.name}",
+              "${currentUser.name}' Page",
               style: const TextStyle(
                 fontFamily: 'Roboto',
                 fontSize: 25,
