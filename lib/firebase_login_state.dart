@@ -16,6 +16,7 @@ enum RegisterState {
 }
 
 const String APDI_TEST_ACCOUNT = "apdi-dev@connect.ust.hk";
+const String APPSTORE_REVIEW_ACCOUNT = "appstore-review@connect.ust.hk";
 
 String verifyEmail(String email) {
   if (email.isEmpty) {
@@ -152,7 +153,8 @@ class LoginState extends ChangeNotifier {
       password: password,
     )
         .then((userCred) {
-      if (!userCred.user!.emailVerified && email != APDI_TEST_ACCOUNT) {
+      if (!userCred.user!.emailVerified &&
+          !(email == APDI_TEST_ACCOUNT || email == APPSTORE_REVIEW_ACCOUNT)) {
         throw Exception("Please verify your email.");
       }
       registerState = RegisterState.emailVerified;
