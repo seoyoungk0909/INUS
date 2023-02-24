@@ -143,7 +143,7 @@ class EventWritePageState extends State<EventWritePage> {
     }
   }
 
-  bool urlValidity = false;
+  bool urlValidity = true;
   Future<void> checkURL(String url) async {
     if (url != '') {
       try {
@@ -156,6 +156,8 @@ class EventWritePageState extends State<EventWritePage> {
       } on Error {
         urlValidity = false;
       }
+    } else {
+      urlValidity = true;
     }
   }
 
@@ -778,7 +780,7 @@ class EventWritePageState extends State<EventWritePage> {
                             ),
                             onPressed: () {
                               checkURL(eventRegistrationLink.text.trim());
-                              Future.delayed(const Duration(milliseconds: 700),
+                              Future.delayed(const Duration(milliseconds: 800),
                                   () {
                                 setState(() {
                                   showDialog<void>(
