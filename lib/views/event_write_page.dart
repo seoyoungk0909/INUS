@@ -779,11 +779,8 @@ class EventWritePageState extends State<EventWritePage> {
                                       : Colors.white60),
                             ),
                             onPressed: () {
-                              checkURL(eventRegistrationLink.text.trim());
-                              Future.delayed(const Duration(milliseconds: 800),
-                                  () {
-                                setState(() {
-                                  showDialog<void>(
+                              checkURL(eventRegistrationLink.text.trim())
+                                  .then((value) => showDialog<void>(
                                       context: context,
                                       builder: (BuildContext context) {
                                         if (isButtonEnabled && urlValidity) {
@@ -889,9 +886,7 @@ class EventWritePageState extends State<EventWritePage> {
                                             ],
                                           );
                                         }
-                                      });
-                                });
-                              });
+                                      }));
                             },
                             child: const Text(
                               'Post',
