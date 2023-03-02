@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:aus/controllers/event_controller.dart';
 import 'package:aus/views/components/popup_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -137,6 +140,24 @@ class EventWritePageState extends State<EventWritePage> {
       setState(() {
         isButtonEnabled = false;
       });
+    }
+  }
+
+  bool urlValidity = true;
+  Future<void> checkURL(String url) async {
+    if (url != '') {
+      try {
+        final response = url.contains('https://')
+            ? await http.get(Uri.parse(url))
+            : await http.get(Uri.parse('https://$url'));
+        urlValidity = (response.statusCode == 200);
+      } on Exception {
+        urlValidity = false;
+      } on Error {
+        urlValidity = false;
+      }
+    } else {
+      urlValidity = true;
     }
   }
 
@@ -758,85 +779,114 @@ class EventWritePageState extends State<EventWritePage> {
                                       : Colors.white60),
                             ),
                             onPressed: () {
-                              showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    if (isButtonEnabled) {
-                                      return AlertDialog(
-                                        title: const Text(
-                                          'Create Event',
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                        content: const Text(
-                                          "Are you sure you want to create this event?",
-                                          style: TextStyle(fontSize: 12),
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                            child: Text(
-                                              "No",
-                                              style: TextStyle(
-                                                  color: ApdiColors.errorRed),
+                              checkURL(eventRegistrationLink.text.trim())
+                                  .then((value) => showDialog<void>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        if (isButtonEnabled && urlValidity) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                              'Create Event',
+                                              style: TextStyle(fontSize: 16),
                                             ),
-                                          ),
-                                          TextButton(
-                                              onPressed: () {
-                                                for (var language
-                                                    in languages.keys) {
-                                                  languages[language] == true
-                                                      ? trueLanguages
-                                                          .add(language)
-                                                      : {};
-                                                }
-                                                for (var category
-                                                    in categories.keys) {
-                                                  categories[category] == true
-                                                      ? trueCategories =
-                                                          category
-                                                      : {};
-                                                }
-                                                uploadEvent(currentUser.uid);
-                                                setState(() {});
-                                                Navigator
-                                                    .pushNamedAndRemoveUntil(
-                                                        context,
-                                                        '/',
-                                                        (route) => false);
-                                              },
-                                              child: Text(
-                                                "Yes",
-                                                style: TextStyle(
-                                                    color:
-                                                        ApdiColors.themeGreen),
-                                              ))
-                                        ],
-                                      );
-                                    } else {
-                                      return AlertDialog(
-                                        title: const Text(
-                                          'Warning',
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                        content: const Text(
-                                          "You have not filled certain parts. Please check again.",
-                                          style: TextStyle(fontSize: 12),
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                            child: Text(
-                                              "OK",
-                                              style: TextStyle(
-                                                  color: ApdiColors.themeGreen),
+                                            content: const Text(
+                                              "Are you sure you want to create this event?",
+                                              style: TextStyle(fontSize: 12),
                                             ),
-                                          ),
-                                        ],
-                                      );
-                                    }
-                                  });
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: Text(
+                                                  "No",
+                                                  style: TextStyle(
+                                                      color:
+                                                          ApdiColors.errorRed),
+                                                ),
+                                              ),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    for (var language
+                                                        in languages.keys) {
+                                                      languages[language] ==
+                                                              true
+                                                          ? trueLanguages
+                                                              .add(language)
+                                                          : {};
+                                                    }
+                                                    for (var category
+                                                        in categories.keys) {
+                                                      categories[category] ==
+                                                              true
+                                                          ? trueCategories =
+                                                              category
+                                                          : {};
+                                                    }
+                                                    uploadEvent(
+                                                        currentUser.uid);
+                                                    setState(() {});
+                                                    Navigator
+                                                        .pushNamedAndRemoveUntil(
+                                                            context,
+                                                            '/',
+                                                            (route) => false);
+                                                  },
+                                                  child: Text(
+                                                    "Yes",
+                                                    style: TextStyle(
+                                                        color: ApdiColors
+                                                            .themeGreen),
+                                                  ))
+                                            ],
+                                          );
+                                        } else if (urlValidity == false) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                              'Warning',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                            content: const Text(
+                                              "The registration URL you have filled in is invalid. Please check again.",
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: Text(
+                                                  "OK",
+                                                  style: TextStyle(
+                                                      color: ApdiColors
+                                                          .themeGreen),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        } else {
+                                          return AlertDialog(
+                                            title: const Text(
+                                              'Warning',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                            content: const Text(
+                                              "You have not filled certain parts. Please check again.",
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: Text(
+                                                  "OK",
+                                                  style: TextStyle(
+                                                      color: ApdiColors
+                                                          .themeGreen),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                      }));
                             },
                             child: const Text(
                               'Post',
