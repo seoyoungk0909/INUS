@@ -134,12 +134,12 @@ class Post {
     Query<Map<String, dynamic>> firebaseQuery = postCollection
         .where('time', isLessThanOrEqualTo: DateTime.now())
         .orderBy('time', descending: true)
-        .limit(20);
+        .limit(50);
     if (popular) {
       firebaseQuery = postCollection
           // .where('time', isLessThanOrEqualTo: DateTime.now())
-          .where('viewCount', isGreaterThan: 20)
-          .limit(20)
+          .where('viewCount', isGreaterThanOrEqualTo: 20)
+          .limit(50)
           .orderBy('viewCount', descending: true);
     }
     return firebaseQuery;

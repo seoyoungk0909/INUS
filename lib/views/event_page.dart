@@ -21,6 +21,13 @@ class EventPageState extends State<EventPage> {
   List<EventController> formalEventsControllers = [];
   List<EventController> casualEventsControllers = [];
   bool refreshing = false;
+  bool confirmedFormalEmpty = false;
+  bool confirmedCasualEmpty = false;
+
+  Stream<DocumentSnapshot> userSnapshots = FirebaseFirestore.instance
+      .collection('user_info')
+      .doc(fba.FirebaseAuth.instance.currentUser?.uid)
+      .snapshots();
 
   Future<void> refreshEvents({bool formal = false}) async {
     setState(() {
@@ -34,8 +41,10 @@ class EventPageState extends State<EventPage> {
     if (mounted) {
       setState(() {
         if (formal) {
+          confirmedFormalEmpty = _controllers.isEmpty;
           formalEventsControllers = _controllers;
         } else {
+          confirmedCasualEmpty = _controllers.isEmpty;
           casualEventsControllers = _controllers;
         }
         refreshing = false;
@@ -43,34 +52,35 @@ class EventPageState extends State<EventPage> {
     }
   }
 
-  Widget eventsGridView({bool formal = false}) {
+  Widget eventsGridView(List filteredEventsControllers, {bool formal = false}) {
+    Widget child;
+
+    if ((confirmedCasualEmpty && !formal) || (confirmedFormalEmpty && formal)) {
+      child = Center(
+        child: Text("no events"),
+      );
+    } else {
+      child = GridView.builder(
+        itemCount: filteredEventsControllers.length,
+        itemBuilder: (BuildContext context, int i) {
+          return eventUI(context, filteredEventsControllers[i],
+              setState: setState);
+        },
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.57,
+          crossAxisSpacing: 14,
+        ),
+        padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+      );
+    }
+
     return RefreshIndicator(
       onRefresh: () async {
         refreshEvents(formal: formal);
       },
       color: ApdiColors.themeGreen,
-      child: FutureBuilder<List<Event>>(
-        future: Event.getEventsFromFirebase(formal: formal),
-        builder: (context, snapshot) {
-          if (snapshot.data == null) {
-            return Center(
-                child: CircularProgressIndicator(color: ApdiColors.themeGreen));
-          }
-          return GridView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (BuildContext context, int i) {
-              return eventUI(context, EventController(snapshot.data![i]),
-                  setState: setState);
-            },
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.57,
-              crossAxisSpacing: 14,
-            ),
-            padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-          );
-        },
-      ),
+      child: child,
     );
   }
 
@@ -82,12 +92,40 @@ class EventPageState extends State<EventPage> {
     refreshEvents(formal: false);
   }
 
+  Widget eventView(snapshot, {bool formal = false}) {
+    if (formalEventsControllers.isEmpty || snapshot.data == null) {
+      return Center(
+          child: CircularProgressIndicator(color: ApdiColors.themeGreen));
+    }
+    Map documentdata = snapshot.data!.data() as Map;
+    List? blockedEvents = documentdata.containsKey('blockedEvents')
+        ? documentdata['blockedEvents']
+        : null;
+
+    List filteredEventsControllers = [];
+    List<EventController> _controllers =
+        formal ? formalEventsControllers : casualEventsControllers;
+    for (EventController ctrl in _controllers) {
+      bool blocked =
+          blockedEvents?.contains(ctrl.event.firebaseDocRef) ?? false;
+      if (!blocked) {
+        filteredEventsControllers.add(ctrl);
+      }
+    }
+    if (filteredEventsControllers.isEmpty) {
+      return RefreshIndicator(
+        onRefresh: () async {
+          refreshEvents(formal: formal);
+        },
+        color: ApdiColors.themeGreen,
+        child: Center(child: Text("No events")),
+      );
+    }
+    return eventsGridView(filteredEventsControllers, formal: formal);
+  }
+
   @override
   Widget build(BuildContext context) {
-    DocumentReference userRef = FirebaseFirestore.instance
-        .collection('user_info')
-        .doc(fba.FirebaseAuth.instance.currentUser?.uid);
-    Future<DocumentSnapshot> snapshots = userRef.get();
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: DefaultTabController(
@@ -105,32 +143,14 @@ class EventPageState extends State<EventPage> {
                 ],
               ),
               Expanded(
-                child: TabBarView(children: [
-                  KeepAliveFutureBuilder(
-                      future: snapshots,
-                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                        if (formalEventsControllers.isEmpty ||
-                            snapshot.data == null) {
-                          return Center(
-                              child: CircularProgressIndicator(
-                                  color: ApdiColors.themeGreen));
-                        }
-                        // Map documentdata = snapshot.data!.data() as Map;
-                        return eventsGridView(formal: true);
-                      }),
-                  KeepAliveFutureBuilder(
-                      future: snapshots,
-                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                        if (casualEventsControllers.isEmpty ||
-                            snapshot.data == null) {
-                          return Center(
-                              child: CircularProgressIndicator(
-                                  color: ApdiColors.themeGreen));
-                        }
-                        // Map documentdata = snapshot.data!.data() as Map;
-                        return eventsGridView(formal: false);
-                      }),
-                ]),
+                child: KeepAliveStreamBuilder(
+                    stream: userSnapshots,
+                    builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                      return TabBarView(children: [
+                        eventView(snapshot, formal: true),
+                        eventView(snapshot, formal: false),
+                      ]);
+                    }),
               ),
             ],
           )),

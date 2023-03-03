@@ -1,4 +1,5 @@
 import 'package:aus/utils/color_utils.dart';
+import 'package:aus/views/components/popup_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -253,6 +254,7 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
       padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 8, 16),
       child: Row(
         mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 40,
@@ -292,41 +294,77 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
                   ),
                 ],
               ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                    child: Text(
-                      !controller.post.anonymous
-                          ? controller.post.writer.name
-                          : "Anonymous",
-                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                            color: hexStringToColor("#AAAAAA"),
-                            fontFamily: 'Outfit',
-                            fontSize: 12,
-                            fontWeight: FontWeight.normal,
-                          ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
-                    child: Text(
-                      // !controller.post.anonymous
-                      //     ? "• ${controller.getPostWriterSchool()}"
-                      //     : "• (Not Specified)",
-                      "• ${controller.getPostWriterSchool()}",
-                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                            fontFamily: 'Outfit',
-                            color: hexStringToColor("#AAAAAA"),
-                            fontSize: 12,
-                            fontWeight: FontWeight.normal,
-                          ),
-                    ),
-                  ),
-                ],
-              )
+              // Row(
+              //   mainAxisSize: MainAxisSize.max,
+              //   children: [
+              //     Padding(
+              //       padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+              //       child: Text(
+              //         !controller.post.anonymous
+              //             ? controller.post.writer.name
+              //             : "Anonymous",
+              //         style: Theme.of(context).textTheme.bodyText2?.copyWith(
+              //               color: hexStringToColor("#AAAAAA"),
+              //               fontFamily: 'Outfit',
+              //               fontSize: 12,
+              //               fontWeight: FontWeight.normal,
+              //             ),
+              //       ),
+              //     ),
+              //     Padding(
+              //       padding: const EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
+              //       child: Text(
+              //         // !controller.post.anonymous
+              //         //     ? "• ${controller.getPostWriterSchool()}"
+              //         //     : "• (Not Specified)",
+              //         "• ${controller.getPostWriterSchool()}",
+              //         style: Theme.of(context).textTheme.bodyText2?.copyWith(
+              //               fontFamily: 'Outfit',
+              //               color: hexStringToColor("#AAAAAA"),
+              //               fontSize: 12,
+              //               fontWeight: FontWeight.normal,
+              //             ),
+              //       ),
+              //     ),
+              //   ],
+              // )
             ],
+          ),
+          Spacer(),
+          IconButton(
+            onPressed: () {
+              popUpDialog(context, "Don't show this post",
+                  "Do you want to remove this post from your feed?",
+                  action: TextButton(
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection('user_info')
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .update({
+                          'blockedPosts': FieldValue.arrayUnion(
+                              [controller.post.firebaseDocRef])
+                        });
+                        Navigator.pop(context);
+
+                        popUpDialog(context, "Removed Post",
+                            "Do you also want to report this post?",
+                            action: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.pushNamed(context, 'report',
+                                      arguments: {'post': controller.post});
+                                },
+                                child: Text("Yes")));
+                      },
+                      child: Text("Yes")));
+            },
+            iconSize: 20,
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(),
+            icon: Icon(
+              Icons.flag_outlined,
+              color: hexStringToColor("#AAAAAA"),
+            ),
           ),
         ],
       ),

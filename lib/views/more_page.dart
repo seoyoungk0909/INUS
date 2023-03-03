@@ -1,5 +1,6 @@
 import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fbauth;
 import 'components/popup_dialog.dart';
 import 'terms_and_conditions.dart';
 
@@ -31,13 +32,42 @@ class MorePage extends StatelessWidget {
             title: Text("Terms and Conditions"),
             trailing: Icon(Icons.arrow_forward_ios_outlined),
           ),
+          // ListTile(
+          //   onTap: () {
+          //     popUpDialog(context, "Leave Feedback", "Coming Soon!");
+          //   },
+          //   title: Text("Leave us Feedback"),
+          //   trailing: Icon(Icons.arrow_forward_ios_outlined),
+          // ),
           ListTile(
             onTap: () {
-              popUpDialog(context, "Leave Feedback", "Coming Soon!");
+              showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Sign Out'),
+                      content: Text("Are you sure you want to sign out?"),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(
+                            "No",
+                          ),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              fbauth.FirebaseAuth.instance.signOut();
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, 'login', (route) => false);
+                            },
+                            child: const Text("Yes")),
+                      ],
+                    );
+                  });
             },
-            title: Text("Leave us Feedback"),
+            title: Text("Sign Out"),
             trailing: Icon(Icons.arrow_forward_ios_outlined),
-          ),
+          )
         ],
       ),
     );

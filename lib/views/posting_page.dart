@@ -29,11 +29,13 @@ class _PostListPageState extends State<PostListPage> {
   bool refreshing = false;
   List<PostController> popularPostsControllers = [];
   List<PostController> recentPostsControllers = [];
+  bool popularEmptyConfirmed = false;
+  bool recentEmptyConfirmed = false;
 
-  Future<DocumentSnapshot> snapshots = FirebaseFirestore.instance
+  Stream<DocumentSnapshot> snapshots = FirebaseFirestore.instance
       .collection('user_info')
       .doc(fba.FirebaseAuth.instance.currentUser?.uid)
-      .get();
+      .snapshots();
 
   Future<void> refreshPosts({bool popular = false}) async {
     setState(() {
@@ -46,17 +48,18 @@ class _PostListPageState extends State<PostListPage> {
     }
     setState(() {
       if (popular) {
+        popularEmptyConfirmed = _controllers.isEmpty;
         popularPostsControllers = _controllers;
       } else {
+        recentEmptyConfirmed = _controllers.isEmpty;
         recentPostsControllers = _controllers;
       }
       refreshing = false;
     });
   }
 
-  Widget postsStreamView({List? savedPosts, bool popular = false}) {
-    List<PostController> controllers =
-        popular ? popularPostsControllers : recentPostsControllers;
+  Widget postsStreamView(List filteredPostControllers,
+      {List? savedPosts, bool popular = false}) {
     return RefreshIndicator(
       onRefresh: () async {
         refreshPosts(popular: popular);
@@ -64,11 +67,12 @@ class _PostListPageState extends State<PostListPage> {
       color: ApdiColors.themeGreen,
       child: ListView.builder(
         // physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: controllers.length,
+        itemCount: filteredPostControllers.length,
         itemBuilder: (BuildContext context, int i) {
-          bool saved =
-              savedPosts?.contains(controllers[i].post.firebaseDocRef) ?? false;
-          return postUI(context, controllers[i],
+          bool saved = savedPosts
+                  ?.contains(filteredPostControllers[i].post.firebaseDocRef) ??
+              false;
+          return postUI(context, filteredPostControllers[i],
               setState: setState, saved: saved, first: i == 0);
         },
       ),
@@ -81,6 +85,49 @@ class _PostListPageState extends State<PostListPage> {
     super.initState();
     refreshPosts(popular: true);
     refreshPosts(popular: false);
+  }
+
+  Widget postView(snapshot, {bool popular = false}) {
+    if ((recentEmptyConfirmed && !popular) ||
+        (popularEmptyConfirmed && popular)) {
+      return RefreshIndicator(
+          onRefresh: () async {
+            refreshPosts(popular: popular);
+          },
+          color: ApdiColors.themeGreen,
+          child: Center(child: Text("No posts")));
+    }
+    if (recentPostsControllers.isEmpty || snapshot.data == null) {
+      return Center(
+          child: CircularProgressIndicator(color: ApdiColors.themeGreen));
+    }
+    Map documentdata = snapshot.data!.data() as Map;
+    List? savedPosts = documentdata.containsKey('savedPosts')
+        ? documentdata['savedPosts']
+        : null;
+    List? blockedPosts = documentdata.containsKey('blockedPosts')
+        ? documentdata['blockedPosts']
+        : null;
+
+    List<PostController> _controllers =
+        popular ? popularPostsControllers : recentPostsControllers;
+    List<PostController> filteredPostControllers = [];
+    for (PostController ctrl in _controllers) {
+      bool blocked = blockedPosts?.contains(ctrl.post.firebaseDocRef) ?? false;
+      if (!blocked) {
+        filteredPostControllers.add(ctrl);
+      }
+    }
+    if (filteredPostControllers.isEmpty) {
+      return RefreshIndicator(
+          onRefresh: () async {
+            refreshPosts(popular: popular);
+          },
+          color: ApdiColors.themeGreen,
+          child: Center(child: Text("No posts")));
+    }
+    return postsStreamView(filteredPostControllers,
+        popular: popular, savedPosts: savedPosts);
   }
 
   @override
@@ -102,43 +149,17 @@ class _PostListPageState extends State<PostListPage> {
               ],
             ),
             Expanded(
-              child: TabBarView(
-                children: [
-                  KeepAliveFutureBuilder(
-                      future: snapshots,
-                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                        if (recentPostsControllers.isEmpty ||
-                            snapshot.data == null) {
-                          return Center(
-                              child: CircularProgressIndicator(
-                                  color: ApdiColors.themeGreen));
-                        }
-                        Map documentdata = snapshot.data!.data() as Map;
-                        List? savedPosts =
-                            documentdata.containsKey('savedPosts')
-                                ? documentdata['savedPosts']
-                                : null;
-                        return postsStreamView(
-                            popular: false, savedPosts: savedPosts);
-                      }),
-                  KeepAliveFutureBuilder(
-                      future: snapshots,
-                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                        if (popularPostsControllers.isEmpty ||
-                            snapshot.data == null) {
-                          return Center(
-                              child: CircularProgressIndicator(
-                                  color: ApdiColors.themeGreen));
-                        }
-                        Map documentdata = snapshot.data!.data() as Map;
-                        List? savedPosts =
-                            documentdata.containsKey('savedPosts')
-                                ? documentdata['savedPosts']
-                                : null;
-                        return postsStreamView(
-                            popular: true, savedPosts: savedPosts);
-                      }),
-                ],
+              child: KeepAliveStreamBuilder(
+                stream: snapshots,
+                builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                  return TabBarView(
+                    children: [
+                      //recent
+                      postView(snapshot, popular: false),
+                      postView(snapshot, popular: true),
+                    ],
+                  );
+                },
               ),
             ),
           ],

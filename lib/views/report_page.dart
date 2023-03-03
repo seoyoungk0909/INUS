@@ -136,7 +136,7 @@ class ReportPageState extends State<ReportPage> {
                                 style: TextStyle(fontSize: 16),
                               ),
                               content: const Text(
-                                  "This report will be reviewed promptly by the administrator.",
+                                  "This report will be reviewed within 24 hours by the administrator.",
                                   style: TextStyle(fontSize: 12)),
                               actions: <Widget>[
                                 TextButton(

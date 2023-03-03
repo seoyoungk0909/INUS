@@ -1,8 +1,12 @@
 import 'package:aus/utils/color_utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../controllers/event_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_svg/svg.dart';
+
+import 'popup_dialog.dart';
 
 //determine image of category button, default is seminar
 String categoryButtonImage(String eventCategory) {
@@ -86,9 +90,47 @@ Widget eventPhoto(BuildContext context, EventController controller) {
 Widget categoryButton(BuildContext context, EventController controller) {
   return Padding(
     padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-    child: SizedBox(
-        child:
-            SvgPicture.asset(categoryButtonImage(controller.event.category))),
+    child: Row(children: [
+      SizedBox(
+          child:
+              SvgPicture.asset(categoryButtonImage(controller.event.category))),
+      Spacer(),
+      IconButton(
+        onPressed: () {
+          popUpDialog(context, "Don't show this event",
+              "Do you want to remove this post from your feed?",
+              action: TextButton(
+                  onPressed: () {
+                    FirebaseFirestore.instance
+                        .collection('user_info')
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .update({
+                      'blockedEvents': FieldValue.arrayUnion(
+                          [controller.event.firebaseDocRef])
+                    });
+                    Navigator.pop(context);
+
+                    popUpDialog(context, "Removed Event",
+                        "Do you also want to report this event?",
+                        action: TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pushNamed(context, 'report',
+                                  arguments: {'event': controller.event});
+                            },
+                            child: Text("Yes")));
+                  },
+                  child: Text("Yes")));
+        },
+        iconSize: 20,
+        padding: EdgeInsets.zero,
+        constraints: BoxConstraints(),
+        icon: Icon(
+          Icons.flag_outlined,
+          color: hexStringToColor("#AAAAAA"),
+        ),
+      ),
+    ]),
   );
 }
 

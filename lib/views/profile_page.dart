@@ -83,50 +83,13 @@ class ProfilePageState extends State<ProfilePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 30),
               child: Text(
                 currentUser.getSchool(),
                 style: const TextStyle(
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w100,
                     color: Colors.grey),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 20, 0),
-              child: TextButton(
-                onPressed: () {
-                  showDialog<void>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Sign Out'),
-                          content: Text("Are you sure you want to sign out?"),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text(
-                                "No",
-                                style: TextStyle(color: Colors.redAccent),
-                              ),
-                            ),
-                            TextButton(
-                                onPressed: () {
-                                  fbauth.FirebaseAuth.instance.signOut();
-                                  Navigator.pushNamedAndRemoveUntil(
-                                      context, 'login', (route) => false);
-                                },
-                                child: const Text("Yes")),
-                          ],
-                        );
-                      });
-                },
-                child: Text(
-                  "sign out",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: hexStringToColor("##57AD9E")),
-                ),
               ),
             ),
           ],
