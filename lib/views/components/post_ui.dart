@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../controllers/post_controller.dart';
-import 'package:timeago/timeago.dart' as timeago;
+// import 'package:timeago/timeago.dart' as timeago;
 import '../../utils/math_utils.dart';
 
 class ViewCommentSave extends StatefulWidget {
@@ -51,12 +51,12 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(5, 8, 0, 8),
+                  padding: EdgeInsetsDirectional.fromSTEB(30, 8, 0, 8),
                   // TODO: use eye-open
                   child: Icon(
                     Icons.remove_red_eye_outlined,
                     color: hexStringToColor(widget.hexButtonColor),
-                    size: 24,
+                    size: 18,
                   ),
                 ),
                 widget.showText
@@ -68,7 +68,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                               .textTheme
                               .bodyText2
                               ?.copyWith(
-                                fontFamily: 'Outfit',
+                                fontFamily: 'Roboto',
                                 color: hexStringToColor(widget.hexButtonColor),
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
@@ -81,7 +81,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                   child: Text(
                     summarizeLongInt(widget.controller.post.views),
                     style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                          fontFamily: 'Outfit',
+                          fontFamily: 'Roboto',
                           color: hexStringToColor(widget.hexButtonColor),
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
@@ -107,7 +107,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                   child: SvgPicture.asset(
                     'assets/icons/message-square-typing.svg',
                     color: hexStringToColor(widget.hexButtonColor),
-                    height: 24,
+                    height: 18,
                   ),
                 ),
                 widget.showText
@@ -119,7 +119,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                               .textTheme
                               .bodyText2
                               ?.copyWith(
-                                fontFamily: 'Outfit',
+                                fontFamily: 'Roboto',
                                 color: hexStringToColor(widget.hexButtonColor),
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
@@ -132,7 +132,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                   child: Text(
                     summarizeLongInt(widget.controller.post.numComments()),
                     style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                          fontFamily: 'Outfit',
+                          fontFamily: 'Roboto',
                           color: hexStringToColor(widget.hexButtonColor),
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
@@ -186,18 +186,18 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                             ? 'assets/icons/save_true.svg'
                             : 'assets/icons/save_false.svg',
                         color: hexStringToColor(widget.hexButtonColor),
-                        height: 24,
+                        height: 18,
                       )),
                   widget.showText
                       ? Padding(
-                          padding: EdgeInsetsDirectional.only(start: 4),
+                          padding: EdgeInsetsDirectional.only(end: 30),
                           child: Text(
                             'Save',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText2
                                 ?.copyWith(
-                                  fontFamily: 'Outfit',
+                                  fontFamily: 'Roboto',
                                   color:
                                       hexStringToColor(widget.hexButtonColor),
                                   fontSize: 14,
@@ -213,7 +213,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                                 .textTheme
                                 .bodyText2
                                 ?.copyWith(
-                                  fontFamily: 'Outfit',
+                                  fontFamily: 'Roboto',
                                   color:
                                       hexStringToColor(widget.hexButtonColor),
                                   fontSize: 14,
@@ -249,6 +249,30 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
     default:
       profileImage = const Image(image: AssetImage('assets/imgs/profile.jpeg'));
   }
+
+  String timeAgoCustom(DateTime datetime) {
+    Duration diff = DateTime.now().difference(datetime);
+    if (diff.inDays > 365) {
+      return "${(diff.inDays / 365).floor()} ${(diff.inDays / 365).floor() == 1 ? "year" : "years"} ago";
+    }
+    if (diff.inDays > 30) {
+      return "${(diff.inDays / 30).floor()} ${(diff.inDays / 30).floor() == 1 ? "month" : "months"} ago";
+    }
+    if (diff.inDays > 7) {
+      return "${(diff.inDays / 7).floor()} ${(diff.inDays / 7).floor() == 1 ? "week" : "weeks"} ago";
+    }
+    if (diff.inDays > 0) {
+      return "${(diff.inDays)} ${(diff.inDays) == 1 ? "days" : "days"} ago";
+    }
+    if (diff.inHours > 0) {
+      return "${(diff.inHours)} ${(diff.inHours) == 1 ? "hr" : "hrs"} ago";
+    }
+    if (diff.inMinutes > 0) {
+      return "${diff.inMinutes} ${diff.inMinutes == 1 ? "min" : "mins"} ago";
+    }
+    return "Just now";
+  }
+
   return Column(children: [
     Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 8, 16),
@@ -270,23 +294,24 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 0, 0),
                     child: Text(
                       controller.post.category,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontFamily: 'Outfit',
+                            fontFamily: 'Roboto',
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(4, 10, 0, 0),
                     child: Text(
-                      "• ${timeago.format(DateTime.now().subtract(DateTime.now().difference(controller.post.timestamp)))}",
+                      // "• ${timeago.format(DateTime.now().subtract(DateTime.now().difference(controller.post.timestamp)))}",
+                      timeAgoCustom(controller.post.timestamp),
                       style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                            fontFamily: 'Outfit',
-                            color: hexStringToColor("#AAAAAA"),
+                            fontFamily: 'Roboto',
+                            color: ApdiColors.greyText,
                             fontSize: 12,
                             fontWeight: FontWeight.normal,
                           ),
@@ -388,7 +413,7 @@ Widget contentUI(BuildContext context, PostController controller,
                     ? "No Title"
                     : controller.post.title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Roboto',
                       color: ApdiColors.lightText,
                       fontSize: isDetail ? 20 : 16,
                       fontWeight: FontWeight.w500,
@@ -411,7 +436,7 @@ Widget contentUI(BuildContext context, PostController controller,
                 maxLines: isDetail ? 1000 : 2,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Roboto',
                       color: isDetail
                           ? ApdiColors.lightText
                           : hexStringToColor("#AAAAAA"),
@@ -434,7 +459,7 @@ Widget postUI(BuildContext context, PostController controller,
     bool first = false}) {
   double topPad = first ? 16 : 0;
   return Padding(
-    padding: EdgeInsetsDirectional.fromSTEB(16, topPad, 16, 0),
+    padding: EdgeInsetsDirectional.fromSTEB(0, topPad, 0, 0),
     child: Container(
       decoration: BoxDecoration(
           // border:
