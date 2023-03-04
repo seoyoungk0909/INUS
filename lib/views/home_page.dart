@@ -89,7 +89,7 @@ class HomePageState extends State<HomePage> {
               color: Colors.grey,
             ),
             // icon: Icon(Icons.group),
-            label: 'Events',
+            label: 'Event',
           ),
           BottomNavigationBarItem(
             activeIcon: SvgPicture.asset(
