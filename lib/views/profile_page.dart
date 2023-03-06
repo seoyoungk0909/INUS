@@ -52,6 +52,9 @@ class ProfilePageState extends State<ProfilePage> {
     List<dynamic> eventsOrPosts = [];
     for (DocumentReference<Map<String, dynamic>> ref in refs) {
       DocumentSnapshot<Map<String, dynamic>> snapshot = await ref.get();
+      if (!snapshot.exists) {
+        continue;
+      }
       Map<String, dynamic> data = snapshot.data()!;
       if (data.containsKey("eventDetail")) {
         eventsOrPosts.add(await Event.fromDocRef(firebaseDoc: ref));
@@ -68,7 +71,7 @@ class ProfilePageState extends State<ProfilePage> {
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(20, 30, 20, 20),
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
             child: Text(
               "${currentUser.name}'s Page",
               style: const TextStyle(
@@ -104,20 +107,17 @@ class ProfilePageState extends State<ProfilePage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).backgroundColor,
-          automaticallyImplyLeading: false,
-          shadowColor: Colors.transparent,
-          actions: [
-            IconButton(
-                onPressed: () => Navigator.pushNamed(context, 'more'),
-                icon: Icon(Icons.more_horiz_rounded))
-          ],
-        ),
         backgroundColor: Theme.of(context).backgroundColor,
         body: Consumer<LoginState>(
           builder: (context, state, _) => Column(
             children: [
+              Padding(
+                  padding: EdgeInsetsDirectional.only(top: 10),
+                  child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: IconButton(
+                          onPressed: () => Navigator.pushNamed(context, 'more'),
+                          icon: Icon(Icons.more_horiz_rounded)))),
               userGreetings(state.currentUser ?? defaultUser),
               const TabBar(
                 indicatorColor: Colors.white,

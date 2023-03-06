@@ -13,6 +13,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'components/popup_dialog.dart';
+
 class EventDetailPage extends StatefulWidget {
   const EventDetailPage({Key? key, required this.title}) : super(key: key);
 
@@ -34,7 +36,19 @@ class EventDetailPageState extends State<EventDetailPage> {
       .get();
 
   Future<void> _launchURL(String url) async {
-    final Uri uri = Uri(scheme: "https", host: url);
+    Uri uri;
+    if (url.contains('@')) {
+      // email
+      uri = Uri(
+        scheme: 'mailto',
+        path: url,
+        queryParameters: {
+          'subject': 'Event Enroll Request',
+        },
+      );
+    } else {
+      uri = Uri(scheme: "https", host: url);
+    }
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       throw "Can not launch $url";
     }
@@ -96,8 +110,14 @@ class EventDetailPageState extends State<EventDetailPage> {
                               width: MediaQuery.of(context).size.width * 0.76,
                               height: 48,
                               child: ElevatedButton(
-                                onPressed: () async {
-                                  _launchURL(controller.event.registerLink);
+                                onPressed: () {
+                                  _launchURL(controller.event.registerLink)
+                                      .onError((error, stackTrace) => {
+                                            popUpDialog(
+                                                context,
+                                                "error launching the url",
+                                                "The register url ${controller.event.registerLink} is not a valid web url.")
+                                          });
                                 },
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
@@ -135,14 +155,14 @@ Widget text(BuildContext context, EventController controller, String content,
     double size,
     {bool bold = false, String textColor = '#FFFFFF'}) {
   if (bold == true) {
-    return Text(content,
+    return SelectableText(content,
         style: Theme.of(context).textTheme.bodyText2?.copyWith(
             fontFamily: 'Outfit',
             color: hexStringToColor(textColor),
             fontSize: size,
             fontWeight: FontWeight.w400));
   }
-  return Text(content,
+  return SelectableText(content,
       style: Theme.of(context).textTheme.bodyText2?.copyWith(
             fontFamily: 'Outfit',
             color: hexStringToColor(textColor),

@@ -404,7 +404,7 @@ class PostWritePageState extends State<PostWritePage> {
                 child: ListView(
                   children: [
                     categorySelector(),
-                    anonymousSelector(),
+                    // anonymousSelector(),
                     titleAndContent(),
                   ],
                 ),

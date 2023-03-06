@@ -79,7 +79,9 @@ class PostDetailPageState extends State<PostDetailPage> {
                           }
                           List commentRefs = snap.data!.get('comments');
                           if (commentRefs.isEmpty) {
-                            return const Center(child: Text("No Comments"));
+                            return const Padding(
+                                padding: EdgeInsets.only(top: 40),
+                                child: Center(child: Text("No Comments")));
                           }
                           return FutureBuilder(
                               future: getCommentsFromRefs(commentRefs),

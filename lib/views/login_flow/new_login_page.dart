@@ -66,6 +66,7 @@ class LoginPageState extends State<LoginPage> {
       backgroundColor: hexStringToColor("##121212"),
       appBar: AppBar(
         backgroundColor: hexStringToColor("##121212"),
+        elevation: 0,
       ),
       body: SafeArea(
         child: Padding(

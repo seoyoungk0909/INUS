@@ -64,7 +64,7 @@ class _WelcomePageState extends State<WelcomePage> {
               // Navigator.pushNamed(context, 't&c');
             },
             child: Text(
-              "INUS Terms",
+              "INUS Terms (EULA)",
               style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,

@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart' as fbauth;
 import 'components/popup_dialog.dart';
 import 'terms_and_conditions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/user_model.dart';
 
 class MorePage extends StatelessWidget {
   const MorePage({Key? key}) : super(key: key);
@@ -94,12 +93,15 @@ class MorePage extends StatelessWidget {
                                       .collection('user_info')
                                       .doc(fbauth.FirebaseAuth.instance
                                           .currentUser?.uid);
-                              FirebaseFirestore.instance.runTransaction(
-                                  (transaction) async =>
-                                      transaction.delete(documentReference));
-
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context, 'login', (route) => false);
+                              FirebaseFirestore.instance
+                                  .runTransaction((transaction) async =>
+                                      transaction.delete(documentReference))
+                                  .then((value) {
+                                popUpDialog(context, "Sorry to see you go!",
+                                    "Your account has been successfully deleted.");
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, 'login', (route) => false);
+                              });
                             },
                             child: const Text("Yes")),
                       ],

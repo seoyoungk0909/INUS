@@ -137,7 +137,7 @@ Widget categoryButton(BuildContext context, EventController controller) {
 //event title
 Widget eventTitle(BuildContext context, EventController controller) {
   return Container(
-    width: 168,
+    // width: 168,
     child: Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
       child: Text(
