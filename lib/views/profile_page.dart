@@ -30,19 +30,7 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   User defaultUser = User(userName: "", userSchool: School.Loading);
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> userInfoStream1 =
-      FirebaseFirestore.instance
-          .collection('user_info')
-          .doc(fbauth.FirebaseAuth.instance.currentUser?.uid)
-          .snapshots();
-
-  Stream<DocumentSnapshot<Map<String, dynamic>>> userInfoStream2 =
-      FirebaseFirestore.instance
-          .collection('user_info')
-          .doc(fbauth.FirebaseAuth.instance.currentUser?.uid)
-          .snapshots();
-
-  Stream<DocumentSnapshot<Map<String, dynamic>>> userInfoStream3 =
+  Stream<DocumentSnapshot<Map<String, dynamic>>> userInfoStream =
       FirebaseFirestore.instance
           .collection('user_info')
           .doc(fbauth.FirebaseAuth.instance.currentUser?.uid)
@@ -102,6 +90,90 @@ class ProfilePageState extends State<ProfilePage> {
     // });
   }
 
+  Widget tabView(String type, AsyncSnapshot<dynamic> snap) {
+    String nullMessage;
+    switch (type) {
+      case "myPosts":
+        nullMessage = "No Posts";
+        break;
+      case "myComments":
+        nullMessage = "No Comments";
+        break;
+      case "savedPosts":
+        nullMessage = "No Saved Events or Posts";
+        break;
+      default:
+        throw ArgumentError("Wrong type");
+    }
+
+    if (snap.data == null) {
+      return Center(
+          child: CircularProgressIndicator(color: ApdiColors.themeGreen));
+    }
+    try {
+      if (type == 'savedPosts') {
+        List refs = snap.data!.get('savedPosts');
+        refs = refs.reversed.toList();
+        if (refs.isEmpty) {
+          return Center(child: Text(nullMessage));
+        }
+        return FutureBuilder<List<dynamic>>(
+          future: getFromDocRefs(refs),
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return const SizedBox.shrink();
+            }
+            return ListView.builder(
+              // physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: snapshot.data!.length,
+              itemBuilder: (BuildContext context, int idx) {
+                if (snapshot.data![idx] is Event) {
+                  return savedEventUI(
+                      context, EventController(snapshot.data![idx]),
+                      setState: setState, first: idx == 0);
+                } else {
+                  return postUI(context, PostController(snapshot.data![idx]),
+                      setState: setState, saved: true, first: idx == 0);
+                }
+              },
+            );
+          },
+        );
+      }
+      Map<String, dynamic> data = snap.data!.data()!;
+      List postRefs = data[type];
+      postRefs = postRefs.reversed.toList();
+      List savedPostRefs = [];
+      if (data.containsKey('savedPosts')) {
+        savedPostRefs = data['savedPosts'];
+      }
+      if (postRefs.isEmpty) {
+        return Center(child: Text(nullMessage));
+      }
+      return FutureBuilder<List<dynamic>>(
+        future: getFromDocRefs(postRefs),
+        builder: (context, snapshot) {
+          if (snapshot.data == null) {
+            return const SizedBox.shrink();
+          }
+          return ListView.builder(
+            // physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: snapshot.data!.length,
+            itemBuilder: (BuildContext context, int idx) {
+              bool saved = savedPostRefs.isNotEmpty &&
+                  savedPostRefs.contains(postRefs[idx]);
+              return postUI(context, PostController(snapshot.data![idx]),
+                  setState: setState, saved: saved, first: idx == 0);
+            },
+          );
+        },
+      );
+    } catch (e) {
+      print(e);
+      return Center(child: Text(nullMessage));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -128,153 +200,17 @@ class ProfilePageState extends State<ProfilePage> {
                 ],
               ),
               Expanded(
-                child: TabBarView(
-                  children: [
-                    KeepAliveStreamBuilder(
-                        stream: userInfoStream1,
-                        builder: (context, AsyncSnapshot<dynamic> snap) {
-                          if (snap.data == null) {
-                            print(snap);
-                            print(snap.data);
-                            return Center(
-                                child: CircularProgressIndicator(
-                                    color: ApdiColors.themeGreen));
-                          }
-                          try {
-                            Map<String, dynamic> data = snap.data!.data()!;
-                            List postRefs = data['myPosts'];
-                            postRefs = postRefs.reversed.toList();
-                            List savedPostRefs = [];
-                            if (data.containsKey('savedPosts')) {
-                              savedPostRefs = data['savedPosts'];
-                            }
-                            if (postRefs.isEmpty) {
-                              return const Center(child: Text("No Posts"));
-                            }
-                            return FutureBuilder<List<dynamic>>(
-                              future: getFromDocRefs(postRefs),
-                              builder: (context, snapshot) {
-                                if (snapshot.data == null) {
-                                  return const SizedBox.shrink();
-                                }
-                                return ListView.builder(
-                                  // physics: const AlwaysScrollableScrollPhysics(),
-                                  itemCount: snapshot.data!.length,
-                                  itemBuilder: (BuildContext context, int idx) {
-                                    bool saved = savedPostRefs.isNotEmpty &&
-                                        savedPostRefs.contains(postRefs[idx]);
-                                    return postUI(context,
-                                        PostController(snapshot.data![idx]),
-                                        setState: setState,
-                                        saved: saved,
-                                        first: idx == 0);
-                                  },
-                                );
-                              },
-                            );
-                          } catch (e) {
-                            print(e);
-                            return const Center(child: Text("No Posts"));
-                          }
-                        }),
-                    KeepAliveStreamBuilder(
-                        stream: userInfoStream3,
-                        builder: (context, AsyncSnapshot<dynamic> snap) {
-                          if (snap.data == null) {
-                            print(snap);
-                            print(snap.data);
-                            return Center(
-                                child: CircularProgressIndicator(
-                                    color: ApdiColors.themeGreen));
-                          }
-                          try {
-                            Map<String, dynamic> data = snap.data!.data()!;
-                            List postRefs = data['myComments'];
-                            postRefs = postRefs.reversed.toList();
-                            List savedPostRefs = [];
-                            if (data.containsKey('savedPosts')) {
-                              savedPostRefs = data['savedPosts'];
-                            }
-                            if (postRefs.isEmpty) {
-                              return const Center(
-                                  child: Text("You Did not Comment Yet"));
-                            }
-                            return FutureBuilder<List<dynamic>>(
-                              future: getFromDocRefs(postRefs),
-                              builder: (context, snapshot) {
-                                if (snapshot.data == null) {
-                                  return const SizedBox.shrink();
-                                }
-                                return ListView.builder(
-                                  // physics: const AlwaysScrollableScrollPhysics(),
-                                  itemCount: snapshot.data!.length,
-                                  itemBuilder: (BuildContext context, int idx) {
-                                    bool saved = savedPostRefs.isNotEmpty &&
-                                        savedPostRefs.contains(postRefs[idx]);
-                                    return postUI(context,
-                                        PostController(snapshot.data![idx]),
-                                        setState: setState,
-                                        saved: saved,
-                                        first: idx == 0);
-                                  },
-                                );
-                              },
-                            );
-                          } catch (e) {
-                            print(e);
-                            return const Center(
-                                child: Text("You Did Not Comment Yet"));
-                          }
-                        }),
-                    KeepAliveStreamBuilder(
-                        stream: userInfoStream2,
-                        builder: (context, AsyncSnapshot<dynamic> snap) {
-                          if (snap.data == null) {
-                            return Center(
-                                child: CircularProgressIndicator(
-                                    color: ApdiColors.themeGreen));
-                          }
-                          try {
-                            List refs = snap.data!.get('savedPosts');
-                            refs = refs.reversed.toList();
-                            if (refs.isEmpty) {
-                              return const Center(
-                                  child: Text("No Saved Events or Posts"));
-                            }
-                            return FutureBuilder<List<dynamic>>(
-                              future: getFromDocRefs(refs),
-                              builder: (context, snapshot) {
-                                if (snapshot.data == null) {
-                                  return const SizedBox.shrink();
-                                }
-                                return ListView.builder(
-                                  // physics: const AlwaysScrollableScrollPhysics(),
-                                  itemCount: snapshot.data!.length,
-                                  itemBuilder: (BuildContext context, int idx) {
-                                    if (snapshot.data![idx] is Event) {
-                                      return savedEventUI(context,
-                                          EventController(snapshot.data![idx]),
-                                          setState: setState, first: idx == 0);
-                                    } else {
-                                      return postUI(context,
-                                          PostController(snapshot.data![idx]),
-                                          setState: setState,
-                                          saved: true,
-                                          first: idx == 0);
-                                    }
-                                  },
-                                );
-                              },
-                            );
-                          } catch (e) {
-                            print(e);
-                            return const Center(
-                                child: Text("No Saved Events or Posts"));
-                          }
-                        }),
-                  ],
-                ),
-              ),
+                  child: KeepAliveStreamBuilder(
+                      stream: userInfoStream,
+                      builder: (context, AsyncSnapshot<dynamic> snap) {
+                        return TabBarView(
+                          children: [
+                            tabView("myPosts", snap),
+                            tabView("myComments", snap),
+                            tabView("savedPosts", snap),
+                          ],
+                        );
+                      })),
             ],
           ),
         ),

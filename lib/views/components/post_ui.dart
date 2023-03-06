@@ -484,7 +484,7 @@ Widget postUI(BuildContext context, PostController controller,
               ViewCommentSave(
                   hexButtonColor: "#AAAAAA",
                   controller: controller,
-                  showText: !isDetail,
+                  showText: false,
                   saved: saved),
               Divider(
                 color: ApdiColors.lineGrey,
