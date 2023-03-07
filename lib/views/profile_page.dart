@@ -112,13 +112,26 @@ class ProfilePageState extends State<ProfilePage> {
     }
     try {
       if (type == 'savedPosts') {
-        List refs = snap.data!.get('savedPosts');
-        refs = refs.reversed.toList();
-        if (refs.isEmpty) {
+        Map<String, dynamic> data = snap.data!.data()!;
+        List savedRefs = data['savedPosts'];
+        savedRefs = savedRefs.reversed.toList();
+
+        List? blockedPosts =
+            data.containsKey('blockedPosts') ? data['blockedPosts'] : null;
+
+        List filteredSavedRefs = [];
+        for (var ref in savedRefs) {
+          bool blocked = blockedPosts?.contains(ref) ?? false;
+          if (!blocked) {
+            filteredSavedRefs.add(ref);
+          }
+        }
+
+        if (filteredSavedRefs.isEmpty) {
           return Center(child: Text(nullMessage));
         }
         return FutureBuilder<List<dynamic>>(
-          future: getFromDocRefs(refs),
+          future: getFromDocRefs(filteredSavedRefs),
           builder: (context, snapshot) {
             if (snapshot.data == null) {
               return const SizedBox.shrink();
@@ -147,11 +160,23 @@ class ProfilePageState extends State<ProfilePage> {
       if (data.containsKey('savedPosts')) {
         savedPostRefs = data['savedPosts'];
       }
-      if (postRefs.isEmpty) {
+
+      List? blockedPosts =
+          data.containsKey('blockedPosts') ? data['blockedPosts'] : null;
+
+      List filteredRefs = [];
+      for (var ref in postRefs) {
+        bool blocked = blockedPosts?.contains(ref) ?? false;
+        if (!blocked) {
+          filteredRefs.add(ref);
+        }
+      }
+
+      if (filteredRefs.isEmpty) {
         return Center(child: Text(nullMessage));
       }
       return FutureBuilder<List<dynamic>>(
-        future: getFromDocRefs(postRefs),
+        future: getFromDocRefs(filteredRefs),
         builder: (context, snapshot) {
           if (snapshot.data == null) {
             return const SizedBox.shrink();
@@ -161,7 +186,7 @@ class ProfilePageState extends State<ProfilePage> {
             itemCount: snapshot.data!.length,
             itemBuilder: (BuildContext context, int idx) {
               bool saved = savedPostRefs.isNotEmpty &&
-                  savedPostRefs.contains(postRefs[idx]);
+                  savedPostRefs.contains(filteredRefs[idx]);
               return postUI(context, PostController(snapshot.data![idx]),
                   setState: setState, saved: saved, first: idx == 0);
             },

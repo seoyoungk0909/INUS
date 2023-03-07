@@ -77,8 +77,7 @@ class VerifyPageState extends State<VerifyPage> {
                   child: TextButton(
                       style: TextButton.styleFrom(
                         primary: Theme.of(context).primaryColor,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.secondary,
+                        backgroundColor: ApdiColors.themeGreen,
                         elevation: 3,
                         // side: const BorderSide(
                         //   color: Colors.transparent,
