@@ -346,6 +346,11 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
                                 .map((e) => InkWell(
                                       onTap: () {
                                         Navigator.pop(context);
+                                        DocumentReference userRef =
+                                            FirebaseFirestore.instance
+                                                .collection('user_info')
+                                                .doc(FirebaseAuth
+                                                    .instance.currentUser!.uid);
                                         if (e == 'Block Post') {
                                           popUpDialog(
                                               context,
@@ -353,13 +358,7 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
                                               "Do you want to remove this post from your feed?",
                                               action: TextButton(
                                                   onPressed: () {
-                                                    FirebaseFirestore.instance
-                                                        .collection('user_info')
-                                                        .doc(FirebaseAuth
-                                                            .instance
-                                                            .currentUser!
-                                                            .uid)
-                                                        .update({
+                                                    userRef.update({
                                                       'blockedPosts': FieldValue
                                                           .arrayUnion([
                                                         controller
@@ -397,14 +396,6 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
                                               action: TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
-                                                  DocumentReference userRef =
-                                                      FirebaseFirestore.instance
-                                                          .collection(
-                                                              'user_info')
-                                                          .doc(FirebaseAuth
-                                                              .instance
-                                                              .currentUser!
-                                                              .uid);
                                                   if (userRef !=
                                                       controller.post.writer
                                                           .userReference) {
