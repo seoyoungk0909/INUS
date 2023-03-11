@@ -108,13 +108,19 @@ class _PostListPageState extends State<PostListPage> {
     List? blockedPosts = documentdata.containsKey('blockedPosts')
         ? documentdata['blockedPosts']
         : null;
+    List? blockedUsers = documentdata.containsKey('blockedUsers')
+        ? documentdata['blockedUsers']
+        : null;
 
     List<PostController> _controllers =
         popular ? popularPostsControllers : recentPostsControllers;
     List<PostController> filteredPostControllers = [];
     for (PostController ctrl in _controllers) {
-      bool blocked = blockedPosts?.contains(ctrl.post.firebaseDocRef) ?? false;
-      if (!blocked) {
+      bool postBlock =
+          blockedPosts?.contains(ctrl.post.firebaseDocRef) ?? false;
+      bool userBlock =
+          blockedUsers?.contains(ctrl.post.writer.userReference) ?? false;
+      if (!postBlock && !userBlock) {
         filteredPostControllers.add(ctrl);
       }
     }
