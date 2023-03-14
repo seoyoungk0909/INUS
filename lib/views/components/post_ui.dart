@@ -380,7 +380,7 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
                                           popUpDialog(
                                               context,
                                               "Don't show this post",
-                                              "Do you want to remove this post from your feed?",
+                                              "Do you want to remove this post from your feed?\n(This will also remove this post from your saved posts.)",
                                               action: TextButton(
                                                   onPressed: () {
                                                     userRef.update({
@@ -390,6 +390,15 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
                                                             .post.firebaseDocRef
                                                       ])
                                                     });
+                                                    // remove from saved
+                                                    userRef.update({
+                                                      'savedPosts': FieldValue
+                                                          .arrayRemove([
+                                                        controller
+                                                            .post.firebaseDocRef
+                                                      ])
+                                                    });
+                                                    // TODO: need to decrement saveCount of the post
                                                     Navigator.pop(context);
 
                                                     popUpDialog(
@@ -420,7 +429,6 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
                                               "Do you want to block the user of this post?\n(All the posts of this user will not appear on your feed.)",
                                               action: TextButton(
                                                 onPressed: () {
-                                                  Navigator.pop(context);
                                                   if (userRef !=
                                                       controller.post.writer
                                                           .userReference) {
@@ -431,6 +439,7 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
                                                             .userReference
                                                       ])
                                                     });
+                                                    Navigator.pop(context);
                                                   } else {
                                                     showDialog<void>(
                                                         context: context,
