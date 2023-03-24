@@ -14,8 +14,8 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  bool tc_confirmed = false;
-  bool alreadyConfirmed = false;
+  bool tc_confirmed = true;
+  bool alreadyConfirmed = true;
 
   Future<Widget> TCAgreeRow() async {
     DocumentReference<Map<String, dynamic>> userRef = FirebaseFirestore.instance
@@ -35,18 +35,18 @@ class _WelcomePageState extends State<WelcomePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Checkbox(
-            value: tc_confirmed,
-            onChanged: (newValue) {
-              setState(() {
-                tc_confirmed = newValue!;
-              });
-            }),
+        // Checkbox(
+        //     value: tc_confirmed,
+        //     onChanged: (newValue) {
+        //       setState(() {
+        //         tc_confirmed = newValue!;
+        //       });
+        //     }),
         Text(
-          "I agree to the",
+          "By joining INUS, you agree to the",
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w400,
             color: ApdiColors.greyText,
           ),
@@ -57,7 +57,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 MaterialPageRoute(
                   fullscreenDialog: true,
                   builder: (context) {
-                    return TandCPage();
+                    return const TandCPage();
                   },
                 ),
               );
@@ -66,7 +66,7 @@ class _WelcomePageState extends State<WelcomePage> {
             child: Text(
               "INUS Terms (EULA)",
               style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w400,
                   color: ApdiColors.themeGreen),
             ))
@@ -132,18 +132,17 @@ class _WelcomePageState extends State<WelcomePage> {
                         ),
                       ),
                       onPressed: () {
-                        if (!tc_confirmed) {
-                          popUpDialog(context, "Terms and Conditions",
-                              "Please agree to our terms and conditions first to use the app.");
-                          return;
-                        }
-                        if (!alreadyConfirmed) {
-                          DocumentReference userRef = FirebaseFirestore.instance
-                              .collection('user_info')
-                              .doc(FirebaseAuth.instance.currentUser?.uid);
-
-                          userRef.update({'tc_confirmed': true});
-                        }
+                        // if (!tc_confirmed) {
+                        //   popUpDialog(context, "Terms and Conditions",
+                        //       "Please agree to our terms and conditions first to use the app.");
+                        //   return;
+                        // }
+                        // if (!alreadyConfirmed) {
+                        //   DocumentReference userRef = FirebaseFirestore.instance
+                        //       .collection('user_info')
+                        //       .doc(FirebaseAuth.instance.currentUser?.uid);
+                        //   userRef.update({'tc_confirmed': true});
+                        // }
                         if (from_signup) {
                           Navigator.pushNamedAndRemoveUntil(
                               context, 'login', (route) => false);

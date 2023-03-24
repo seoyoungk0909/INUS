@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../firebase_login_state.dart';
 import '../components/popup_dialog.dart';
+import '../terms_and_conditions.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -182,8 +183,41 @@ class LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "By joining INUS, you agree to the",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: ApdiColors.greyText,
+                    ),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            fullscreenDialog: true,
+                            builder: (context) {
+                              return const TandCPage();
+                            },
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "INUS Terms (EULA)",
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: ApdiColors.themeGreen),
+                      )),
+                ],
+              ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                 child: Row(
                   // mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
