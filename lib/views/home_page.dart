@@ -129,6 +129,8 @@ class HomePageState extends State<HomePage> {
         // childPadding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
         icon: Icons.add,
         activeIcon: Icons.close,
+        buttonSize: Size(50, 50),
+        overlayOpacity: 0.3,
         children: [
           SpeedDialChild(
               // shape: RoundedRectangleBorder(),
