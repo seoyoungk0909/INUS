@@ -87,59 +87,68 @@ class EventDetailPageState extends State<EventDetailPage> {
                 : null;
             bool isEventSaved =
                 savedPosts?.contains(controller.event.firebaseDocRef) ?? false;
-            return ListView(
+            return Column(
               children: [
-                eventDetailPhoto(context, controller),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        eventDetailPhoto(context, controller),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              16, 0, 16, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              categoryButton(context, controller),
+                              eventTitle(context, controller),
+                              categoryHashtag(context, controller),
+                              quickView(context, controller),
+                              eventDescription(context, controller),
+                              detailedView(context, controller),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  padding: const EdgeInsets.only(top: 40, bottom: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      categoryButton(context, controller),
-                      eventTitle(context, controller),
-                      categoryHashtag(context, controller),
-                      quickView(context, controller),
-                      eventDescription(context, controller),
-                      detailedView(context, controller),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 40, bottom: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.76,
-                              height: 48,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  _launchURL(controller.event.registerLink)
-                                      .onError((error, stackTrace) => {
-                                            popUpDialog(
-                                                context,
-                                                "error launching the url",
-                                                "The register url ${controller.event.registerLink} is not a valid web url.")
-                                          });
-                                },
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        hexStringToColor(buttonColor(
-                                            controller.event.category))),
-                                    textStyle: MaterialStateProperty.all(
-                                        const TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.w500,
-                                    ))),
-                                child: const Text('Register'),
-                              ),
-                            ),
-                            Spacer(),
-                            EventSaveButton(
-                                controller: controller,
-                                currentUser: FirebaseAuth.instance.currentUser!,
-                                saved: isEventSaved),
-                          ],
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.76,
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _launchURL(controller.event.registerLink)
+                                .onError((error, stackTrace) => {
+                                      popUpDialog(
+                                          context,
+                                          "error launching the url",
+                                          "The register url ${controller.event.registerLink} is not a valid web url.")
+                                    });
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  hexStringToColor(
+                                      buttonColor(controller.event.category))),
+                              textStyle:
+                                  MaterialStateProperty.all(const TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'Outfit',
+                                fontWeight: FontWeight.w500,
+                              ))),
+                          child: const Text('Register'),
                         ),
                       ),
+                      const Spacer(),
+                      EventSaveButton(
+                          controller: controller,
+                          currentUser: FirebaseAuth.instance.currentUser!,
+                          saved: isEventSaved),
                     ],
                   ),
                 ),

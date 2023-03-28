@@ -147,7 +147,7 @@ class LoginPageState extends State<LoginPage> {
                       enableSuggestions: false,
                       keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
-                        hintText: 'password',
+                        hintText: 'Password',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
                         contentPadding:
                             const EdgeInsetsDirectional.only(start: 20, top: 5),
@@ -238,7 +238,7 @@ class LoginPageState extends State<LoginPage> {
                         child: Text(
                           'Sign Up',
                           style: TextStyle(
-                            fontFamily: 'Poppins',
+                            fontFamily: 'Roboto',
                             color: Colors.grey,
                             fontSize: 14,
                           ),
@@ -262,7 +262,7 @@ class LoginPageState extends State<LoginPage> {
                         child: Text(
                           'Forgot Password',
                           style: TextStyle(
-                            fontFamily: 'Poppins',
+                            fontFamily: 'Roboto',
                             color: Colors.grey,
                             fontSize: 14,
                           ),
