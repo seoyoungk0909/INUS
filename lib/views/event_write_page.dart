@@ -164,9 +164,9 @@ class EventWritePageState extends State<EventWritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ApdiColors.darkBackground,
+      backgroundColor: ApdiColors.darkerBackground,
       appBar: AppBar(
-        backgroundColor: ApdiColors.darkerBackground,
+        backgroundColor: ApdiColors.darkBackground,
         title: Text(
           widget.title,
           style: const TextStyle(

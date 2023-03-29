@@ -339,9 +339,9 @@ class PostWritePageState extends State<PostWritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ApdiColors.darkBackground,
+      backgroundColor: ApdiColors.darkerBackground,
       appBar: AppBar(
-        backgroundColor: ApdiColors.darkerBackground,
+        backgroundColor: ApdiColors.darkBackground,
         title: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: Text(
