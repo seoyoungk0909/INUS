@@ -114,7 +114,7 @@ class EventDetailPageState extends State<EventDetailPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 40, bottom: 16),
+                  padding: const EdgeInsets.only(top: 40, bottom: 16, left: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -144,11 +144,14 @@ class EventDetailPageState extends State<EventDetailPage> {
                           child: const Text('Register'),
                         ),
                       ),
-                      const Spacer(),
-                      EventSaveButton(
-                          controller: controller,
-                          currentUser: FirebaseAuth.instance.currentUser!,
-                          saved: isEventSaved),
+                      // const Spacer(),
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(start: 20),
+                        child: EventSaveButton(
+                            controller: controller,
+                            currentUser: FirebaseAuth.instance.currentUser!,
+                            saved: isEventSaved),
+                      ),
                     ],
                   ),
                 ),
