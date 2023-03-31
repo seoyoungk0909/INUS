@@ -39,7 +39,7 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -564,40 +564,36 @@ Widget postUI(BuildContext context, PostController controller,
   double topPad = first ? 16 : 0;
   return Padding(
     padding: EdgeInsetsDirectional.fromSTEB(0, topPad, 0, 0),
-    child: Container(
-      decoration: BoxDecoration(
-          // border:
-          //     BorderDirectional(bottom: BorderSide(color: ApdiColors.lineGrey)),
-          ),
-      child: TextButton(
-        style: ButtonStyle(
-            overlayColor: MaterialStateProperty.all(Colors.transparent)),
-        onPressed: () {
-          if (isDetail) return;
-          Navigator.pushNamed(context, 'post_detail',
-              arguments: {'post': controller.post, 'saved': saved});
-          setState!(controller.incrementView);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(4),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              writerInfoUI(context, controller),
-              contentUI(context, controller, isDetail: isDetail),
-              ViewCommentSave(
-                  hexButtonColor: "#AAAAAA",
-                  controller: controller,
-                  showText: false,
-                  saved: saved),
-              Divider(
-                color: ApdiColors.lineGrey,
-                height: 0,
-                thickness: 1,
-                indent: 0,
-                endIndent: 0,
-              ),
-            ],
+    child: Padding(
+      padding: EdgeInsetsDirectional.only(top: first ? 0 : 20),
+      child: Container(
+        decoration: BoxDecoration(
+          border:
+              BorderDirectional(bottom: BorderSide(color: ApdiColors.lineGrey)),
+        ),
+        child: TextButton(
+          style: ButtonStyle(
+              overlayColor: MaterialStateProperty.all(Colors.transparent)),
+          onPressed: () {
+            if (isDetail) return;
+            Navigator.pushNamed(context, 'post_detail',
+                arguments: {'post': controller.post, 'saved': saved});
+            setState!(controller.incrementView);
+          },
+          child: Padding(
+            padding: const EdgeInsetsDirectional.only(start: 8, end: 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                writerInfoUI(context, controller),
+                contentUI(context, controller, isDetail: isDetail),
+                ViewCommentSave(
+                    hexButtonColor: "#AAAAAA",
+                    controller: controller,
+                    showText: false,
+                    saved: saved),
+              ],
+            ),
           ),
         ),
       ),

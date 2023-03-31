@@ -20,6 +20,12 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  bool _isSpeedDialOpen = false;
+  Widget _speedDialIcon = SizedBox(
+    width: 32, // set the width to the desired size
+    height: 32, // set the height to the desired size
+    child: SvgPicture.asset("assets/icons/add-square-02.svg"),
+  );
 
   Widget pageBuilder(int index) {
     switch (index) {
@@ -125,12 +131,15 @@ class HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButton: SpeedDial(
-        // childMargin: const EdgeInsets.symmetric(horizontal: 150, vertical: 50),
-        // childPadding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
-        icon: Icons.add,
-        activeIcon: Icons.close,
-        buttonSize: Size(50, 50),
+        // icon: Icons.add,
+        // activeIcon: Icons.close,
+        buttonSize: const Size(50, 50),
+        childrenButtonSize: const Size(52, 52),
+        backgroundColor: const Color(0xffd14c4c),
         overlayOpacity: 0.3,
+        // spacing: 8,
+        spacing: 4,
+        spaceBetweenChildren: 4,
         children: [
           SpeedDialChild(
               // shape: RoundedRectangleBorder(),
@@ -139,8 +148,8 @@ class HomePageState extends State<HomePage> {
               //   children: [Icon(Icons.save), Text("Create Post")],
               // )),
               child: SizedBox(
-                width: 28,
-                height: 28,
+                width: 32,
+                height: 32,
                 child: Image.asset(
                   "assets/icons/create-post.png",
                   fit: BoxFit.fitWidth,
@@ -150,8 +159,8 @@ class HomePageState extends State<HomePage> {
               onTap: () => Navigator.pushNamed(context, 'post_write')),
           SpeedDialChild(
               child: SizedBox(
-                width: 28,
-                height: 28,
+                width: 32,
+                height: 32,
                 child: Image.asset(
                   "assets/icons/create-event.png",
                   fit: BoxFit.fitWidth,
@@ -160,6 +169,27 @@ class HomePageState extends State<HomePage> {
               label: "Create Event",
               onTap: () => Navigator.pushNamed(context, 'event_write')),
         ],
+        onOpen: () {
+          setState(() {
+            _isSpeedDialOpen = true;
+            _speedDialIcon = SizedBox(
+              width: 32,
+              height: 32,
+              child: SvgPicture.asset("assets/icons/x-01.svg"),
+            );
+          });
+        },
+        onClose: () {
+          setState(() {
+            _isSpeedDialOpen = false;
+            _speedDialIcon = SizedBox(
+              width: 32,
+              height: 32,
+              child: SvgPicture.asset("assets/icons/add-square-02.svg"),
+            );
+          });
+        },
+        child: _speedDialIcon,
       ),
     );
   }
