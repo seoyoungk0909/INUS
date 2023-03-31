@@ -71,7 +71,7 @@ class LoginPageState extends State<LoginPage> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
           child: Column(
             children: <Widget>[
               const Align(
@@ -276,6 +276,9 @@ class LoginPageState extends State<LoginPage> {
               Consumer<LoginState>(builder: (context, appState, _) {
                 return TextButton(
                     style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       primary: Theme.of(context).primaryColor,
                       backgroundColor: loginButtonEnabled
                           ? Theme.of(context).colorScheme.secondary
@@ -288,8 +291,7 @@ class LoginPageState extends State<LoginPage> {
                     ),
                     child: Container(
                       height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10)),
+                      width: 350,
                       child: Center(
                         child: Text(
                           "Login",
@@ -297,7 +299,7 @@ class LoginPageState extends State<LoginPage> {
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge
-                              ?.copyWith(color: Colors.white),
+                              ?.copyWith(color: Colors.white, fontSize: 16),
                         ),
                       ),
                     ),
