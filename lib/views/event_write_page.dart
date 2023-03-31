@@ -392,39 +392,37 @@ class EventWritePageState extends State<EventWritePage> {
                           ]),
                     ),
                   ),
-                  Center(
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: 50,
-                      child: TextField(
-                          controller: eventTitle,
-                          onChanged: (content) {
-                            if (content != "") {
-                              textChecker['Title'] = true;
-                              textChecking();
-                            } else {
-                              textChecker['Title'] = false;
-                              textChecking();
-                            }
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 1, color: ApdiColors.lineGrey),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 1, color: ApdiColors.themeGreen),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            hintText: "Input event name",
-                            hintStyle: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.white24,
-                            ),
-                          )),
-                    ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 50,
+                    child: TextField(
+                        controller: eventTitle,
+                        onChanged: (content) {
+                          if (content != "") {
+                            textChecker['Title'] = true;
+                            textChecking();
+                          } else {
+                            textChecker['Title'] = false;
+                            textChecking();
+                          }
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1, color: ApdiColors.lineGrey),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1, color: ApdiColors.themeGreen),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          hintText: "Input event name",
+                          hintStyle: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white24,
+                          ),
+                        )),
                   ),
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
