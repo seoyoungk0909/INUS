@@ -93,7 +93,7 @@ class EventPageState extends State<EventPage> {
   }
 
   Widget eventView(snapshot, {bool formal = false}) {
-    if (formalEventsControllers.isEmpty || snapshot.data == null) {
+    if (snapshot.data == null) {
       return Center(
           child: CircularProgressIndicator(color: ApdiColors.themeGreen));
     }
