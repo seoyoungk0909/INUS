@@ -156,6 +156,13 @@ class _PostListPageState extends State<PostListPage> {
                 Tab(text: "Popular"),
               ],
             ),
+            Divider(
+              color: ApdiColors.lineGrey,
+              height: 0,
+              thickness: 1,
+              indent: 0,
+              endIndent: 0,
+            ),
             Expanded(
               child: KeepAliveStreamBuilder(
                 stream: snapshots,

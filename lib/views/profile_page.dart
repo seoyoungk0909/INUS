@@ -226,6 +226,13 @@ class ProfilePageState extends State<ProfilePage> {
                   Tab(text: "Save"),
                 ],
               ),
+              Divider(
+                color: ApdiColors.lineGrey,
+                height: 0,
+                thickness: 1,
+                indent: 0,
+                endIndent: 0,
+              ),
               Expanded(
                   child: KeepAliveStreamBuilder(
                       stream: userInfoStream,
