@@ -128,6 +128,8 @@ class HomePageState extends State<HomePage> {
         // childMargin: const EdgeInsets.symmetric(horizontal: 150, vertical: 50),
         // childPadding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
         icon: Icons.add,
+        spacing: 4,
+        spaceBetweenChildren: 4,
         activeIcon: Icons.close,
         buttonSize: Size(50, 50),
         overlayOpacity: 0.3,

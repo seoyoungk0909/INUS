@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../controllers/event_controller.dart';
 
@@ -32,21 +33,28 @@ class EventSaveButtonState extends State<EventSaveButton> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        padding: EdgeInsets.zero,
-        onPressed: () {
-          if (saved) {
-            widget.controller.deleteEvent(widget.currentUser.uid);
-          } else {
-            widget.controller.saveEvent(widget.currentUser.uid);
-          }
-          setState(() {
-            saved = !saved;
-          });
-        },
-        icon: Icon(
-          saved ? Icons.bookmark : Icons.bookmark_border,
-          size: 40,
-          color: Colors.white70,
-        ));
+      padding: EdgeInsets.zero,
+      onPressed: () {
+        if (saved) {
+          widget.controller.deleteEvent(widget.currentUser.uid);
+        } else {
+          widget.controller.saveEvent(widget.currentUser.uid);
+        }
+        setState(() {
+          saved = !saved;
+        });
+      },
+      icon: saved
+          ? SvgPicture.asset(
+              'assets/icons/save_true.svg',
+              width: 36,
+              height: 36,
+            )
+          : SvgPicture.asset(
+              'assets/icons/save_false.svg',
+              width: 36,
+              height: 36,
+            ),
+    );
   }
 }

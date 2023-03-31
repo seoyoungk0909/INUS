@@ -13,6 +13,7 @@ import '../models/user_model.dart';
 import 'components/event_ui.dart';
 import '../controllers/event_controller.dart';
 import '../models/event_model.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key, required this.title}) : super(key: key);
@@ -214,7 +215,8 @@ class ProfilePageState extends State<ProfilePage> {
                       alignment: Alignment.bottomRight,
                       child: IconButton(
                           onPressed: () => Navigator.pushNamed(context, 'more'),
-                          icon: Icon(Icons.more_horiz_rounded)))),
+                          icon: SvgPicture.asset(
+                              'assets/icons/jum jum jum.svg')))),
               userGreetings(state.currentUser ?? defaultUser),
               const TabBar(
                 indicatorColor: Colors.white,
