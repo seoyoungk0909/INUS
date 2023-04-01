@@ -38,83 +38,153 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          //view
-          Padding(
-            padding: const EdgeInsetsDirectional.only(end: 5),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(30, 8, 0, 8),
-                  // TODO: use eye-open
-                  child: Icon(
-                    Icons.remove_red_eye_outlined,
-                    color: hexStringToColor(widget.hexButtonColor),
-                    size: 18,
-                  ),
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        //view
+        Padding(
+          padding: const EdgeInsetsDirectional.only(end: 5),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(30, 8, 0, 8),
+                // TODO: use eye-open
+                child: Icon(
+                  Icons.remove_red_eye_outlined,
+                  color: hexStringToColor(widget.hexButtonColor),
+                  size: 18,
                 ),
-                widget.showText
-                    ? Padding(
-                        padding: EdgeInsetsDirectional.only(start: 4),
-                        child: Text(
-                          'View',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2
-                              ?.copyWith(
-                                fontFamily: 'Roboto',
-                                color: hexStringToColor(widget.hexButtonColor),
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal,
-                              ),
-                        ),
-                      )
-                    : SizedBox.shrink(),
-                Padding(
-                  padding: EdgeInsetsDirectional.only(start: 4),
-                  child: Text(
-                    summarizeLongInt(widget.controller.post.views),
-                    style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                          fontFamily: 'Roboto',
-                          color: hexStringToColor(widget.hexButtonColor),
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                        ),
-                  ),
+              ),
+              widget.showText
+                  ? Padding(
+                      padding: EdgeInsetsDirectional.only(start: 4),
+                      child: Text(
+                        'View',
+                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                              fontFamily: 'Roboto',
+                              color: hexStringToColor(widget.hexButtonColor),
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
+                      ),
+                    )
+                  : SizedBox.shrink(),
+              Padding(
+                padding: EdgeInsetsDirectional.only(start: 4),
+                child: Text(
+                  summarizeLongInt(widget.controller.post.views),
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        fontFamily: 'Roboto',
+                        color: hexStringToColor(widget.hexButtonColor),
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          //comment
-          Padding(
+        ),
+        //comment
+        Padding(
+          padding: EdgeInsetsDirectional.only(end: 5),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(5, 8, 0, 8),
+                // child: Icon(
+                //   Icons.comment,
+                //   color: hexStringToColor(hexButtonColor),
+                //   size: 24,
+                // ),
+                child: SvgPicture.asset(
+                  'assets/icons/message-square-typing.svg',
+                  color: hexStringToColor(widget.hexButtonColor),
+                  height: 18,
+                ),
+              ),
+              widget.showText
+                  ? Padding(
+                      padding: EdgeInsetsDirectional.only(start: 4),
+                      child: Text(
+                        'Comment',
+                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                              fontFamily: 'Roboto',
+                              color: hexStringToColor(widget.hexButtonColor),
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
+                      ),
+                    )
+                  : SizedBox.shrink(),
+              Padding(
+                padding: EdgeInsetsDirectional.only(start: 4),
+                child: Text(
+                  summarizeLongInt(widget.controller.post.numComments()),
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        fontFamily: 'Roboto',
+                        color: hexStringToColor(widget.hexButtonColor),
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        //save
+        TextButton(
+          style: TextButton.styleFrom(
+              primary: hexStringToColor(widget.hexButtonColor)),
+          onPressed: () {
+            setState(() {
+              saved = !saved;
+              DocumentReference userRef = FirebaseFirestore.instance
+                  .collection('user_info')
+                  .doc(FirebaseAuth.instance.currentUser?.uid);
+              if (saved) {
+                // saved = false -> true; now we save
+                widget.controller.postSave();
+                userRef.update({
+                  'savedPosts': FieldValue.arrayUnion(
+                      [widget.controller.post.firebaseDocRef])
+                });
+              } else {
+                // saved = true -> false; now we remove
+                widget.controller.postSaveCancel();
+                userRef.update({
+                  'savedPosts': FieldValue.arrayRemove(
+                      [widget.controller.post.firebaseDocRef])
+                });
+              }
+            });
+          },
+          child: Padding(
             padding: EdgeInsetsDirectional.only(end: 5),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(5, 8, 0, 8),
-                  // child: Icon(
-                  //   Icons.comment,
-                  //   color: hexStringToColor(hexButtonColor),
-                  //   size: 24,
-                  // ),
-                  child: SvgPicture.asset(
-                    'assets/icons/message-square-typing.svg',
-                    color: hexStringToColor(widget.hexButtonColor),
-                    height: 18,
-                  ),
-                ),
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+                    // child: Icon(
+                    //   Icons.bookmark_border,
+                    //   color: hexStringToColor(hexButtonColor),
+                    //   size: 24,
+                    // ),
+                    child: SvgPicture.asset(
+                      saved
+                          ? 'assets/icons/save_true.svg'
+                          : 'assets/icons/save_false.svg',
+                      color: hexStringToColor(widget.hexButtonColor),
+                      height: 18,
+                    )),
                 widget.showText
                     ? Padding(
-                        padding: EdgeInsetsDirectional.only(start: 4),
+                        padding: EdgeInsetsDirectional.only(end: 30),
                         child: Text(
-                          'Comment',
+                          'Save',
                           style: Theme.of(context)
                               .textTheme
                               .bodyText2
@@ -126,107 +196,26 @@ class ViewCommentSaveState extends State<ViewCommentSave> {
                               ),
                         ),
                       )
-                    : SizedBox.shrink(),
-                Padding(
-                  padding: EdgeInsetsDirectional.only(start: 4),
-                  child: Text(
-                    summarizeLongInt(widget.controller.post.numComments()),
-                    style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                          fontFamily: 'Roboto',
-                          color: hexStringToColor(widget.hexButtonColor),
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
+                    : Padding(
+                        padding: EdgeInsetsDirectional.only(start: 4),
+                        child: Text(
+                          widget.controller.post.saveCount.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText2
+                              ?.copyWith(
+                                fontFamily: 'Roboto',
+                                color: hexStringToColor(widget.hexButtonColor),
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
                         ),
-                  ),
-                ),
+                      ),
               ],
             ),
           ),
-          //save
-          TextButton(
-            style: TextButton.styleFrom(
-                primary: hexStringToColor(widget.hexButtonColor)),
-            onPressed: () {
-              setState(() {
-                saved = !saved;
-                DocumentReference userRef = FirebaseFirestore.instance
-                    .collection('user_info')
-                    .doc(FirebaseAuth.instance.currentUser?.uid);
-                if (saved) {
-                  // saved = false -> true; now we save
-                  widget.controller.postSave();
-                  userRef.update({
-                    'savedPosts': FieldValue.arrayUnion(
-                        [widget.controller.post.firebaseDocRef])
-                  });
-                } else {
-                  // saved = true -> false; now we remove
-                  widget.controller.postSaveCancel();
-                  userRef.update({
-                    'savedPosts': FieldValue.arrayRemove(
-                        [widget.controller.post.firebaseDocRef])
-                  });
-                }
-              });
-            },
-            child: Padding(
-              padding: EdgeInsetsDirectional.only(end: 5),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
-                      // child: Icon(
-                      //   Icons.bookmark_border,
-                      //   color: hexStringToColor(hexButtonColor),
-                      //   size: 24,
-                      // ),
-                      child: SvgPicture.asset(
-                        saved
-                            ? 'assets/icons/save_true.svg'
-                            : 'assets/icons/save_false.svg',
-                        color: hexStringToColor(widget.hexButtonColor),
-                        height: 18,
-                      )),
-                  widget.showText
-                      ? Padding(
-                          padding: EdgeInsetsDirectional.only(end: 30),
-                          child: Text(
-                            'Save',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText2
-                                ?.copyWith(
-                                  fontFamily: 'Roboto',
-                                  color:
-                                      hexStringToColor(widget.hexButtonColor),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                          ),
-                        )
-                      : Padding(
-                          padding: EdgeInsetsDirectional.only(start: 4),
-                          child: Text(
-                            widget.controller.post.saveCount.toString(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText2
-                                ?.copyWith(
-                                  fontFamily: 'Roboto',
-                                  color:
-                                      hexStringToColor(widget.hexButtonColor),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                          ),
-                        ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
