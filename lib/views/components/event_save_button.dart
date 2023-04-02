@@ -33,28 +33,21 @@ class EventSaveButtonState extends State<EventSaveButton> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      padding: EdgeInsets.zero,
-      onPressed: () {
-        if (saved) {
-          widget.controller.deleteEvent(widget.currentUser.uid);
-        } else {
-          widget.controller.saveEvent(widget.currentUser.uid);
-        }
-        setState(() {
-          saved = !saved;
-        });
-      },
-      icon: saved
-          ? SvgPicture.asset(
-              'assets/icons/save_true.svg',
-              width: 36,
-              height: 36,
-            )
-          : SvgPicture.asset(
-              'assets/icons/save_false.svg',
-              width: 36,
-              height: 36,
-            ),
-    );
+        padding: EdgeInsets.zero,
+        onPressed: () {
+          if (saved) {
+            widget.controller.deleteEvent(widget.currentUser.uid);
+          } else {
+            widget.controller.saveEvent(widget.currentUser.uid);
+          }
+          setState(() {
+            saved = !saved;
+          });
+        },
+        icon: SvgPicture.asset(
+          saved ? 'assets/icons/save_true.svg' : 'assets/icons/save_false.svg',
+          width: 36,
+          height: 36,
+        ));
   }
 }
