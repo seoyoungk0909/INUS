@@ -132,31 +132,42 @@ class ProfilePageState extends State<ProfilePage> {
           }
         }
 
-        if (filteredSavedRefs.isEmpty) {
-          return Center(child: Text(nullMessage));
-        }
-        return FutureBuilder<List<dynamic>>(
-          future: getFromDocRefs(filteredSavedRefs),
-          builder: (context, snapshot) {
-            if (snapshot.data == null) {
-              return const SizedBox.shrink();
-            }
-            return ListView.builder(
-              // physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: snapshot.data!.length,
-              itemBuilder: (BuildContext context, int idx) {
-                if (snapshot.data![idx] is Event) {
-                  return savedEventUI(
-                      context, EventController(snapshot.data![idx]),
-                      setState: setState, first: idx == 0);
-                } else {
-                  return postUI(context, PostController(snapshot.data![idx]),
-                      setState: setState, saved: true, first: idx == 0);
-                }
-              },
-            );
-          },
-        );
+        return FutureBuilder(
+            future: filterEmptyRefs(filteredSavedRefs),
+            builder: (context, refSnapshot) {
+              if (refSnapshot.data == null) {
+                return Center(
+                    child: CircularProgressIndicator(
+                        color: ApdiColors.themeGreen));
+              }
+              List finalFilteredRefs = refSnapshot.data! as List;
+              if (finalFilteredRefs.isEmpty) {
+                return Center(child: Text(nullMessage));
+              }
+              return FutureBuilder<List<dynamic>>(
+                future: getFromDocRefs(finalFilteredRefs),
+                builder: (context, snapshot) {
+                  if (snapshot.data == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return ListView.builder(
+                    // physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (BuildContext context, int idx) {
+                      if (snapshot.data![idx] is Event) {
+                        return savedEventUI(
+                            context, EventController(snapshot.data![idx]),
+                            setState: setState, first: idx == 0);
+                      } else {
+                        return postUI(
+                            context, PostController(snapshot.data![idx]),
+                            setState: setState, saved: true, first: idx == 0);
+                      }
+                    },
+                  );
+                },
+              );
+            });
       }
       Map<String, dynamic> data = snap.data!.data()!;
       List postRefs = data[type];
@@ -177,27 +188,37 @@ class ProfilePageState extends State<ProfilePage> {
         }
       }
 
-      if (filteredRefs.isEmpty) {
-        return Center(child: Text(nullMessage));
-      }
-      return FutureBuilder<List<dynamic>>(
-        future: getFromDocRefs(filteredRefs),
-        builder: (context, snapshot) {
-          if (snapshot.data == null) {
-            return const SizedBox.shrink();
-          }
-          return ListView.builder(
-            // physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: snapshot.data!.length,
-            itemBuilder: (BuildContext context, int idx) {
-              bool saved = savedPostRefs.isNotEmpty &&
-                  savedPostRefs.contains(filteredRefs[idx]);
-              return postUI(context, PostController(snapshot.data![idx]),
-                  setState: setState, saved: saved, first: idx == 0);
-            },
-          );
-        },
-      );
+      return FutureBuilder(
+          future: filterEmptyRefs(filteredRefs),
+          builder: (context, refSnapshot) {
+            if (refSnapshot.data == null) {
+              return Center(
+                  child:
+                      CircularProgressIndicator(color: ApdiColors.themeGreen));
+            }
+            List finalFilteredRefs = refSnapshot.data! as List;
+            if (finalFilteredRefs.isEmpty) {
+              return Center(child: Text(nullMessage));
+            }
+            return FutureBuilder<List<dynamic>>(
+              future: getFromDocRefs(finalFilteredRefs),
+              builder: (context, snapshot) {
+                if (snapshot.data == null) {
+                  return const SizedBox.shrink();
+                }
+                return ListView.builder(
+                  // physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (BuildContext context, int idx) {
+                    bool saved = savedPostRefs.isNotEmpty &&
+                        savedPostRefs.contains(finalFilteredRefs[idx]);
+                    return postUI(context, PostController(snapshot.data![idx]),
+                        setState: setState, saved: saved, first: idx == 0);
+                  },
+                );
+              },
+            );
+          });
     } catch (e) {
       print(e);
       return Center(child: Text(nullMessage));
@@ -263,4 +284,15 @@ class ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+}
+
+Future<List> filterEmptyRefs(List refs) async {
+  List filtered = [];
+  for (DocumentReference ref in refs) {
+    DocumentSnapshot ds = await ref.get();
+    if (ds.exists) {
+      filtered.add(ref);
+    }
+  }
+  return filtered;
 }
