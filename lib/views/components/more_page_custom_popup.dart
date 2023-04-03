@@ -25,7 +25,7 @@ Widget signOutPopUp(BuildContext context, {Widget? action}) {
                       fontFamily: 'Roboto',
                       color: hexStringToColor('#FFFFFF'),
                       fontSize: 20,
-                      fontWeight: FontWeight.w600))),
+                      fontWeight: FontWeight.w500))),
         ),
         Center(
           child: Container(
@@ -33,6 +33,7 @@ Widget signOutPopUp(BuildContext context, {Widget? action}) {
               child: SelectableText("Are you sure you want to sign out?",
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
                         fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w400,
                         color: hexStringToColor('#A3A3A3'),
                         fontSize: 14,
                       ))),
@@ -110,7 +111,7 @@ Widget deletePopUp(BuildContext context, {Widget? action}) {
                       fontFamily: 'Roboto',
                       color: hexStringToColor('#FFFFFF'),
                       fontSize: 20,
-                      fontWeight: FontWeight.w600))),
+                      fontWeight: FontWeight.w500))),
         ),
         Center(
           child: Container(
@@ -119,6 +120,7 @@ Widget deletePopUp(BuildContext context, {Widget? action}) {
                   "Once you delete your account, it can't be restored.",
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
                         fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w400,
                         color: hexStringToColor('#A3A3A3'),
                         fontSize: 14,
                       ))),

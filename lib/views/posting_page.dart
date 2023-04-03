@@ -149,7 +149,10 @@ class _PostListPageState extends State<PostListPage> {
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'Roboto')),
-              unselectedLabelStyle: (TextStyle(fontSize: 18)),
+              unselectedLabelStyle: (TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xffa3a3a3))),
               indicatorColor: Colors.white,
               tabs: [
                 Tab(text: "Recent"),

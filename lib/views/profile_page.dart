@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fbauth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'components/keep_alive_builder.dart';
 import 'components/post_ui.dart';
@@ -60,12 +61,12 @@ class ProfilePageState extends State<ProfilePage> {
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
             child: Text(
               "${currentUser.name}'s Page",
               style: const TextStyle(
                 fontFamily: 'Roboto',
-                fontSize: 25,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -74,14 +75,17 @@ class ProfilePageState extends State<ProfilePage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 30),
-              child: Text(
-                currentUser.getSchool(),
-                style: const TextStyle(
-                    fontFamily: 'Roboto',
-                    fontWeight: FontWeight.w100,
-                    color: Colors.grey),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(20, 10, 130, 40),
+                child: Text(
+                  currentUser.getSchool(),
+                  style: const TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xffa3a3a3)),
+                ),
               ),
             ),
           ],
@@ -210,7 +214,7 @@ class ProfilePageState extends State<ProfilePage> {
           builder: (context, state, _) => Column(
             children: [
               Padding(
-                  padding: EdgeInsetsDirectional.only(top: 10),
+                  padding: EdgeInsetsDirectional.only(top: 0),
                   child: Align(
                       alignment: Alignment.bottomRight,
                       child: IconButton(
@@ -219,6 +223,14 @@ class ProfilePageState extends State<ProfilePage> {
                               'assets/icons/jum jum jum.svg')))),
               userGreetings(state.currentUser ?? defaultUser),
               const TabBar(
+                labelStyle: (TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Roboto')),
+                unselectedLabelStyle: (TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xffa3a3a3))),
                 indicatorColor: Colors.white,
                 tabs: [
                   Tab(text: "Post"),

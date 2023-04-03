@@ -137,12 +137,22 @@ class EventPageState extends State<EventPage> {
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Roboto')),
-                unselectedLabelStyle: (TextStyle(fontSize: 18)),
+                unselectedLabelStyle: (TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xffa3a3a3))),
                 indicatorColor: Colors.white,
                 tabs: [
                   Tab(text: "Formal"),
                   Tab(text: "Casual"),
                 ],
+              ),
+              Divider(
+                color: ApdiColors.lineGrey,
+                height: 0,
+                thickness: 1,
+                indent: 0,
+                endIndent: 0,
               ),
               Expanded(
                 child: KeepAliveStreamBuilder(

@@ -114,7 +114,7 @@ class EventDetailPageState extends State<EventDetailPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 12, bottom: 56, left: 16),
+                  padding: const EdgeInsetsDirectional.fromSTEB(20, 10, 0, 45),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
