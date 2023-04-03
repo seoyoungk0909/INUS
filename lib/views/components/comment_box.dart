@@ -3,6 +3,7 @@ import 'package:aus/views/components/popup_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/style.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../../controllers/post_controller.dart';
 
@@ -37,10 +38,10 @@ class CommentBoxState extends State<CommentBox> {
   @override
   Widget build(BuildContext context) {
     return KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
-      double bottomPad = isKeyboardVisible ? 0 : 30;
+      double bottomPad = isKeyboardVisible ? 0 : 52;
       return Container(
           // margin: EdgeInsets.only(top: 8),
-          padding: EdgeInsets.fromLTRB(15, 0, 15, bottomPad),
+          padding: EdgeInsets.fromLTRB(20, 8, 16, bottomPad),
           decoration: BoxDecoration(
               color: Theme.of(context).primaryColorDark,
               border: BorderDirectional(
@@ -53,6 +54,10 @@ class CommentBoxState extends State<CommentBox> {
                   decoration: const InputDecoration(
                     // labelText: 'Write your comment',
                     hintText: 'Write your comment',
+                    hintStyle: TextStyle(
+                      fontSize: 15.0,
+                      color: Colors.white30,
+                    ),
                     border: InputBorder.none,
                   ),
                   onChanged: (value) {
@@ -63,7 +68,9 @@ class CommentBoxState extends State<CommentBox> {
                 ),
               ),
               TextButton(
-                style: TextButton.styleFrom(primary: ApdiColors.themeGreen),
+                style: TextButton.styleFrom(
+                    primary: ApdiColors.themeGreen,
+                    textStyle: TextStyle(fontSize: 15)),
                 onPressed: !typed
                     ? null
                     : () {

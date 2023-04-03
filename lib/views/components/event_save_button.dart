@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../controllers/event_controller.dart';
 
@@ -43,10 +44,10 @@ class EventSaveButtonState extends State<EventSaveButton> {
             saved = !saved;
           });
         },
-        icon: Icon(
-          saved ? Icons.bookmark : Icons.bookmark_border,
-          size: 40,
-          color: Colors.white70,
+        icon: SvgPicture.asset(
+          saved ? 'assets/icons/save_true.svg' : 'assets/icons/save_false.svg',
+          width: 36,
+          height: 36,
         ));
   }
 }

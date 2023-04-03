@@ -131,15 +131,15 @@ class HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButton: SpeedDial(
+        // childMargin: const EdgeInsets.symmetric(horizontal: 150, vertical: 50),
+        // childPadding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
         // icon: Icons.add,
-        // activeIcon: Icons.close,
-        buttonSize: const Size(50, 50),
-        childrenButtonSize: const Size(52, 52),
-        backgroundColor: const Color(0xffd14c4c),
-        overlayOpacity: 0.3,
-        // spacing: 8,
         spacing: 4,
         spaceBetweenChildren: 4,
+        //activeIcon: Icons.close,
+        buttonSize: Size(50, 50),
+        overlayOpacity: 0.3,
+        // spacing: 8,
         children: [
           SpeedDialChild(
               // shape: RoundedRectangleBorder(),

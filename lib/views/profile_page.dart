@@ -14,6 +14,7 @@ import '../models/user_model.dart';
 import 'components/event_ui.dart';
 import '../controllers/event_controller.dart';
 import '../models/event_model.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key, required this.title}) : super(key: key);
@@ -215,15 +216,11 @@ class ProfilePageState extends State<ProfilePage> {
               Padding(
                   padding: EdgeInsetsDirectional.only(top: 0),
                   child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: IconButton(
-                      onPressed: () => Navigator.pushNamed(context, 'more'),
-                      icon: SvgPicture.asset(
-                        "assets/icons/jum jum jum.svg",
-                      ),
-                      // Icon(Icons.more_horiz_rounded)
-                    ),
-                  )),
+                      alignment: Alignment.bottomRight,
+                      child: IconButton(
+                          onPressed: () => Navigator.pushNamed(context, 'more'),
+                          icon: SvgPicture.asset(
+                              'assets/icons/jum jum jum.svg')))),
               userGreetings(state.currentUser ?? defaultUser),
               const TabBar(
                 labelStyle: (TextStyle(
@@ -240,6 +237,13 @@ class ProfilePageState extends State<ProfilePage> {
                   Tab(text: "Comment"),
                   Tab(text: "Save"),
                 ],
+              ),
+              Divider(
+                color: ApdiColors.lineGrey,
+                height: 0,
+                thickness: 1,
+                indent: 0,
+                endIndent: 0,
               ),
               Expanded(
                   child: KeepAliveStreamBuilder(

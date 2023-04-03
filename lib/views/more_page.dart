@@ -5,6 +5,7 @@ import 'components/popup_dialog.dart';
 import 'terms_and_conditions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'components/more_page_custom_popup.dart';
+import 'package:flutter_svg/svg.dart';
 
 void userSignOut(BuildContext context) {
   fbauth.FirebaseAuth.instance.signOut();
@@ -81,7 +82,7 @@ class MorePage extends StatelessWidget {
               // Navigator.pushNamed(context, 't&c');
             },
             title: Text("Terms and Conditions"),
-            trailing: Icon(Icons.arrow_forward_ios_outlined),
+            trailing: SvgPicture.asset('assets/icons/chevron-right.svg'),
           ),
           // ListTile(
           //   onTap: () {
@@ -99,7 +100,7 @@ class MorePage extends StatelessWidget {
                   });
             },
             title: const Text("Sign Out"),
-            trailing: const Icon(Icons.arrow_forward_ios_outlined),
+            trailing: SvgPicture.asset('assets/icons/chevron-right.svg'),
           ),
           ListTile(
             onTap: () {
@@ -111,7 +112,7 @@ class MorePage extends StatelessWidget {
               );
             },
             title: const Text("Delete Your Account"),
-            trailing: const Icon(Icons.arrow_forward_ios_outlined),
+            trailing: SvgPicture.asset('assets/icons/chevron-right.svg'),
           )
         ],
       ),
