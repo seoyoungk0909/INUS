@@ -46,6 +46,7 @@ class PostDetailPageState extends State<PostDetailPage> {
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           backgroundColor: Theme.of(context).backgroundColor,
+          elevation: 0.0,
           actions: [
             IconButton(
                 onPressed: () {

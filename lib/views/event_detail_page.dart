@@ -114,7 +114,7 @@ class EventDetailPageState extends State<EventDetailPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 40, bottom: 16, left: 20),
+                  padding: const EdgeInsets.only(top: 12, bottom: 56, left: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -132,6 +132,11 @@ class EventDetailPageState extends State<EventDetailPage> {
                                     });
                           },
                           style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              )),
                               backgroundColor: MaterialStateProperty.all(
                                   hexStringToColor(
                                       buttonColor(controller.event.category))),
@@ -146,7 +151,7 @@ class EventDetailPageState extends State<EventDetailPage> {
                       ),
                       // const Spacer(),
                       Padding(
-                        padding: const EdgeInsetsDirectional.only(start: 20),
+                        padding: const EdgeInsetsDirectional.only(start: 18),
                         child: EventSaveButton(
                             controller: controller,
                             currentUser: FirebaseAuth.instance.currentUser!,
