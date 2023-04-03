@@ -93,7 +93,10 @@ class EventPageState extends State<EventPage> {
   }
 
   Widget eventView(snapshot, {bool formal = false}) {
-    if (snapshot.data == null) {
+    List<EventController> _controllers =
+        formal ? formalEventsControllers : casualEventsControllers;
+    bool emptyConfirmed = formal ? confirmedFormalEmpty : confirmedCasualEmpty;
+    if ((_controllers.isEmpty && !emptyConfirmed) || snapshot.data == null) {
       return Center(
           child: CircularProgressIndicator(color: ApdiColors.themeGreen));
     }
@@ -103,8 +106,6 @@ class EventPageState extends State<EventPage> {
         : null;
 
     List filteredEventsControllers = [];
-    List<EventController> _controllers =
-        formal ? formalEventsControllers : casualEventsControllers;
     for (EventController ctrl in _controllers) {
       bool blocked =
           blockedEvents?.contains(ctrl.event.firebaseDocRef) ?? false;

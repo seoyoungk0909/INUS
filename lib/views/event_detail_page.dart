@@ -47,7 +47,10 @@ class EventDetailPageState extends State<EventDetailPage> {
         },
       );
     } else {
-      uri = Uri(scheme: "https", host: url);
+      if (!url.startsWith("https")) {
+        url = "https://$url";
+      }
+      uri = Uri.parse(url);
     }
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       throw "Can not launch $url";

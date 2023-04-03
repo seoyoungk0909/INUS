@@ -103,6 +103,7 @@ class LoginPageState extends State<LoginPage> {
                       enableSuggestions: false,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
+                        border: InputBorder.none,
                         hintText: 'School email',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
                         contentPadding: const EdgeInsetsDirectional.only(
@@ -147,6 +148,7 @@ class LoginPageState extends State<LoginPage> {
                       enableSuggestions: false,
                       keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
+                        border: InputBorder.none,
                         hintText: 'Password',
                         hintStyle: Theme.of(context).textTheme.labelMedium,
                         contentPadding:
