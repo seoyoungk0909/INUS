@@ -66,8 +66,8 @@ String capitalize(String value) {
 
 //event photo
 Widget eventPhoto(BuildContext context, EventController controller) {
-  return Container(
-    width: 168,
+  Widget image = Container(
+    // width: 168,
     height: 112,
     decoration: BoxDecoration(
         image: DecorationImage(
@@ -76,14 +76,19 @@ Widget eventPhoto(BuildContext context, EventController controller) {
         ),
         borderRadius: BorderRadius.circular(5)),
   );
-
-  //     SizedBox(
-  //   width: 168,
-  //   height: 112,
-  //   child: SvgPicture.asset(
-  //     eventImage(controller.event.category),
-  //   ),
-  // );
+  if (!controller.event.expired) return image;
+  // if expired, add dark layer on top
+  return Stack(children: [
+    image,
+    Positioned.fill(
+      child: Opacity(
+        opacity: 0.7,
+        child: Container(
+          color: Colors.black,
+        ),
+      ),
+    ),
+  ]);
 }
 
 //category button

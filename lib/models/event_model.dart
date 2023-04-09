@@ -25,6 +25,7 @@ class Event {
   late DateTime eventTime;
   late DateTime uploadTime;
   bool formal = false;
+  bool expired = false;
   String registerLink = "www.google.com";
   // bool save = false;
   DocumentReference<Map<String, dynamic>>? firebaseDocRef;
@@ -40,6 +41,7 @@ class Event {
     DateTime? eventHeldTime,
     DateTime? eventUploadTime,
     bool? eventFormality,
+    bool? eventExpired,
     String? eventRegisterLink,
     DocumentReference<Map<String, dynamic>>? docRef,
   }) {
@@ -56,6 +58,7 @@ class Event {
     uploadTime = eventUploadTime ?? DateTime.now();
     eventTime = eventHeldTime ?? DateTime.now();
     formal = eventFormality ?? formal;
+    expired = eventExpired ?? expired;
     registerLink = eventRegisterLink ?? registerLink;
     firebaseDocRef = docRef;
   }
@@ -63,7 +66,8 @@ class Event {
   // factory for events
   static Future<Event> fromDocRef(
       {DocumentReference<Map<String, dynamic>>? firebaseDoc,
-      QueryDocumentSnapshot<Map<String, dynamic>>? firebaseSnap}) async {
+      QueryDocumentSnapshot<Map<String, dynamic>>? firebaseSnap,
+      bool expired = false}) async {
     DocumentSnapshot<Map<String, dynamic>> eventData;
 
     if (firebaseSnap == null) {
@@ -80,6 +84,9 @@ class Event {
       eventWriter = User(userName: "Anonymous");
     }
 
+    // print(eventData.get('title'));
+    // print(expired);
+
     return Event(
         eventWriter: eventWriter,
         eventTitle: eventData.get('title'),
@@ -91,6 +98,7 @@ class Event {
         eventUploadTime: (eventData.get('uploadTime') as Timestamp).toDate(),
         eventHeldTime: (eventData.get('eventTime') as Timestamp).toDate(),
         eventFormality: (eventData.get('formal')),
+        eventExpired: expired,
         eventRegisterLink: eventData.get('registrationLink'),
         docRef: firebaseDoc);
   }
@@ -100,25 +108,43 @@ class Event {
       {bool formal = false}) async {
     List<Event> events = [];
     Query<Map<String, dynamic>> firebaseQuery = getEventsQuery(formal: formal);
+    Query<Map<String, dynamic>> expiredQuery =
+        getEventsQuery(formal: formal, expired: true);
 
     QuerySnapshot<Map<String, dynamic>> firebaseEvents =
         await firebaseQuery.get();
+    QuerySnapshot<Map<String, dynamic>> expiredEvents =
+        await expiredQuery.get();
 
     for (QueryDocumentSnapshot<Map<String, dynamic>> fbEvent
         in firebaseEvents.docs) {
       events.add(await Event.fromDocRef(firebaseDoc: fbEvent.reference));
     }
+    for (QueryDocumentSnapshot<Map<String, dynamic>> fbEvent
+        in expiredEvents.docs) {
+      events.add(await Event.fromDocRef(
+          firebaseDoc: fbEvent.reference, expired: true));
+    }
     return events;
   }
 
-  static Query<Map<String, dynamic>> getEventsQuery({bool formal = false}) {
+  static Query<Map<String, dynamic>> getEventsQuery(
+      {bool formal = false, bool expired = false}) {
     CollectionReference<Map<String, dynamic>> eventCollection =
         FirebaseFirestore.instance.collection('event');
 
-    Query<Map<String, dynamic>> firebaseQuery = eventCollection
-        .where('eventTime', isGreaterThanOrEqualTo: DateTime.now())
-        .orderBy('eventTime', descending: true)
-        .limit(20);
+    Query<Map<String, dynamic>> firebaseQuery;
+    if (expired) {
+      firebaseQuery = eventCollection
+          .where('eventTime', isLessThan: DateTime.now())
+          .orderBy('eventTime', descending: true)
+          .limit(10);
+    } else {
+      firebaseQuery = eventCollection
+          .where('eventTime', isGreaterThanOrEqualTo: DateTime.now())
+          .orderBy('eventTime', descending: false)
+          .limit(20);
+    }
     firebaseQuery = firebaseQuery.where('formal', isEqualTo: formal);
 
     return firebaseQuery;
