@@ -501,7 +501,7 @@ Widget contentUI(BuildContext context, PostController controller,
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
-              child: Text(
+              child: SelectableText(
                 controller.post.title.isEmpty
                     ? "No Title"
                     : controller.post.title,
@@ -522,12 +522,16 @@ Widget contentUI(BuildContext context, PostController controller,
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
-              child: Text(
+              child: SelectableText(
                 controller.post.text.isEmpty
                     ? "No Content"
                     : controller.post.text,
                 maxLines: isDetail ? 1000 : 2,
-                overflow: TextOverflow.ellipsis,
+                toolbarOptions: const ToolbarOptions(
+                  copy: true,
+                  selectAll: true,
+                ),
+                scrollPhysics: const ClampingScrollPhysics(),
                 style: Theme.of(context).textTheme.bodyText2?.copyWith(
                       fontFamily: 'Roboto',
                       color: isDetail
@@ -535,6 +539,7 @@ Widget contentUI(BuildContext context, PostController controller,
                           : hexStringToColor("#AAAAAA"),
                       fontSize: isDetail ? 16 : 14,
                       fontWeight: FontWeight.w400,
+                      overflow: TextOverflow.ellipsis,
                     ),
               ),
             ),
