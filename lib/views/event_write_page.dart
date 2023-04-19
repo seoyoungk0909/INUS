@@ -412,6 +412,8 @@ class EventWritePageState extends State<EventWritePage> {
                                 width: 1, color: ApdiColors.lineGrey),
                             borderRadius: BorderRadius.circular(5.0),
                           ),
+                          isDense: true,
+                          contentPadding: const EdgeInsets.all(14),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 width: 1, color: ApdiColors.themeGreen),
@@ -478,6 +480,8 @@ class EventWritePageState extends State<EventWritePage> {
                                 color: ApdiColors.themeGreen), //<-- SEE HERE
                             borderRadius: BorderRadius.circular(5.0),
                           ),
+                          isDense: true,
+                          contentPadding: const EdgeInsets.all(14),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
                                 width: 1,
@@ -515,7 +519,7 @@ class EventWritePageState extends State<EventWritePage> {
                       child: Row(children: <Widget>[
                         SizedBox(
                             width: 130,
-                            height: 50,
+                            height: 46,
                             child: OutlinedButton(
                               style: ButtonStyle(
                                 side: MaterialStateProperty.all(BorderSide(
@@ -546,7 +550,7 @@ class EventWritePageState extends State<EventWritePage> {
                         const SizedBox(width: 10),
                         SizedBox(
                             width: 100,
-                            height: 50,
+                            height: 46,
                             child: OutlinedButton(
                               style: ButtonStyle(
                                 side: MaterialStateProperty.all(
@@ -673,6 +677,8 @@ class EventWritePageState extends State<EventWritePage> {
                                 color: ApdiColors.themeGreen), //<-- SEE HERE
                             borderRadius: BorderRadius.circular(5.0),
                           ),
+                          isDense: true,
+                          contentPadding: const EdgeInsets.all(14),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
                                 width: 1,
@@ -708,6 +714,8 @@ class EventWritePageState extends State<EventWritePage> {
                                 color: ApdiColors.themeGreen), //<-- SEE HERE
                             borderRadius: BorderRadius.circular(5.0),
                           ),
+                          isDense: true,
+                          contentPadding: const EdgeInsets.all(14),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
                                 width: 1,
@@ -743,6 +751,8 @@ class EventWritePageState extends State<EventWritePage> {
                               color: ApdiColors.themeGreen), //<-- SEE HERE
                           borderRadius: BorderRadius.circular(5.0),
                         ),
+                        isDense: true,
+                        contentPadding: const EdgeInsets.all(14),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
                               width: 1,
