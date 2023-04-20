@@ -290,7 +290,7 @@ Future<List> filterEmptyRefs(List refs) async {
   List filtered = [];
   for (DocumentReference ref in refs) {
     DocumentSnapshot ds = await ref.get();
-    if (ds.exists) {
+    if (ds.exists && !ds.get('deleted')) {
       filtered.add(ref);
     }
   }

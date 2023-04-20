@@ -26,6 +26,10 @@ class PostController {
     post.commentRefs.add(newComment);
   }
 
+  void lazyDeletePost() {
+    post.firebaseDocRef?.update({'deleted': true});
+  }
+
   PostController(this.post);
 
   String getPostWriterSchool() => post.getWriterSchool();

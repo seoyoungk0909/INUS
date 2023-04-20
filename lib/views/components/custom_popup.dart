@@ -260,7 +260,7 @@ Widget deletePopUp(BuildContext context, {Widget? action}) {
 
 Widget commentDeletePopUp(BuildContext context, Comment comment) {
   return Container(
-    height: 150,
+    height: 100,
     decoration: BoxDecoration(
       color: ApdiColors.darkBackground,
       borderRadius: BorderRadius.only(
@@ -314,8 +314,10 @@ Widget commentDeletePopUp(BuildContext context, Comment comment) {
 }
 
 Widget blockPostPopUp(BuildContext context, PostController controller) {
+  bool isCurrentUserWriter = FirebaseAuth.instance.currentUser?.uid ==
+      controller.post.writer.userReference?.id;
   return Container(
-      height: 150,
+      height: isCurrentUserWriter ? 180 : 140,
       decoration: BoxDecoration(
         color: ApdiColors.darkBackground,
         borderRadius: BorderRadius.only(
@@ -324,107 +326,158 @@ Widget blockPostPopUp(BuildContext context, PostController controller) {
         ),
       ),
       child: Padding(
-        padding: EdgeInsetsDirectional.only(top: 20),
-        child: Column(
-            children: [
-          'Block User',
-          'Hide Post',
-        ]
-                .map((e) => Center(
-                        child: InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                        DocumentReference userRef = FirebaseFirestore.instance
-                            .collection('user_info')
-                            .doc(FirebaseAuth.instance.currentUser!.uid);
-                        if (e == 'Hide Post') {
-                          popUpDialog(context, "Don't show this post",
-                              "Do you want to remove this post from your feed?\n(This will also remove this post from your saved posts.)",
-                              action: TextButton(
-                                  onPressed: () {
-                                    userRef.update({
-                                      'blockedPosts': FieldValue.arrayUnion(
-                                          [controller.post.firebaseDocRef])
-                                    });
-                                    // remove from saved
-                                    userRef.update({
-                                      'savedPosts': FieldValue.arrayRemove(
-                                          [controller.post.firebaseDocRef])
-                                    });
-                                    // TODO: need to decrement saveCount of the post
-                                    Navigator.pop(context);
-
-                                    popUpDialog(context, "Removed Post",
-                                        "Do you also want to report this post?",
-                                        action: TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                              Navigator.pushNamed(
-                                                  context, 'report',
-                                                  arguments: {
-                                                    'post': controller.post
-                                                  });
-                                            },
-                                            child: const Text("Yes")));
-                                  },
-                                  child: const Text("Yes")));
-                        } else if (e == 'Block User') {
-                          popUpDialog(context, "Block the user of this post",
-                              "Do you want to block the user of this post?\n(All the posts of this user will not appear on your feed.)",
-                              action: TextButton(
-                                onPressed: () {
-                                  if (userRef !=
-                                      controller.post.writer.userReference) {
-                                    userRef.update({
-                                      'blockedUsers': FieldValue.arrayUnion([
-                                        controller.post.writer.userReference
-                                      ])
-                                    });
-                                    Navigator.pop(context);
-                                  } else {
-                                    showDialog<void>(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: const Text(
-                                              'Warning',
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                            content: const Text(
-                                              'You cannot block yourself. Please check again.',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(context),
-                                                  child: Text(
-                                                    'OK',
-                                                    style: TextStyle(
-                                                        color: ApdiColors
-                                                            .themeGreen),
-                                                  ))
-                                            ],
-                                          );
-                                        });
-                                  }
-                                },
-                                child: const Text("Yes"),
-                              ));
+          padding: EdgeInsetsDirectional.only(top: 20),
+          child: Column(children: [
+            // Block User
+            Center(
+                child: InkWell(
+              onTap: () {
+                DocumentReference userRef = FirebaseFirestore.instance
+                    .collection('user_info')
+                    .doc(FirebaseAuth.instance.currentUser!.uid);
+                popUpDialog(context, "Block the user of this post",
+                    "Do you want to block the user of this post?\n(All the posts of this user will not appear on your feed.)",
+                    action: TextButton(
+                      onPressed: () {
+                        if (userRef != controller.post.writer.userReference) {
+                          userRef.update({
+                            'blockedUsers': FieldValue.arrayUnion(
+                                [controller.post.writer.userReference])
+                          });
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        } else {
+                          showDialog<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text(
+                                    'Warning',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  content: const Text(
+                                    'You cannot block yourself. Please check again.',
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          'OK',
+                                          style: TextStyle(
+                                              color: ApdiColors.themeGreen),
+                                        ))
+                                  ],
+                                );
+                              });
                         }
                       },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 16,
-                        ),
-                        child: Text(
-                          e,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
+                      child: const Text("Yes"),
+                    ));
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
+                child: const Text(
+                  "Block User",
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white),
+                ),
+              ),
+            )),
+            // Hide Post
+            Center(
+                child: InkWell(
+              onTap: () {
+                DocumentReference userRef = FirebaseFirestore.instance
+                    .collection('user_info')
+                    .doc(FirebaseAuth.instance.currentUser!.uid);
+                popUpDialog(context, "Don't show this post",
+                    "Do you want to remove this post from your feed?\n(This will also remove this post from your saved posts.)",
+                    action: TextButton(
+                        onPressed: () {
+                          userRef.update({
+                            'blockedPosts': FieldValue.arrayUnion(
+                                [controller.post.firebaseDocRef])
+                          });
+                          // remove from saved
+                          userRef.update({
+                            'savedPosts': FieldValue.arrayRemove(
+                                [controller.post.firebaseDocRef])
+                          });
+                          // TODO: need to decrement saveCount of the post
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+
+                          popUpDialog(context, "Removed Post",
+                              "Do you also want to report this post?",
+                              action: TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pushNamed(context, 'report',
+                                        arguments: {'post': controller.post});
+                                  },
+                                  child: const Text("Yes")));
+                        },
+                        child: const Text("Yes")));
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
+                child: const Text(
+                  "Hide Post",
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white),
+                ),
+              ),
+            )),
+            // Delete
+            isCurrentUserWriter
+                ? Center(
+                    child: InkWell(
+                    onTap: () {
+                      DocumentReference userRef = FirebaseFirestore.instance
+                          .collection('user_info')
+                          .doc(FirebaseAuth.instance.currentUser!.uid);
+                      popUpDialog(context, "Delete post?",
+                          "Once you delete this post, it cannot be restored.",
+                          action: TextButton(
+                            onPressed: () {
+                              controller.lazyDeletePost();
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Yes",
+                              style: TextStyle(color: ApdiColors.errorRed),
+                            ),
+                          ));
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 16,
                       ),
-                    )))
-                .toList()),
-      ));
+                      child: Text(
+                        "Delete",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: ApdiColors.errorRed),
+                      ),
+                    ),
+                  ))
+                : SizedBox.shrink(),
+          ])));
 }

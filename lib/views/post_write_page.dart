@@ -37,6 +37,7 @@ class PostWritePageState extends State<PostWritePage> {
       'comments': [],
       'user': userRef,
       'isAnonymous': isAnonymous,
+      'deleted': false,
     });
     userRef.update({
       'myPosts': FieldValue.arrayUnion([newPost])

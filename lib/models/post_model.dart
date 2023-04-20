@@ -77,19 +77,21 @@ class Post {
           await Comment.getCommentsFromFirebase(commentRefList, postData);
     }
 
-    // User postWriter;
-    // bool isAnonymous;
-    // try {
-    //   postWriter = await User.fromUserRef(postData.get('user'));
-    //   Map<String, dynamic> postDataMap = postData.data()!;
-    //   isAnonymous =
-    //       postDataMap.containsKey('isAnonymous') && postDataMap['isAnonymous'];
-    // } catch (e) {
-    //   postWriter = User(userName: "Anonymous");
-    //   isAnonymous = true;
-    // }
-    User postWriter = User(userName: "Anonymous");
+    User postWriter;
     bool isAnonymous = true;
+    try {
+      var user = postData.get('user');
+      DocumentReference<Map<String, dynamic>> userRef;
+      if (user.runtimeType == String) {
+        userRef = FirebaseFirestore.instance.doc(user);
+      } else {
+        userRef = user;
+      }
+      postWriter = await User.fromUserRef(userRef);
+    } catch (e) {
+      print(e);
+      postWriter = User(userName: "Anonymous");
+    }
 
     return Post(
         postWriter: postWriter,
@@ -135,6 +137,7 @@ class Post {
         FirebaseFirestore.instance.collection('post');
     Query<Map<String, dynamic>> firebaseQuery = postCollection
         .where('time', isLessThanOrEqualTo: DateTime.now())
+        .where('deleted', isEqualTo: false)
         .orderBy('time', descending: true)
         .limit(50);
     if (popular) {
