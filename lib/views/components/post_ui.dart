@@ -365,6 +365,27 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
 Widget contentUI(BuildContext context, PostController controller,
     {bool isDetail = false}) {
   double topPad = isDetail ? 16 : 8;
+
+  Text titleWidget = Text(
+    controller.post.title.isEmpty ? "No Title" : controller.post.title,
+    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          fontFamily: 'Roboto',
+          color: ApdiColors.lightText,
+          fontSize: isDetail ? 20 : 16,
+          fontWeight: FontWeight.w500,
+        ),
+  );
+  Text bodyWidget = Text(
+    controller.post.text.isEmpty ? "No Content" : controller.post.text,
+    maxLines: isDetail ? 1000 : 2,
+    style: Theme.of(context).textTheme.bodyText2?.copyWith(
+          fontFamily: 'Roboto',
+          color: isDetail ? ApdiColors.lightText : hexStringToColor("#AAAAAA"),
+          fontSize: isDetail ? 16 : 14,
+          fontWeight: FontWeight.w400,
+          overflow: TextOverflow.ellipsis,
+        ),
+  );
   return Column(
     children: [
       Padding(
@@ -373,19 +394,7 @@ Widget contentUI(BuildContext context, PostController controller,
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
-              child: SelectionArea(
-                child: Text(
-                  controller.post.title.isEmpty
-                      ? "No Title"
-                      : controller.post.title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontFamily: 'Roboto',
-                        color: ApdiColors.lightText,
-                        fontSize: isDetail ? 20 : 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
-              ),
+              child: isDetail ? SelectionArea(child: titleWidget) : titleWidget,
             ),
           ],
         ),
@@ -396,23 +405,7 @@ Widget contentUI(BuildContext context, PostController controller,
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
-              child: SelectionArea(
-                child: Text(
-                  controller.post.text.isEmpty
-                      ? "No Content"
-                      : controller.post.text,
-                  maxLines: isDetail ? 1000 : 2,
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        fontFamily: 'Roboto',
-                        color: isDetail
-                            ? ApdiColors.lightText
-                            : hexStringToColor("#AAAAAA"),
-                        fontSize: isDetail ? 16 : 14,
-                        fontWeight: FontWeight.w400,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                ),
-              ),
+              child: isDetail ? SelectionArea(child: bodyWidget) : bodyWidget,
             ),
           ],
         ),
