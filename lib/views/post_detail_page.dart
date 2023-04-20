@@ -97,7 +97,8 @@ class PostDetailPageState extends State<PostDetailPage> {
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, idx) {
-                                    return CommentUI(snapshot.data![idx],
+                                    return CommentUI(
+                                        snapshot.data![idx], context,
                                         first: idx == 0);
                                   },
                                 );

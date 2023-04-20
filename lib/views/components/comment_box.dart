@@ -1,9 +1,7 @@
 import 'package:aus/utils/color_utils.dart';
-import 'package:aus/views/components/popup_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/style.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../../controllers/post_controller.dart';
 
@@ -80,6 +78,7 @@ class CommentBoxState extends State<CommentBox> {
                           'body': commentController.text,
                           'writerFlag': isWriter(),
                           'time': DateTime.now(),
+                          'writer': FirebaseAuth.instance.currentUser,
                         }).then((DocumentReference newComment) {
                           widget.controller.addComment(newComment);
                           commentController.clear();

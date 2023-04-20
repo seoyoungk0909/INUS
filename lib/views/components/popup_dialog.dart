@@ -1,8 +1,8 @@
-import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
+import '../../utils/color_utils.dart';
 
 void popUpDialog(BuildContext context, String title, String body,
-    {Widget? action}) {
+    {Widget? action, String? closeText}) {
   showDialog<void>(
     context: context,
     builder: (context) {
@@ -25,7 +25,7 @@ void popUpDialog(BuildContext context, String title, String body,
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Close',
+              closeText ?? 'Close',
               style: TextStyle(color: ApdiColors.themeGreen),
             ),
           ),

@@ -1,11 +1,11 @@
-import 'package:aus/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fbauth;
-import 'components/popup_dialog.dart';
-import 'terms_and_conditions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'components/more_page_custom_popup.dart';
 import 'package:flutter_svg/svg.dart';
+
+import 'terms_and_conditions.dart';
+import 'components/custom_popup.dart';
+import '../utils/color_utils.dart';
 
 void userSignOut(BuildContext context) {
   fbauth.FirebaseAuth.instance.signOut();

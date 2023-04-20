@@ -1,9 +1,12 @@
-import 'package:aus/utils/color_utils.dart';
-import 'package:flutter/material.dart';
-import 'popup_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fbauth;
-import 'package:aus/views/more_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import '../../views/more_page.dart';
+import '../../controllers/post_controller.dart';
+import '../../utils/color_utils.dart';
+import '../../models/comment_model.dart';
+import 'popup_dialog.dart';
 
 Widget signOutPopUp(BuildContext context, {Widget? action}) {
   return Container(
@@ -253,4 +256,175 @@ Widget deletePopUp(BuildContext context, {Widget? action}) {
       ],
     ),
   );
+}
+
+Widget commentDeletePopUp(BuildContext context, Comment comment) {
+  return Container(
+    height: 150,
+    decoration: BoxDecoration(
+      color: ApdiColors.darkBackground,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(20.0),
+        topRight: Radius.circular(20.0),
+      ),
+    ),
+    child: Column(
+      children: [
+        Padding(
+          padding: const EdgeInsetsDirectional.only(top: 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                height: 50,
+                child: GestureDetector(
+                    onTap: () {
+                      popUpDialog(
+                        context,
+                        "Delete reply?",
+                        "Once you delete this reply, it can’t be restored.",
+                        closeText: 'No',
+                        action: TextButton(
+                          onPressed: () {
+                            //delete comment
+                            comment.commentReference?.update({'deleted': true});
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'Yes',
+                            style: TextStyle(color: ApdiColors.themeGreen),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text("Delete",
+                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                            fontFamily: 'Roboto',
+                            color: ApdiColors.errorRed,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600))),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget blockPostPopUp(BuildContext context, PostController controller) {
+  return Container(
+      height: 150,
+      decoration: BoxDecoration(
+        color: ApdiColors.darkBackground,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsetsDirectional.only(top: 20),
+        child: Column(
+            children: [
+          'Block User',
+          'Hide Post',
+        ]
+                .map((e) => Center(
+                        child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                        DocumentReference userRef = FirebaseFirestore.instance
+                            .collection('user_info')
+                            .doc(FirebaseAuth.instance.currentUser!.uid);
+                        if (e == 'Hide Post') {
+                          popUpDialog(context, "Don't show this post",
+                              "Do you want to remove this post from your feed?\n(This will also remove this post from your saved posts.)",
+                              action: TextButton(
+                                  onPressed: () {
+                                    userRef.update({
+                                      'blockedPosts': FieldValue.arrayUnion(
+                                          [controller.post.firebaseDocRef])
+                                    });
+                                    // remove from saved
+                                    userRef.update({
+                                      'savedPosts': FieldValue.arrayRemove(
+                                          [controller.post.firebaseDocRef])
+                                    });
+                                    // TODO: need to decrement saveCount of the post
+                                    Navigator.pop(context);
+
+                                    popUpDialog(context, "Removed Post",
+                                        "Do you also want to report this post?",
+                                        action: TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              Navigator.pushNamed(
+                                                  context, 'report',
+                                                  arguments: {
+                                                    'post': controller.post
+                                                  });
+                                            },
+                                            child: const Text("Yes")));
+                                  },
+                                  child: const Text("Yes")));
+                        } else if (e == 'Block User') {
+                          popUpDialog(context, "Block the user of this post",
+                              "Do you want to block the user of this post?\n(All the posts of this user will not appear on your feed.)",
+                              action: TextButton(
+                                onPressed: () {
+                                  if (userRef !=
+                                      controller.post.writer.userReference) {
+                                    userRef.update({
+                                      'blockedUsers': FieldValue.arrayUnion([
+                                        controller.post.writer.userReference
+                                      ])
+                                    });
+                                    Navigator.pop(context);
+                                  } else {
+                                    showDialog<void>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                              'Warning',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                            content: const Text(
+                                              'You cannot block yourself. Please check again.',
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  child: Text(
+                                                    'OK',
+                                                    style: TextStyle(
+                                                        color: ApdiColors
+                                                            .themeGreen),
+                                                  ))
+                                            ],
+                                          );
+                                        });
+                                  }
+                                },
+                                child: const Text("Yes"),
+                              ));
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
+                        child: Text(
+                          e,
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    )))
+                .toList()),
+      ));
 }

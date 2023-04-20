@@ -8,16 +8,23 @@ class Comment {
   String body = "Wow that is amazing!";
   late DateTime time;
   DocumentReference<Map<String, dynamic>>? commentReference;
+  DocumentReference<Map<String, dynamic>>? writerReference;
+  bool deleted = false;
+  final String deletedMessage = "This message was deleted";
 
   Comment(
       {bool? isPostWriter,
       String? content,
       DateTime? timestamp,
-      DocumentReference<Map<String, dynamic>>? firebaseDocRef}) {
+      DocumentReference<Map<String, dynamic>>? firebaseDocRef,
+      DocumentReference<Map<String, dynamic>>? writerRef,
+      bool? commentDeleted}) {
     writerFlag = isPostWriter ?? writerFlag;
     body = content ?? body;
     time = timestamp ?? DateTime.now();
     commentReference = firebaseDocRef;
+    writerReference = writerRef;
+    deleted = commentDeleted ?? deleted;
   }
 
   String writerToString() => writerFlag ? "Writer" : "Anonymous";
@@ -26,11 +33,20 @@ class Comment {
       DocumentReference<Map<String, dynamic>> commentRef) async {
     DocumentSnapshot<Map<String, dynamic>> commentData = await commentRef.get();
 
+    bool deleted = false;
+    DocumentReference<Map<String, dynamic>>? writerRef;
+    try {
+      deleted = commentData.get('deleted');
+      writerRef = commentData.get('writer');
+    } catch (e) {}
+
     return Comment(
       isPostWriter: commentData.get('writerFlag'),
       content: commentData.get('body'),
       timestamp: (commentData.get('time') as Timestamp).toDate(),
       firebaseDocRef: commentRef,
+      commentDeleted: deleted,
+      writerRef: writerRef,
     );
   }
 
