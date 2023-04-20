@@ -157,11 +157,12 @@ class ProfilePageState extends State<ProfilePage> {
                       if (snapshot.data![idx] is Event) {
                         return savedEventUI(
                             context, EventController(snapshot.data![idx]),
-                            setState: setState, first: idx == 0);
+                            first: idx == 0);
                       } else {
-                        return postUI(
-                            context, PostController(snapshot.data![idx]),
-                            setState: setState, saved: true, first: idx == 0);
+                        return PostUI(
+                            controller: PostController(snapshot.data![idx]),
+                            saved: true,
+                            first: idx == 0);
                       }
                     },
                   );
@@ -212,8 +213,10 @@ class ProfilePageState extends State<ProfilePage> {
                   itemBuilder: (BuildContext context, int idx) {
                     bool saved = savedPostRefs.isNotEmpty &&
                         savedPostRefs.contains(finalFilteredRefs[idx]);
-                    return postUI(context, PostController(snapshot.data![idx]),
-                        setState: setState, saved: saved, first: idx == 0);
+                    return PostUI(
+                        controller: PostController(snapshot.data![idx]),
+                        saved: saved,
+                        first: idx == 0);
                   },
                 );
               },

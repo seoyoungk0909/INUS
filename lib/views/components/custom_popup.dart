@@ -313,7 +313,8 @@ Widget commentDeletePopUp(BuildContext context, Comment comment) {
   );
 }
 
-Widget blockPostPopUp(BuildContext context, PostController controller) {
+Widget blockPostPopUp(
+    BuildContext context, PostController controller, Function? setState) {
   bool isCurrentUserWriter = FirebaseAuth.instance.currentUser?.uid ==
       controller.post.writer.userReference?.id;
   return Container(
@@ -462,7 +463,12 @@ Widget blockPostPopUp(BuildContext context, PostController controller) {
                           "Once you delete this post, it cannot be restored.",
                           action: TextButton(
                             onPressed: () {
-                              controller.lazyDeletePost();
+                              if (setState != null) {
+                                setState(() {
+                                  print('delete');
+                                  controller.lazyDeletePost();
+                                });
+                              }
                               Navigator.pop(context);
                               Navigator.pop(context);
                             },
