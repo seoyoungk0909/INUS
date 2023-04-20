@@ -37,6 +37,8 @@ class Comment {
     DocumentReference<Map<String, dynamic>>? writerRef;
     try {
       deleted = commentData.get('deleted');
+    } catch (e) {}
+    try {
       writerRef = commentData.get('writer');
     } catch (e) {}
 

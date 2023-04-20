@@ -345,8 +345,10 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
             ],
           ),
           Spacer(),
-          GestureDetector(
-            onTap: () {
+          IconButton(
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(),
+            onPressed: () {
               showModalBottomSheet(
                   isScrollControlled: true,
                   isDismissible: true,
@@ -354,7 +356,10 @@ Widget writerInfoUI(BuildContext context, PostController controller) {
                   context: context,
                   builder: (context) => blockPostPopUp(context, controller));
             },
-            child: SvgPicture.asset('assets/icons/more_vert.svg'),
+            icon: SvgPicture.asset(
+              'assets/icons/more_vert.svg',
+              height: 12,
+            ),
           ),
         ],
       ),
