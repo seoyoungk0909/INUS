@@ -31,12 +31,11 @@ class PostController {
     post.commentRefs.add(newComment);
   }
 
-  // void addReport(DocumentReference newReport) {
-  //   post.firebaseDocRef?.update({
-  //     'reports': FieldValue.arrayUnion([newReport])
-  //   });
-  //   //post.reportRefs.add(newReport);
-  // }
+  void addReport(DocumentReference newReport) {
+    post.firebaseDocRef?.update({
+      'reports': FieldValue.arrayUnion([newReport])
+    });
+  }
 
   void lazyDeletePost() {
     post.deleted = true;

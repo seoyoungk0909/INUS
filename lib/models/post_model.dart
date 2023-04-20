@@ -20,7 +20,7 @@ class Post {
   List commentRefs = [];
   bool anonymous = false;
   int reportCount = 0;
-  // List reportRefs = [];
+  List reportRefs = [];
   bool deleted = false;
 
   Post(
@@ -48,7 +48,7 @@ class Post {
     commentRefs = commentRefList ?? commentRefs;
     anonymous = isAnonymous ?? anonymous;
     reportCount = postReports ?? reportCount;
-    // reportRefs = reportRefList ?? reportRefs;
+    reportRefs = reportRefList ?? reportRefs;
     deleted = postDeleted ?? deleted;
     // comments = commentList ?? comments;
 
@@ -114,9 +114,8 @@ class Post {
         postSaves: postData.get('saveCount'),
         commentList: comments,
         commentRefList: commentRefList,
-        postReports: postData.get('reportCount'),
+        // postReports: postData.get('reportCount'),
         // reportRefList: reportRefList,
-        // postReportRefs: reports,
         docRef: firebaseDoc,
         isAnonymous: isAnonymous);
   }

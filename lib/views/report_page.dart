@@ -33,6 +33,9 @@ class ReportPageState extends State<ReportPage> {
       'time': Timestamp.now(),
       'reason': selectedReportType,
     });
+    setState(() {
+      controller.addReport(newReport);
+    });
   }
 
   List REPORT_TYPE = [
@@ -127,9 +130,6 @@ class ReportPageState extends State<ReportPage> {
                       } else if (arguments.keys.first == 'post') {
                         postSendReport(postController);
                         setState(postController.incrementReport);
-                        // setState(postController.addReport);
-                        // FirebaseFirestore.instance.collection('report').get();
-                        // postController.addReport(postController.post.firebaseDocRef);
                       }
                       showDialog<void>(
                           context: context,
