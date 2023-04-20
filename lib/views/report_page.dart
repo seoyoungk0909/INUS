@@ -126,6 +126,10 @@ class ReportPageState extends State<ReportPage> {
                         eventSendReport(eventController);
                       } else if (arguments.keys.first == 'post') {
                         postSendReport(postController);
+                        setState(postController.incrementReport);
+                        // setState(postController.addReport);
+                        // FirebaseFirestore.instance.collection('report').get();
+                        // postController.addReport(postController.post.firebaseDocRef);
                       }
                       showDialog<void>(
                           context: context,
