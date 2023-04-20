@@ -64,7 +64,8 @@ class PostDetailPageState extends State<PostDetailPage> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
                     children: [
-                      postUI(context, controller, isDetail: true, saved: saved),
+                      PostUI(
+                          controller: controller, isDetail: true, saved: saved),
                       // comment list
                       // Expanded(
                       StreamBuilder(

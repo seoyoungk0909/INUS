@@ -53,8 +53,10 @@ Widget CommentUI(Comment comment, BuildContext context, {bool first = false}) {
                 Spacer(),
                 FirebaseAuth.instance.currentUser?.uid ==
                         comment.writerReference?.id
-                    ? GestureDetector(
-                        onTap: () {
+                    ? IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: BoxConstraints(),
+                        onPressed: () {
                           if (comment.deleted) {
                             return;
                           }
@@ -67,7 +69,10 @@ Widget CommentUI(Comment comment, BuildContext context, {bool first = false}) {
                                 return commentDeletePopUp(context, comment);
                               });
                         },
-                        child: SvgPicture.asset('assets/icons/more_vert.svg'))
+                        icon: SvgPicture.asset(
+                          'assets/icons/more_vert.svg',
+                          height: 12,
+                        ))
                     : SizedBox.shrink(),
               ],
             ),

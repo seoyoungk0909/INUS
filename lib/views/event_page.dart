@@ -63,8 +63,7 @@ class EventPageState extends State<EventPage> {
       child = GridView.builder(
         itemCount: filteredEventsControllers.length,
         itemBuilder: (BuildContext context, int i) {
-          return eventUI(context, filteredEventsControllers[i],
-              setState: setState);
+          return eventUI(context, filteredEventsControllers[i]);
         },
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,

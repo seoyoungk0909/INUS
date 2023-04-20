@@ -39,6 +39,7 @@ class PostController {
   // }
 
   void lazyDeletePost() {
+    post.deleted = true;
     post.firebaseDocRef?.update({'deleted': true});
   }
 
