@@ -54,16 +54,19 @@ Widget CommentUI(Comment comment, BuildContext context, {bool first = false}) {
                 FirebaseAuth.instance.currentUser?.uid ==
                         comment.writerReference?.id
                     ? GestureDetector(
-                        onTap: () => {
-                              showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  isDismissible: true,
-                                  backgroundColor: Colors.transparent,
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return commentDeletePopUp(context, comment);
-                                  })
-                            },
+                        onTap: () {
+                          if (comment.deleted) {
+                            return;
+                          }
+                          showModalBottomSheet(
+                              isScrollControlled: true,
+                              isDismissible: true,
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return commentDeletePopUp(context, comment);
+                              });
+                        },
                         child: SvgPicture.asset('assets/icons/more_vert.svg'))
                     : SizedBox.shrink(),
               ],
