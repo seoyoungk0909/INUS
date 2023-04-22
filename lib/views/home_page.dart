@@ -8,6 +8,7 @@ import 'posting_page.dart';
 import 'event_page.dart';
 import 'profile_page.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -127,6 +128,12 @@ class HomePageState extends State<HomePage> {
         onTap: (int index) {
           setState(() {
             _selectedIndex = index;
+            FirebaseAnalytics.instance.logEvent(
+              name: 'pages',
+              parameters: {
+                "page number": _selectedIndex,
+              },
+            );
           });
         },
       ),
