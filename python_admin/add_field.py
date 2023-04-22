@@ -11,6 +11,11 @@ DB = firestore.client()
 
 #%%
 for doc_ref in DB.collection('post').list_documents():
-    doc_ref.update({'deleted': False})
+    snapshot = doc_ref.get()
+    try:
+        deleted = snapshot.get('deleted')
+        print(deleted)
+    except:
+        doc_ref.update({'deleted': False})
 
 # %%
