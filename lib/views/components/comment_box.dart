@@ -78,7 +78,9 @@ class CommentBoxState extends State<CommentBox> {
                           'body': commentController.text,
                           'writerFlag': isWriter(),
                           'time': DateTime.now(),
-                          'writer': FirebaseAuth.instance.currentUser,
+                          'writer': FirebaseFirestore.instance
+                              .collection('user_info')
+                              .doc(FirebaseAuth.instance.currentUser?.uid),
                         }).then((DocumentReference newComment) {
                           widget.controller.addComment(newComment);
                           commentController.clear();

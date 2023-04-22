@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:upgrader/upgrader.dart';
 // firebase related
 import 'firebase_login_state.dart';
 import 'firebase_options.dart';
@@ -65,7 +66,9 @@ class MyApp extends StatelessWidget {
             )),
         initialRoute: initialRoute,
         routes: {
-          '/': (context) => const HomePage(title: 'APDI'),
+          '/': (context) => UpgradeAlert(
+              upgrader: Upgrader(minAppVersion: "1.0.2", showIgnore: false),
+              child: const HomePage(title: 'APDI')),
           'login': (context) => const LoginPage(),
           'password_reset': (context) => const PasswordResetPage(),
           'name_form': (context) => const NameFormPage(),

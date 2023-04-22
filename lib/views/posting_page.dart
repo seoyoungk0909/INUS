@@ -38,24 +38,28 @@ class _PostListPageState extends State<PostListPage> {
       .snapshots();
 
   Future<void> refreshPosts({bool popular = false}) async {
-    setState(() {
-      refreshing = true;
-    });
+    if (mounted) {
+      setState(() {
+        refreshing = true;
+      });
+    }
     List<Post> posts = await Post.getPostsFromFirebase(popular: popular);
     List<PostController> _controllers = [];
     for (Post post in posts) {
       _controllers.add(PostController(post));
     }
-    setState(() {
-      if (popular) {
-        popularEmptyConfirmed = _controllers.isEmpty;
-        popularPostsControllers = _controllers;
-      } else {
-        recentEmptyConfirmed = _controllers.isEmpty;
-        recentPostsControllers = _controllers;
-      }
-      refreshing = false;
-    });
+    if (mounted) {
+      setState(() {
+        if (popular) {
+          popularEmptyConfirmed = _controllers.isEmpty;
+          popularPostsControllers = _controllers;
+        } else {
+          recentEmptyConfirmed = _controllers.isEmpty;
+          recentPostsControllers = _controllers;
+        }
+        refreshing = false;
+      });
+    }
   }
 
   Widget postsStreamView(List filteredPostControllers,
@@ -72,8 +76,10 @@ class _PostListPageState extends State<PostListPage> {
           bool saved = savedPosts
                   ?.contains(filteredPostControllers[i].post.firebaseDocRef) ??
               false;
-          return postUI(context, filteredPostControllers[i],
-              setState: setState, saved: saved, first: i == 0);
+          return PostUI(
+              controller: filteredPostControllers[i],
+              saved: saved,
+              first: i == 0);
         },
       ),
     );

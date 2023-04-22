@@ -210,8 +210,7 @@ Widget contentUI(BuildContext context, EventController controller) {
   );
 }
 
-Widget eventUI(BuildContext context, EventController controller,
-    {Function? setState}) {
+Widget eventUI(BuildContext context, EventController controller) {
   return Padding(
     padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
     child: GestureDetector(
@@ -233,7 +232,7 @@ Widget eventUI(BuildContext context, EventController controller,
 }
 
 Widget savedEventUI(BuildContext context, EventController controller,
-    {Function? setState, bool first = false}) {
+    {bool first = false}) {
   double topPad = first ? 16 : 0;
   return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(16, topPad, 16, 0),

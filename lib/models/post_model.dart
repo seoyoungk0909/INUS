@@ -19,6 +19,7 @@ class Post {
   List<Comment> comments = [];
   List commentRefs = [];
   bool anonymous = false;
+  bool deleted = false;
 
   Post(
       {User? postWriter,
@@ -31,7 +32,8 @@ class Post {
       List<Comment>? commentList,
       List? commentRefList,
       DocumentReference<Map<String, dynamic>>? docRef,
-      bool? isAnonymous}) {
+      bool? isAnonymous,
+      bool? postDeleted}) {
     writer = postWriter ?? writer;
     title = postTitle ?? title;
     category = postCategory ?? category;
@@ -41,6 +43,7 @@ class Post {
     saveCount = postSaves ?? saveCount;
     commentRefs = commentRefList ?? commentRefs;
     anonymous = isAnonymous ?? anonymous;
+    deleted = postDeleted ?? deleted;
     // comments = commentList ?? comments;
 
     if (commentList != null && commentList.isNotEmpty) {
