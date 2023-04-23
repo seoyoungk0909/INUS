@@ -1,4 +1,5 @@
 import 'package:aus/utils/color_utils.dart';
+import 'package:aus/views/components/custom_popup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,22 @@ import 'package:intl/intl.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'popup_dialog.dart';
+
+void hideEvent(BuildContext context, EventController controller) {
+  FirebaseFirestore.instance
+      .collection('user_info')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .update({
+    'blockedEvents': FieldValue.arrayUnion([controller.event.firebaseDocRef])
+  });
+  Navigator.pop(context);
+}
+
+void reportEvent(BuildContext context, EventController controller) {
+  Navigator.pop(context);
+  Navigator.pushNamed(context, 'report',
+      arguments: {'event': controller.event});
+}
 
 //determine image of category button, default is seminar
 String categoryButtonImage(String eventCategory) {
@@ -101,31 +118,38 @@ Widget categoryButton(BuildContext context, EventController controller) {
               SvgPicture.asset(categoryButtonImage(controller.event.category))),
       Spacer(),
       IconButton(
-        onPressed: () {
-          popUpDialog(context, "Don't show this event",
-              "Do you want to remove this post from your feed?",
-              action: TextButton(
-                  onPressed: () {
-                    FirebaseFirestore.instance
-                        .collection('user_info')
-                        .doc(FirebaseAuth.instance.currentUser!.uid)
-                        .update({
-                      'blockedEvents': FieldValue.arrayUnion(
-                          [controller.event.firebaseDocRef])
-                    });
-                    Navigator.pop(context);
+        // onPressed: () {
+        //   popUpDialog(context, "Don't show this event",
+        //       "Do you want to remove this post from your feed?",
+        //       action: TextButton(
+        //           onPressed: () {
+        //             FirebaseFirestore.instance
+        //                 .collection('user_info')
+        //                 .doc(FirebaseAuth.instance.currentUser!.uid)
+        //                 .update({
+        //               'blockedEvents': FieldValue.arrayUnion(
+        //                   [controller.event.firebaseDocRef])
+        //             });
+        //             Navigator.pop(context);
 
-                    popUpDialog(context, "Removed Event",
-                        "Do you also want to report this event?",
-                        action: TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.pushNamed(context, 'report',
-                                  arguments: {'event': controller.event});
-                            },
-                            child: Text("Yes")));
-                  },
-                  child: Text("Yes")));
+        //             popUpDialog(context, "Removed Event",
+        //                 "Do you also want to report this event?",
+        //                 action: TextButton(
+        //                     onPressed: () {
+        //                       Navigator.pop(context);
+        //                       Navigator.pushNamed(context, 'report',
+        //                           arguments: {'event': controller.event});
+        //                     },
+        //                     child: Text("Yes")));
+        //           },
+        //           child: Text("Yes")));
+        // },
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return hideEventPopUp(context, controller);
+              });
         },
         iconSize: 20,
         padding: EdgeInsets.zero,

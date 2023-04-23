@@ -20,7 +20,7 @@ String timeAgoCustom(DateTime datetime) {
     return "${(diff.inDays / 7).floor()} ${(diff.inDays / 7).floor() == 1 ? "week" : "weeks"} ago";
   }
   if (diff.inDays > 0) {
-    return "${(diff.inDays)} ${(diff.inDays) == 1 ? "days" : "days"} ago";
+    return "${(diff.inDays)} ${(diff.inDays) == 1 ? "day" : "days"} ago";
   }
   if (diff.inHours > 0) {
     return "${(diff.inHours)} ${(diff.inHours) == 1 ? "hr" : "hrs"} ago";
