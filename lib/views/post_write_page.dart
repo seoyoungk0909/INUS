@@ -38,6 +38,8 @@ class PostWritePageState extends State<PostWritePage> {
       'user': userRef,
       'isAnonymous': isAnonymous,
       'deleted': false,
+      'reportCount': 0,
+      'reports': [],
     });
     userRef.update({
       'myPosts': FieldValue.arrayUnion([newPost])
