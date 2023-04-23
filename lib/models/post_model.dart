@@ -19,6 +19,8 @@ class Post {
   List<Comment> comments = [];
   List commentRefs = [];
   bool anonymous = false;
+  int reportCount = 0;
+  List reportRefs = [];
   bool deleted = false;
 
   Post(
@@ -31,6 +33,8 @@ class Post {
       int? postSaves,
       List<Comment>? commentList,
       List? commentRefList,
+      int? postReports,
+      List? reportRefList,
       DocumentReference<Map<String, dynamic>>? docRef,
       bool? isAnonymous,
       bool? postDeleted}) {
@@ -43,6 +47,8 @@ class Post {
     saveCount = postSaves ?? saveCount;
     commentRefs = commentRefList ?? commentRefs;
     anonymous = isAnonymous ?? anonymous;
+    reportCount = postReports ?? reportCount;
+    reportRefs = reportRefList ?? reportRefs;
     deleted = postDeleted ?? deleted;
     // comments = commentList ?? comments;
 
@@ -80,6 +86,8 @@ class Post {
           await Comment.getCommentsFromFirebase(commentRefList, postData);
     }
 
+    // List reportRefList = postData.get('reports') as List;
+
     User postWriter;
     bool isAnonymous = true;
     try {
@@ -106,6 +114,8 @@ class Post {
         postSaves: postData.get('saveCount'),
         commentList: comments,
         commentRefList: commentRefList,
+        // postReports: postData.get('reportCount'),
+        // reportRefList: reportRefList,
         docRef: firebaseDoc,
         isAnonymous: isAnonymous);
   }

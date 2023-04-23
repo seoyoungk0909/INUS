@@ -9,6 +9,11 @@ class PostController {
     post.firebaseDocRef?.update({"viewCount": FieldValue.increment(1)});
   }
 
+  void incrementReport() {
+    post.reportCount++;
+    post.firebaseDocRef?.update({"reportCount": FieldValue.increment(1)});
+  }
+
   void postSave() {
     post.saveCount++;
     post.firebaseDocRef?.update({"saveCount": FieldValue.increment(1)});
@@ -24,6 +29,12 @@ class PostController {
       'comments': FieldValue.arrayUnion([newComment])
     });
     post.commentRefs.add(newComment);
+  }
+
+  void addReport(DocumentReference newReport) {
+    post.firebaseDocRef?.update({
+      'reports': FieldValue.arrayUnion([newReport])
+    });
   }
 
   void lazyDeletePost() {

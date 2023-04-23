@@ -33,6 +33,9 @@ class ReportPageState extends State<ReportPage> {
       'time': Timestamp.now(),
       'reason': selectedReportType,
     });
+    setState(() {
+      controller.addReport(newReport);
+    });
   }
 
   List REPORT_TYPE = [
@@ -126,6 +129,7 @@ class ReportPageState extends State<ReportPage> {
                         eventSendReport(eventController);
                       } else if (arguments.keys.first == 'post') {
                         postSendReport(postController);
+                        setState(postController.incrementReport);
                       }
                       showDialog<void>(
                           context: context,

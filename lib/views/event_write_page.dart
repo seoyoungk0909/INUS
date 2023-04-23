@@ -1,6 +1,7 @@
-import 'dart:io';
+// import 'dart:io';
 
-import 'package:aus/controllers/event_controller.dart';
+// import 'package:aus/controllers/event_controller.dart';
+import 'package:aus/views/components/custom_popup.dart';
 import 'package:aus/views/components/popup_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -161,6 +162,18 @@ class EventWritePageState extends State<EventWritePage> {
     }
   }
 
+  void createEvent(BuildContext context) {
+    for (var language in languages.keys) {
+      languages[language] == true ? trueLanguages.add(language) : {};
+    }
+    for (var category in categories.keys) {
+      categories[category] == true ? trueCategories = category : {};
+    }
+    uploadEvent(currentUser.uid);
+    setState(() {});
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,36 +191,41 @@ class EventWritePageState extends State<EventWritePage> {
         leading: GestureDetector(
           child: const Icon(Icons.arrow_back_ios),
           onTap: () {
-            showDialog<void>(
+            // showDialog<void>(
+            //     context: context,
+            //     builder: (BuildContext context) {
+            //       return AlertDialog(
+            //         title: const Text(
+            //           'Discard Writings',
+            //           style: TextStyle(fontSize: 16),
+            //         ),
+            //         content: const Text(
+            //             "Are you sure you want to go back to the main page? (All you have written will be lost!) ",
+            //             style: TextStyle(fontSize: 12)),
+            //         actions: <Widget>[
+            //           TextButton(
+            //             onPressed: () => Navigator.pop(context),
+            //             child: Text(
+            //               "No",
+            //               style: TextStyle(color: ApdiColors.errorRed),
+            //             ),
+            //           ),
+            //           TextButton(
+            //               onPressed: () {
+            //                 Navigator.pop(context);
+            //                 Navigator.pop(context);
+            //               },
+            //               child: Text(
+            //                 "Yes",
+            //                 style: TextStyle(color: ApdiColors.themeGreen),
+            //               ))
+            //         ],
+            //       );
+            //     });
+            showModalBottomSheet(
                 context: context,
                 builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text(
-                      'Discard Writings',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    content: const Text(
-                        "Are you sure you want to go back to the main page? (All you have written will be lost!) ",
-                        style: TextStyle(fontSize: 12)),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text(
-                          "No",
-                          style: TextStyle(color: ApdiColors.errorRed),
-                        ),
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            "Yes",
-                            style: TextStyle(color: ApdiColors.themeGreen),
-                          ))
-                    ],
-                  );
+                  return discardWritingsPopUp(context);
                 });
           },
         ),
@@ -787,114 +805,188 @@ class EventWritePageState extends State<EventWritePage> {
                                       : Colors.white60),
                             ),
                             onPressed: () {
-                              checkURL(eventRegistrationLink.text.trim())
-                                  .then((value) => showDialog<void>(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        if (isButtonEnabled && urlValidity) {
-                                          return AlertDialog(
-                                            title: const Text(
-                                              'Create Event',
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                            content: const Text(
+                              checkURL(eventRegistrationLink.text.trim()).then(
+                                (value) {
+                                  if (isButtonEnabled && urlValidity) {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return createPopUp(
+                                              context,
+                                              "Create Event",
                                               "Are you sure you want to create this event?",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
-                                                child: Text(
-                                                  "No",
-                                                  style: TextStyle(
-                                                      color:
-                                                          ApdiColors.errorRed),
-                                                ),
+                                              createEvent);
+                                        });
+                                  } else {
+                                    showDialog<void>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          if (urlValidity == false) {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                'Warning',
+                                                style: TextStyle(fontSize: 16),
                                               ),
-                                              TextButton(
-                                                  onPressed: () {
-                                                    for (var language
-                                                        in languages.keys) {
-                                                      languages[language] ==
-                                                              true
-                                                          ? trueLanguages
-                                                              .add(language)
-                                                          : {};
-                                                    }
-                                                    for (var category
-                                                        in categories.keys) {
-                                                      categories[category] ==
-                                                              true
-                                                          ? trueCategories =
-                                                              category
-                                                          : {};
-                                                    }
-                                                    uploadEvent(
-                                                        currentUser.uid);
-                                                    setState(() {});
-                                                    Navigator
-                                                        .pushNamedAndRemoveUntil(
-                                                            context,
-                                                            '/',
-                                                            (route) => false);
-                                                  },
+                                              content: const Text(
+                                                "The registration URL you have filled in is invalid. Please check again.",
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
                                                   child: Text(
-                                                    "Yes",
+                                                    "OK",
                                                     style: TextStyle(
                                                         color: ApdiColors
                                                             .themeGreen),
-                                                  ))
-                                            ],
-                                          );
-                                        } else if (urlValidity == false) {
-                                          return AlertDialog(
-                                            title: const Text(
-                                              'Warning',
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                            content: const Text(
-                                              "The registration URL you have filled in is invalid. Please check again.",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
-                                                child: Text(
-                                                  "OK",
-                                                  style: TextStyle(
-                                                      color: ApdiColors
-                                                          .themeGreen),
+                                                  ),
                                                 ),
+                                              ],
+                                            );
+                                          } else {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                'Warning',
+                                                style: TextStyle(fontSize: 16),
                                               ),
-                                            ],
-                                          );
-                                        } else {
-                                          return AlertDialog(
-                                            title: const Text(
-                                              'Warning',
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                            content: const Text(
-                                              "You have not filled certain parts. Please check again.",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
-                                                child: Text(
-                                                  "OK",
-                                                  style: TextStyle(
-                                                      color: ApdiColors
-                                                          .themeGreen),
+                                              content: const Text(
+                                                "You have not filled certain parts. Please check again.",
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  child: Text(
+                                                    "OK",
+                                                    style: TextStyle(
+                                                        color: ApdiColors
+                                                            .themeGreen),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          );
-                                        }
-                                      }));
+                                              ],
+                                            );
+                                          }
+                                        });
+                                  }
+                                },
+                              );
+                              //   checkURL(eventRegistrationLink.text.trim())
+                              //       .then((value) => showDialog<void>(
+                              //           context: context,
+                              //           builder: (BuildContext context) {
+                              //             if (isButtonEnabled && urlValidity) {
+                              //               showModalBottomSheet(
+                              //                   context: context,
+                              //                   builder: (BuildContext context) {
+                              //                     return createEventPopUp(
+                              //                         context, createEvent);
+                              //                   });
+                              //               return const Divider();
+                              //               // return AlertDialog(
+                              //               //   title: const Text(
+                              //               //     'Create Event',
+                              //               //     style: TextStyle(fontSize: 16),
+                              //               //   ),
+                              //               //   content: const Text(
+                              //               //     "Are you sure you want to create this event?",
+                              //               //     style: TextStyle(fontSize: 12),
+                              //               //   ),
+                              //               //   actions: <Widget>[
+                              //               //     TextButton(
+                              //               //       onPressed: () =>
+                              //               //           Navigator.pop(context),
+                              //               //       child: Text(
+                              //               //         "No",
+                              //               //         style: TextStyle(
+                              //               //             color:
+                              //               //                 ApdiColors.errorRed),
+                              //               //       ),
+                              //               //     ),
+                              //               //     TextButton(
+                              //               //         onPressed: () {
+                              //               //           for (var language
+                              //               //               in languages.keys) {
+                              //               //             languages[language] ==
+                              //               //                     true
+                              //               //                 ? trueLanguages
+                              //               //                     .add(language)
+                              //               //                 : {};
+                              //               //           }
+                              //               //           for (var category
+                              //               //               in categories.keys) {
+                              //               //             categories[category] ==
+                              //               //                     true
+                              //               //                 ? trueCategories =
+                              //               //                     category
+                              //               //                 : {};
+                              //               //           }
+                              //               //           uploadEvent(
+                              //               //               currentUser.uid);
+                              //               //           setState(() {});
+                              //               //           Navigator
+                              //               //               .pushNamedAndRemoveUntil(
+                              //               //                   context,
+                              //               //                   '/',
+                              //               //                   (route) => false);
+                              //               //         },
+                              //               //         child: Text(
+                              //               //           "Yes",
+                              //               //           style: TextStyle(
+                              //               //               color: ApdiColors
+                              //               //                   .themeGreen),
+                              //               //         ))
+                              //               //   ],
+                              //               // );
+                              //             } else if (urlValidity == false) {
+                              //               return AlertDialog(
+                              //                 title: const Text(
+                              //                   'Warning',
+                              //                   style: TextStyle(fontSize: 16),
+                              //                 ),
+                              //                 content: const Text(
+                              //                   "The registration URL you have filled in is invalid. Please check again.",
+                              //                   style: TextStyle(fontSize: 12),
+                              //                 ),
+                              //                 actions: <Widget>[
+                              //                   TextButton(
+                              //                     onPressed: () =>
+                              //                         Navigator.pop(context),
+                              //                     child: Text(
+                              //                       "OK",
+                              //                       style: TextStyle(
+                              //                           color: ApdiColors
+                              //                               .themeGreen),
+                              //                     ),
+                              //                   ),
+                              //                 ],
+                              //               );
+                              //             } else {
+                              //               return AlertDialog(
+                              //                 title: const Text(
+                              //                   'Warning',
+                              //                   style: TextStyle(fontSize: 16),
+                              //                 ),
+                              //                 content: const Text(
+                              //                   "You have not filled certain parts. Please check again.",
+                              //                   style: TextStyle(fontSize: 12),
+                              //                 ),
+                              //                 actions: <Widget>[
+                              //                   TextButton(
+                              //                     onPressed: () =>
+                              //                         Navigator.pop(context),
+                              //                     child: Text(
+                              //                       "OK",
+                              //                       style: TextStyle(
+                              //                           color: ApdiColors
+                              //                               .themeGreen),
+                              //                     ),
+                              //                   ),
+                              //                 ],
+                              //               );
+                              //             }
+                              //           }));
                             },
                             child: const Text(
                               'Post',

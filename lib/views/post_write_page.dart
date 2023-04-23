@@ -1,3 +1,4 @@
+import 'package:aus/views/components/custom_popup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -38,6 +39,8 @@ class PostWritePageState extends State<PostWritePage> {
       'user': userRef,
       'isAnonymous': isAnonymous,
       'deleted': false,
+      'reportCount': 0,
+      'reports': [],
     });
     userRef.update({
       'myPosts': FieldValue.arrayUnion([newPost])
@@ -249,6 +252,16 @@ class PostWritePageState extends State<PostWritePage> {
     );
   }
 
+  void createPost(BuildContext context) {
+    for (var category in categories.keys) {
+      categories[category] == true ? trueCategories = category : {};
+    }
+    uploadPost(currentUser.uid);
+    setState(() {});
+    Navigator.pushNamedAndRemoveUntil(
+        context, '/', arguments: {'postpage': true}, (route) => false);
+  }
+
   Widget postButton() {
     return SizedBox(
         width: 350,
@@ -262,68 +275,102 @@ class PostWritePageState extends State<PostWritePage> {
                 isButtonEnabled ? ApdiColors.themeGreen : Colors.white60),
           ),
           onPressed: () {
-            showDialog<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  if (isButtonEnabled) {
+            if (isButtonEnabled) {
+              showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return createPopUp(
+                        context,
+                        "Create Post",
+                        "Are you sure you want to create this post?",
+                        createPost);
+                  });
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
                     return AlertDialog(
                       title: const Text(
-                        'Create Post',
+                        'Warning',
                         style: TextStyle(fontSize: 16),
                       ),
                       content: const Text(
-                        "Are you sure you want to create this post?",
+                        "You have not filled certain parts. Please check again.",
                         style: TextStyle(fontSize: 12),
                       ),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text(
-                            "No",
-                            style: TextStyle(color: ApdiColors.errorRed),
-                          ),
-                        ),
-                        TextButton(
-                            onPressed: () {
-                              for (var category in categories.keys) {
-                                categories[category] == true
-                                    ? trueCategories = category
-                                    : {};
-                              }
-                              uploadPost(currentUser.uid);
-                              setState(() {});
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context,
-                                  '/',
-                                  arguments: {'postpage': true},
-                                  (route) => false);
-                            },
+                            onPressed: () => Navigator.pop(context),
                             child: Text(
-                              "Yes",
+                              "OK",
                               style: TextStyle(color: ApdiColors.themeGreen),
                             ))
                       ],
                     );
-                  }
-                  return AlertDialog(
-                    title: const Text(
-                      'Warning',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    content: const Text(
-                      "You have not filled certain parts. Please check again.",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text(
-                            "OK",
-                            style: TextStyle(color: ApdiColors.themeGreen),
-                          ))
-                    ],
-                  );
-                });
+                  });
+            }
+            //   showDialog<void>(
+            //       context: context,
+            //       builder: (BuildContext context) {
+            //         if (isButtonEnabled) {
+            //           return AlertDialog(
+            //             title: const Text(
+            //               'Create Post',
+            //               style: TextStyle(fontSize: 16),
+            //             ),
+            //             content: const Text(
+            //               "Are you sure you want to create this post?",
+            //               style: TextStyle(fontSize: 12),
+            //             ),
+            //             actions: <Widget>[
+            //               TextButton(
+            //                 onPressed: () => Navigator.pop(context),
+            //                 child: Text(
+            //                   "No",
+            //                   style: TextStyle(color: ApdiColors.errorRed),
+            //                 ),
+            //               ),
+            //               TextButton(
+            //                   onPressed: () {
+            //                     for (var category in categories.keys) {
+            //                       categories[category] == true
+            //                           ? trueCategories = category
+            //                           : {};
+            //                     }
+            //                     uploadPost(currentUser.uid);
+            //                     setState(() {});
+            //                     Navigator.pushNamedAndRemoveUntil(
+            //                         context,
+            //                         '/',
+            //                         arguments: {'postpage': true},
+            //                         (route) => false);
+            //                   },
+            //                   child: Text(
+            //                     "Yes",
+            //                     style: TextStyle(color: ApdiColors.themeGreen),
+            //                   ))
+            //             ],
+            //           );
+            //         }
+            //         return AlertDialog(
+            //           title: const Text(
+            //             'Warning',
+            //             style: TextStyle(fontSize: 16),
+            //           ),
+            //           content: const Text(
+            //             "You have not filled certain parts. Please check again.",
+            //             style: TextStyle(fontSize: 12),
+            //           ),
+            //           actions: <Widget>[
+            //             TextButton(
+            //                 onPressed: () => Navigator.pop(context),
+            //                 child: Text(
+            //                   "OK",
+            //                   style: TextStyle(color: ApdiColors.themeGreen),
+            //                 ))
+            //           ],
+            //         );
+            //       });
           },
           child: const Text(
             'Post',
@@ -359,38 +406,43 @@ class PostWritePageState extends State<PostWritePage> {
             Icons.arrow_back_ios,
           ),
           onPressed: () {
-            showDialog<void>(
+            showModalBottomSheet(
                 context: context,
                 builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text(
-                      'Discard Writings',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    content: const Text(
-                      "Are you sure you want to go back to the main page? (All you have written will be lost!) ",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text(
-                          "No",
-                          style: TextStyle(color: ApdiColors.errorRed),
-                        ),
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            "Yes",
-                            style: TextStyle(color: ApdiColors.themeGreen),
-                          ))
-                    ],
-                  );
+                  return discardWritingsPopUp(context);
                 });
+            // showDialog<void>(
+            //     context: context,
+            //     builder: (BuildContext context) {
+            //       return AlertDialog(
+            //         title: const Text(
+            //           'Discard Writings',
+            //           style: TextStyle(fontSize: 16),
+            //         ),
+            //         content: const Text(
+            //           "Are you sure you want to go back to the main page? (All you have written will be lost!) ",
+            //           style: TextStyle(fontSize: 12),
+            //         ),
+            //         actions: <Widget>[
+            //           TextButton(
+            //             onPressed: () => Navigator.pop(context),
+            //             child: Text(
+            //               "No",
+            //               style: TextStyle(color: ApdiColors.errorRed),
+            //             ),
+            //           ),
+            //           TextButton(
+            //               onPressed: () {
+            //                 Navigator.pop(context);
+            //                 Navigator.pop(context);
+            //               },
+            //               child: Text(
+            //                 "Yes",
+            //                 style: TextStyle(color: ApdiColors.themeGreen),
+            //               ))
+            //         ],
+            //       );
+            //     });
           },
         ),
       ),
