@@ -131,7 +131,11 @@ class HomePageState extends State<HomePage> {
             FirebaseAnalytics.instance.logEvent(
               name: 'pages',
               parameters: {
-                "page number": _selectedIndex,
+                "page number": _selectedIndex == 0
+                    ? 'events'
+                    : _selectedIndex == 1
+                        ? 'posts'
+                        : 'profile',
               },
             );
           });
