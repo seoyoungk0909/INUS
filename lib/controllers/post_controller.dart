@@ -7,8 +7,12 @@ class PostController {
   void incrementView() {
     post.views++;
     post.firebaseDocRef?.update({"viewCount": FieldValue.increment(1)});
-    post.points++;
-    post.firebaseDocRef?.update({"points": FieldValue.increment(1)});
+    // update point according to percentage of days past when view is updated
+    Duration diff = DateTime.now().difference(post.timestamp);
+    double dayPercent = (1 - (0.01 * diff.inDays));
+    double point = (++post.points) * dayPercent;
+    post.points = point.round();
+    post.firebaseDocRef?.update({"points": point});
   }
 
   void incrementReport() {
@@ -46,23 +50,6 @@ class PostController {
       'reports': FieldValue.arrayUnion([newReport])
     });
   }
-
-  // void updatePoints() {
-  // int views = post.views;
-  // int comments = 5 * post.numComments();
-  // int save = 10 * post.saveCount;
-
-  // int reportCount = 20 * post.reportCount;
-  // int category = (post.category == '19+') ? 50 : 0;
-  // Duration diff = DateTime.now().difference(post.timestamp);
-  // int dayPercent = (1 - (0.01 * diff.inDays)) as int;
-  // int point = (post.points) * dayPercent;
-
-  // // int point =
-  // //     ((views + comments + save) - (reportCount + category)) * dayPercent;
-  // post.points = point;
-  // post.firebaseDocRef?.update({"points": point});
-  // }
 
   void lazyDeletePost() {
     post.deleted = true;
