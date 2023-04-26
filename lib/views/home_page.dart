@@ -128,16 +128,10 @@ class HomePageState extends State<HomePage> {
         onTap: (int index) {
           setState(() {
             _selectedIndex = index;
+            List pageName = ['posts', 'events', 'profile'];
             FirebaseAnalytics.instance.logEvent(
               name: 'pages',
-              parameters: {
-                if (_selectedIndex == 0)
-                  'page_name': 'posts'
-                else if (_selectedIndex == 1)
-                  'page_name': 'events'
-                else if (_selectedIndex == 2)
-                  'page_name': 'profile'
-              },
+              parameters: pageName[_selectedIndex],
             );
           });
         },
