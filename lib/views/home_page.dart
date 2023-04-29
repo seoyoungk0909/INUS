@@ -131,7 +131,7 @@ class HomePageState extends State<HomePage> {
             List pageName = ['posts', 'events', 'profile'];
             FirebaseAnalytics.instance.logEvent(
               name: 'pages',
-              parameters: pageName[_selectedIndex],
+              parameters: {'page': pageName[_selectedIndex]},
             );
           });
         },
