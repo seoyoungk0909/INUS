@@ -171,7 +171,7 @@ class Post {
           // .where('time', isLessThanOrEqualTo: DateTime.now())
           // .where('viewCount', isGreaterThanOrEqualTo: 20)
           // .orderBy('points', descending: true)
-          .orderBy('viewCount', descending: true)
+          .orderBy('points', descending: true)
           .limit(50);
     }
     return firebaseQuery;

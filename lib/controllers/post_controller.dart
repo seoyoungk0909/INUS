@@ -8,11 +8,13 @@ class PostController {
     post.views++;
     post.firebaseDocRef?.update({"viewCount": FieldValue.increment(1)});
     // update point according to percentage of days past when view is updated
-    Duration diff = DateTime.now().difference(post.timestamp);
-    double dayPercent = (1 - (0.01 * diff.inDays));
-    double point = (++post.points) * dayPercent;
-    post.points = point.round();
-    post.firebaseDocRef?.update({"points": point});
+    // Duration diff = DateTime.now().difference(post.timestamp);
+    // double dayPercent = (1 - (0.01 * diff.inDays));
+    // double point = (++post.points) * dayPercent;
+    // post.points = point.round();
+    // post.firebaseDocRef?.update({"points": point});
+    post.points++;
+    post.firebaseDocRef?.update({"points": FieldValue.increment(1)});
   }
 
   void incrementReport() {
