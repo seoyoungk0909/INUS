@@ -43,6 +43,7 @@ dependencies:
   firebase_core:
   firebase_auth:
   cloud_firestore:
+  firebase_messaging:
   flutter_speed_dial:
   date_format:
   flutter_svg:
