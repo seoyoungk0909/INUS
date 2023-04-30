@@ -28,6 +28,10 @@ String verifyEmail(String email) {
     case 'connect.ust.hk':
       school = 'HKUST';
       break;
+    case 'ust.hk':
+      // staff email
+      school = 'HKUST';
+      break;
     case 'connect.polyu.hk':
       school = 'PolyU';
       break;
