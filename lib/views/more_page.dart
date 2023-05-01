@@ -118,17 +118,11 @@ class MorePage extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              getTokenAndStatus(fbauth.FirebaseAuth.instance.currentUser?.uid)
-                  .then((value) {
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => NotificationSettingPage(
-                      fcmToken: value[0],
-                      notificationTurnedOn: value[1],
-                    ),
-                  ),
-                );
-              });
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => NotificationSettingPage(),
+                ),
+              );
             },
             title: const Text("Notification"),
             trailing: SvgPicture.asset('assets/icons/chevron-right.svg'),

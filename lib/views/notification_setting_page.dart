@@ -5,11 +5,7 @@ import '../controllers/notification_controller.dart';
 import '../utils/color_utils.dart';
 
 class NotificationSettingPage extends StatefulWidget {
-  const NotificationSettingPage(
-      {Key? key, this.fcmToken, this.notificationTurnedOn = false})
-      : super(key: key);
-  final String? fcmToken;
-  final bool notificationTurnedOn;
+  const NotificationSettingPage({Key? key}) : super(key: key);
 
   @override
   State<NotificationSettingPage> createState() =>
@@ -18,11 +14,22 @@ class NotificationSettingPage extends StatefulWidget {
 
 class NotificationSettingPageState extends State<NotificationSettingPage> {
   bool notificationTurnedOn = false;
+  String? fcmToken;
+
+  bool refreshing = true;
 
   @override
   void initState() {
     super.initState();
-    notificationTurnedOn = widget.notificationTurnedOn;
+    getTokenAndStatus(FirebaseAuth.instance.currentUser?.uid).then((value) {
+      if (mounted) {
+        setState(() {
+          fcmToken = value[0];
+          notificationTurnedOn = value[1];
+          refreshing = false;
+        });
+      }
+    });
   }
 
   @override
@@ -33,28 +40,30 @@ class NotificationSettingPageState extends State<NotificationSettingPage> {
           backgroundColor: Theme.of(context).colorScheme.background,
           title: const Text("Notification Settings"),
         ),
-        body: ListView(
-          children: [
-            ListTile(
-              // onTap: () {},
-              title: const Text("New Comments"),
-              // trailing: SvgPicture.asset('assets/icons/chevron-right.svg'),
-              trailing: Switch(
-                onChanged: (value) {
-                  updateDeviceToken(widget.fcmToken, value,
-                      FirebaseAuth.instance.currentUser?.uid);
-                  setState(() {
-                    notificationTurnedOn = value;
-                  });
-                },
-                value: notificationTurnedOn,
-                activeColor: ApdiColors.pointGreen,
-                activeTrackColor: ApdiColors.themeGreen,
-                inactiveThumbColor: ApdiColors.greyText,
-                inactiveTrackColor: ApdiColors.darkBackground,
-              ),
-            ),
-          ],
-        ));
+        body: refreshing
+            ? Center(
+                child: CircularProgressIndicator(color: ApdiColors.themeGreen))
+            : ListView(
+                children: [
+                  ListTile(
+                    // onTap: () {},
+                    title: const Text("New Comments"),
+                    trailing: Switch(
+                      onChanged: (value) {
+                        updateDeviceToken(fcmToken, value,
+                            FirebaseAuth.instance.currentUser?.uid);
+                        setState(() {
+                          notificationTurnedOn = value;
+                        });
+                      },
+                      value: notificationTurnedOn,
+                      activeColor: ApdiColors.pointGreen,
+                      activeTrackColor: ApdiColors.themeGreen,
+                      inactiveThumbColor: ApdiColors.greyText,
+                      inactiveTrackColor: ApdiColors.darkBackground,
+                    ),
+                  ),
+                ],
+              ));
   }
 }
