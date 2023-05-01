@@ -116,17 +116,17 @@ class MorePage extends StatelessWidget {
             title: const Text("Delete Your Account"),
             trailing: SvgPicture.asset('assets/icons/chevron-right.svg'),
           ),
-          ListTile(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (BuildContext context) => NotificationSettingPage(),
-                ),
-              );
-            },
-            title: const Text("Notification"),
-            trailing: SvgPicture.asset('assets/icons/chevron-right.svg'),
-          ),
+          // ListTile(
+          //   onTap: () {
+          //     Navigator.of(context).push(
+          //       MaterialPageRoute<void>(
+          //         builder: (BuildContext context) => NotificationSettingPage(),
+          //       ),
+          //     );
+          //   },
+          //   title: const Text("Notification"),
+          //   trailing: SvgPicture.asset('assets/icons/chevron-right.svg'),
+          // ),
         ],
       ),
     );
