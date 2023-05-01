@@ -22,6 +22,7 @@ class PostWritePage extends StatefulWidget {
 
 class PostWritePageState extends State<PostWritePage> {
   bool isAnonymous = false;
+  // bool isEnglish = false;
 
   Future<void> uploadPost(String currentUserId) async {
     DocumentReference userRef =
@@ -41,6 +42,8 @@ class PostWritePageState extends State<PostWritePage> {
       'deleted': false,
       'reportCount': 0,
       'reports': [],
+      'points': (trueCategories == "19+") ? -50 : 0,
+      // 'isEnglish': isEnglish,
     });
     userRef.update({
       'myPosts': FieldValue.arrayUnion([newPost])
