@@ -120,15 +120,7 @@ class Post {
         postSaves: postData.get('saveCount'),
         commentList: comments,
         commentRefList: commentRefList,
-        postReports: (postData.data()!['reportCount'] != null)
-            ? postData.get('reportCount')
-            : 0,
-        reportRefList: (postData.data()!['reports'] != null)
-            ? postData.get('reports') as List
-            : [],
-        postPoints:
-            (postData.data()!['points'] != null) ? postData.get('points') : 0,
-        // isEnglish: isEnglish,
+        postReports: postData.get('reportCount'),
         docRef: firebaseDoc,
         isAnonymous: isAnonymous);
   }
