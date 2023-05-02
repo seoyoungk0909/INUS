@@ -1,8 +1,3 @@
-// import 'dart:io';
-
-// import 'package:aus/controllers/event_controller.dart';
-// import 'dart:html';
-
 import 'package:aus/views/components/custom_popup.dart';
 import 'package:aus/views/components/popup_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
