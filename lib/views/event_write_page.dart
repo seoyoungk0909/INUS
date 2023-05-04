@@ -1,6 +1,3 @@
-// import 'dart:io';
-
-// import 'package:aus/controllers/event_controller.dart';
 import 'package:aus/views/components/custom_popup.dart';
 import 'package:aus/views/components/popup_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,7 +29,7 @@ class EventWritePageState extends State<EventWritePage> {
     DocumentReference newEvent =
         await FirebaseFirestore.instance.collection("event").add({
       'title': eventTitle.text.trim(),
-      'tag': tags.text.split(' '),
+      'tag': tags.text.trim().split(RegExp(r"\s+")),
       'eventTime': Timestamp.fromDate(
         DateTime(date.year, date.month, date.day, time.hour, time.minute),
       ),
@@ -482,7 +479,8 @@ class EventWritePageState extends State<EventWritePage> {
                             textChecker['Tags'] = false;
                             textChecking();
                           }
-                          List twoTagsAllowed = tags.text.split(' ');
+                          List twoTagsAllowed =
+                              tags.text.trim().split(RegExp(r"\s+"));
                           if (twoTagsAllowed.length >= 3) {
                             textChecker['Tags'] = false;
                             textChecking();
