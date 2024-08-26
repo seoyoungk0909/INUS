@@ -4,6 +4,8 @@ A mobile application for university students that organizes events, seminars, an
 
 Furthermore, it provides a platform for communication between students to allow easier bonding of university students within Hong Kong. 
 
+Developed by APDI - Mobile application development team of HKUST.
+
 ## Repo Structure
 
 ```
