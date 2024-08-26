@@ -1,6 +1,8 @@
 # INUS - All You Need In Us
 
-A mobile application for university students that organizes events, seminars, and competitions to assist students who experienced difficulties organizing and identifying relavant emails. Furthermore, it provides a platform for communication between students to allow easier bonding of university students within Hong Kong. 
+A mobile application for university students that organizes events, seminars, and competitions to assist students who experienced difficulties organizing and identifying relavant emails. 
+
+Furthermore, it provides a platform for communication between students to allow easier bonding of university students within Hong Kong. 
 
 ## Repo Structure
 
